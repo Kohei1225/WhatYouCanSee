@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - BackGround
+  - ColorObject
+  - Ray
+  - Stage
   layers:
   - Default
   - TransparentFX
@@ -11,32 +15,32 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Real
+  - Stage
+  - BLACK
+  - WHITE
+  - RED
+  - GREEN
+  - BLUE
+  - CYAN
+  - MAGENTA
+  - YELLOW
+  - PURPLE
+  - ORRANGE
+  - LIME
+  - GRAY
+  - BACKGROUND
+  - Ray
+  - Player
+  - Object1
+  - Object2
+  - Object3
+  - Object4
+  - Object5
+  - Object6
+  - Object7
+  - Object8
+  - Object9
   m_SortingLayers:
   - name: Default
     uniqueID: 0

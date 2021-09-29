@@ -6,6 +6,8 @@ using UnityEngine.Experimental.Rendering.Universal;
 //色を持ってるオブジェクトにアタッチするクラス。消え得るオブジェクトを覆っていたら印を付けてあげる。
 public class ColorObject2 : MonoBehaviour
 {
+    //いらない変数多すぎ、
+
     //色情報のenum
     public enum OBJECT_COLOR2
     {
@@ -176,6 +178,8 @@ public class ColorObject2 : MonoBehaviour
             if(!onShadowRay)outOfShadow = true;
 
             
+            //長すぎ、enumの値とHashMapとか使えばいけると思う。
+            //関数も使えるよね。
             switch(this.colorType)
             {
                     //色が黒色の場合
@@ -619,4 +623,8 @@ public class ColorObject2 : MonoBehaviour
         if(max < value)return max;
         return value;
     }
+
+    /*
+    関数
+    */
 }

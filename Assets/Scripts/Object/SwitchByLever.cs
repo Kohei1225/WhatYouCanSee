@@ -8,10 +8,18 @@ public class SwitchByLever : MonoBehaviour
     public GameObject LeverObject;//操作元のレバー
     LeverScript leverScript;
 
+
+    void Awake()
+    {
+        leverScript = LeverObject.GetComponent<LeverScript>();
+        if(leverScript.barPosition == 0)switchObject.SetActive(true);
+        else switchObject.SetActive(false);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        leverScript = LeverObject.GetComponent<LeverScript>();
+        
     }
 
     // Update is called once per frame

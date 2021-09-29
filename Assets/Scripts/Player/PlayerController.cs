@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
                     //目の前のブロックを持ち上げる
                     isHoldingObject = true;
                     objectBeingHolden = holdObject.objectFrontMe;
-                    objectBeingHolden.transform.root.GetComponent<ColorObjectScript>().onThePlayer = true;
+                    objectBeingHolden.transform.root.GetComponent<ColorObject2>().onThePlayer = true;
                 }
                 //ブロックを持ち上げてる時
                 else if(isHoldingObject)
@@ -86,14 +86,14 @@ public class PlayerController : MonoBehaviour
 
                     //何も持ってない状態にする
                     isHoldingObject = false;
-                    objectBeingHolden.transform.root.GetComponent<ColorObjectScript>().onThePlayer = false;
+                    objectBeingHolden.transform.root.GetComponent<ColorObject2>().onThePlayer = false;
                     objectBeingHolden = null;
                 }
             }
         }
         else 
         {
-            if(isHoldingObject)objectBeingHolden.transform.root.gameObject.GetComponent<ColorObjectScript>().onThePlayer = false;
+            if(isHoldingObject)objectBeingHolden.transform.root.gameObject.GetComponent<ColorObject2>().onThePlayer = false;
             isHoldingObject = false;
             objectBeingHolden = null;
         }
@@ -116,18 +116,19 @@ public class PlayerController : MonoBehaviour
         //何か持ってる時
         if(isHoldingObject)
         {
-            //持ってるオブジェクトが見えてる時
-            if(!objectBeingHolden.transform.root.GetComponent<ColorObjectScript>().noBody)
+            //持ってるオブジェクトが見えてる時              //元々はColorObjectScript
+            if(!objectBeingHolden.transform.root.GetComponent<ColorObject2>().noBody)
             {
                 Vector3 pos = transform.position;
                 pos.y = transform.position.y + (transform.localScale.y * PLAYERTOP) + (objectBeingHolden.transform.localScale.y) + 0.6f;
                 objectBeingHolden.transform.root.position = pos;
-                objectBeingHolden.transform.root.GetComponent<ColorObjectScript>().onThePlayer = true;
+                                                        //元々はColorObjectScript
+                objectBeingHolden.transform.root.GetComponent<ColorObject2>().onThePlayer = true;
             }
             //持ってるオブジェクトが見えなくなった時
             else 
-            {
-                objectBeingHolden.transform.root.GetComponent<ColorObjectScript>().onThePlayer = false;
+            {                                           //元々はColorObjectScript
+                objectBeingHolden.transform.root.GetComponent<ColorObject2>().onThePlayer = false;
                 isHoldingObject = false;
                 objectBeingHolden = null;     
             }       

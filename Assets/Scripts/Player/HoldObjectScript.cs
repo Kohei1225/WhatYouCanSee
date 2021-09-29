@@ -39,6 +39,22 @@ public class HoldObjectScript: MonoBehaviour
             }
             else objectFrontMe = null;
         }
+        else if(otherObject.transform.root.gameObject.GetComponent<ColorObject2>() != null)
+        {
+            ColorObject2 colorObject = otherObject.gameObject.transform.root.GetComponent<ColorObject2>();
+            //Debug.Log("前のオブジェクトはコンポーネントもってる");
+            //対象が運べる状態だったら
+            if(colorObject.isObject && colorObject.canHold && otherObject.transform.root.gameObject.tag == "ColorObject")
+            {
+                //プレイヤーが何ももってない時は記録しておく
+                if(!transform.root.gameObject.GetComponent<PlayerController>().isHoldingObject)
+                {
+                    //Debug.Log("前にオブジェクトある");
+                    objectFrontMe = otherObject.gameObject;
+                }
+            }
+            else objectFrontMe = null;
+        }
         else objectFrontMe = null;
         //else Debug.Log("ない");
     }
@@ -49,6 +65,24 @@ public class HoldObjectScript: MonoBehaviour
         if(otherObject.transform.root.gameObject.GetComponent<ColorObjectScript>())
         {
             ColorObjectScript colorObject = otherObject.gameObject.transform.root.gameObject.GetComponent<ColorObjectScript>();
+
+            //対象が運べる状態だったら
+            if(colorObject.isObject && colorObject.canHold)
+            {
+                /*
+                //プレイヤーが何ももってない時は記録しておく
+                if(GetComponent<PlayerController>().havingObject)
+                {
+                    objectBeingHolden = otherObject.gameObject;
+                }
+                */
+                objectFrontMe = null;
+            }
+        }
+        //もしも触れてるオブジェクトがカラーオブジェクトだったら
+        else if(otherObject.transform.root.gameObject.GetComponent<ColorObject2>())
+        {
+            ColorObject2 colorObject = otherObject.gameObject.transform.root.gameObject.GetComponent<ColorObject2>();
 
             //対象が運べる状態だったら
             if(colorObject.isObject && colorObject.canHold)

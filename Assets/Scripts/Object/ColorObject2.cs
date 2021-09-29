@@ -82,6 +82,7 @@ public class ColorObject2 : MonoBehaviour
             BodyObject.transform.Find("ShadowCaster").gameObject.SetActive(this.hasShadow);
         }
 
+        //色のタイプによって変色する
         switch(this.colorType)
         {
             case OBJECT_COLOR2.BLACK:

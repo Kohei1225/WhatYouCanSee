@@ -54,7 +54,7 @@ public class ButtonSwitchScript : MonoBehaviour
         {
 
         }
-        Debug.Log(other.gameObject.name);
+        //Debug.Log(other.gameObject.name);
         isPushed = true;
     }
 

@@ -6,8 +6,8 @@ public class ChangeColorByButton : MonoBehaviour
 {
     ButtonSwitchScript buttonScript;
     public GameObject buttonObject;
-    ColorObjectScript colorScript;
-    public ColorObjectScript.OBJECT_COLOR[] colorList;
+    ColorObject2 colorScript;
+    public ColorObject2.OBJECT_COLOR2[] colorList;
 
     bool hasPushed;
     int colorNum = 0;
@@ -15,7 +15,7 @@ public class ChangeColorByButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        colorScript = gameObject.GetComponent<ColorObjectScript>();
+        colorScript = gameObject.GetComponent<ColorObject2>();
         buttonScript = buttonObject.GetComponent<ButtonSwitchScript>();
         hasPushed = false;
     }

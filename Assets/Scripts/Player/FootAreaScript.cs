@@ -28,7 +28,11 @@ public class FootAreaScript : MonoBehaviour
         || (other.gameObject.tag == "ColorObject"
         && other.gameObject.transform.parent.gameObject.GetComponent<ColorObjectScript>() 
         && !other.gameObject.transform.parent.gameObject.GetComponent<ColorObjectScript>().noBody 
-        && other.gameObject.transform.parent.gameObject.GetComponent<ColorObjectScript>().isObject))
+        && other.gameObject.transform.parent.gameObject.GetComponent<ColorObjectScript>().isObject)
+        || (other.gameObject.tag == "ColorObject"
+        && other.gameObject.transform.parent.gameObject.GetComponent<ColorObject2>() 
+        && !other.gameObject.transform.parent.gameObject.GetComponent<ColorObject2>().noBody 
+        && other.gameObject.transform.parent.gameObject.GetComponent<ColorObject2>().isObject))
         {
             touchingStage = true;
             //player.GetComponent<PlayerController>().onStage = true;

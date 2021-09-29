@@ -47,7 +47,7 @@ public class ColorObject2 : MonoBehaviour
     public bool isChild;
 
     public bool onLightRay;         //光に当たってる判定
-    public bool onShadowRay;        //影に当たってる判定
+    public bool onShadowRay = true;        //影に当たってる判定
     bool touchingShadow;            //影に触れてる判定
     bool outOfShadow;               //影の外にいる判定
 

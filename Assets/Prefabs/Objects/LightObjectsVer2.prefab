@@ -55,6 +55,7 @@ MonoBehaviour:
   firstTheta: 0
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &8487917160370266863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,6 +72,7 @@ MonoBehaviour:
   firstTheta: 10
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &4061811328186182402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -87,6 +89,7 @@ MonoBehaviour:
   firstTheta: 20
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &4130557693230089372
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,6 +106,7 @@ MonoBehaviour:
   firstTheta: 30
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &1080247848659227819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,6 +123,7 @@ MonoBehaviour:
   firstTheta: 40
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &307435221779413799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -135,6 +140,7 @@ MonoBehaviour:
   firstTheta: 50
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &2854110259577168760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,6 +157,7 @@ MonoBehaviour:
   firstTheta: 60
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &1044860444942633490
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +174,7 @@ MonoBehaviour:
   firstTheta: 70
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &6804112135927791872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,6 +191,7 @@ MonoBehaviour:
   firstTheta: 80
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!1 &627545860927613083
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,6 +247,7 @@ MonoBehaviour:
   firstTheta: 180
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &8055854795673824446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,6 +264,7 @@ MonoBehaviour:
   firstTheta: 190
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &3092428640082522981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,6 +281,7 @@ MonoBehaviour:
   firstTheta: 200
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &7398902423456547312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,6 +298,7 @@ MonoBehaviour:
   firstTheta: 210
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &6827877060495983068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +315,7 @@ MonoBehaviour:
   firstTheta: 220
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &9150281657745900454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -318,6 +332,7 @@ MonoBehaviour:
   firstTheta: 230
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &1606177509237244674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,6 +349,7 @@ MonoBehaviour:
   firstTheta: 240
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &3878372003004974149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -350,6 +366,7 @@ MonoBehaviour:
   firstTheta: 250
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &6170588327385841156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,6 +383,7 @@ MonoBehaviour:
   firstTheta: 260
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!1 &627545861094356506
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,7 +492,7 @@ MonoBehaviour:
   - {x: -0.5, y: 0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 57114
+  m_InstanceId: 636850
 --- !u!1 &627545861207130201
 GameObject:
   m_ObjectHideFlags: 0
@@ -602,6 +620,7 @@ MonoBehaviour:
   firstTheta: 90
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &2200232167549886714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,6 +637,7 @@ MonoBehaviour:
   firstTheta: 100
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &6291825370366015973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -634,6 +654,7 @@ MonoBehaviour:
   firstTheta: 110
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &3992684817314122361
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -650,6 +671,7 @@ MonoBehaviour:
   firstTheta: 120
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &5599067875094134966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -666,6 +688,7 @@ MonoBehaviour:
   firstTheta: 130
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &5316054167146190407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -682,6 +705,7 @@ MonoBehaviour:
   firstTheta: 140
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &6490557409452079163
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -698,6 +722,7 @@ MonoBehaviour:
   firstTheta: 150
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &5395459466175894984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -714,6 +739,7 @@ MonoBehaviour:
   firstTheta: 160
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &8171254330320633527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -730,6 +756,7 @@ MonoBehaviour:
   firstTheta: 170
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!1 &627545861345582617
 GameObject:
   m_ObjectHideFlags: 0
@@ -899,11 +926,11 @@ GameObject:
   m_Component:
   - component: {fileID: 627545861604197781}
   - component: {fileID: 7211304545276830975}
-  - component: {fileID: 627545861604197780}
+  - component: {fileID: 803971706878714616}
   - component: {fileID: 1893768843695231545}
+  - component: {fileID: 491914401472546553}
   - component: {fileID: 7366875403809263830}
   - component: {fileID: 1914897611566574319}
-  - component: {fileID: 491914401472546553}
   - component: {fileID: 1054944672059023640}
   - component: {fileID: 571594662268756977}
   - component: {fileID: 4405447502595427772}
@@ -944,7 +971,8 @@ MonoBehaviour:
   firstTheta: 270
   rootObjectTheta: 0
   parentLightTheta: 0
---- !u!114 &627545861604197780
+  forDebug: 0
+--- !u!114 &803971706878714616
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -953,13 +981,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 627545861604197778}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76d78b7f0d313462cbc17406f0decce5, type: 3}
+  m_Script: {fileID: 11500000, guid: d3461fa9967f341a4b12cca62e389cb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rayLength: 0
   firstTheta: 280
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &1893768843695231545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -976,38 +1005,7 @@ MonoBehaviour:
   firstTheta: 290
   rootObjectTheta: 0
   parentLightTheta: 0
---- !u!114 &7366875403809263830
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 627545861604197778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3461fa9967f341a4b12cca62e389cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rayLength: 0
-  firstTheta: 300
-  rootObjectTheta: 0
-  parentLightTheta: 0
---- !u!114 &1914897611566574319
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 627545861604197778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3461fa9967f341a4b12cca62e389cb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rayLength: 0
-  firstTheta: 310
-  rootObjectTheta: 0
-  parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &491914401472546553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1024,6 +1022,41 @@ MonoBehaviour:
   firstTheta: 320
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
+--- !u!114 &7366875403809263830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627545861604197778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3461fa9967f341a4b12cca62e389cb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayLength: 0
+  firstTheta: 300
+  rootObjectTheta: 0
+  parentLightTheta: 0
+  forDebug: 0
+--- !u!114 &1914897611566574319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627545861604197778}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3461fa9967f341a4b12cca62e389cb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rayLength: 0
+  firstTheta: 310
+  rootObjectTheta: 0
+  parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &1054944672059023640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1040,6 +1073,7 @@ MonoBehaviour:
   firstTheta: 330
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &571594662268756977
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1056,6 +1090,7 @@ MonoBehaviour:
   firstTheta: 340
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!114 &4405447502595427772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1072,6 +1107,7 @@ MonoBehaviour:
   firstTheta: 350
   rootObjectTheta: 0
   parentLightTheta: 0
+  forDebug: 0
 --- !u!1 &2348336262407927967
 GameObject:
   m_ObjectHideFlags: 0

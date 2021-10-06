@@ -34,7 +34,7 @@ public class ColorObject2 : MonoBehaviour
     public bool noBody;
     int time = 0;
     
-    
+    public int[,] rayList;
     
     public int objectNumber;
     public bool touchingObject;
@@ -49,7 +49,7 @@ public class ColorObject2 : MonoBehaviour
     public bool isChild;
 
     public bool onLightRay;         //光に当たってる判定
-    public bool onShadowRay = true;        //影に当たってる判定
+    public bool onShadowRay;        //影に当たってる判定
     bool touchingShadow;            //影に触れてる判定
     bool outOfShadow;               //影の外にいる判定
 
@@ -94,7 +94,7 @@ public class ColorObject2 : MonoBehaviour
     void FixedUpdate()
     {
         //if(isChild)this.colorType = transform.root.GetComponent<ColorParentScript>().colorType;
-        if(gameObject.tag != "BackGround" && gameObject.tag != "Player")gameObject.layer = LayerMask.NameToLayer(this.colorType.ToString());
+        if(gameObject.tag != "BackGround" && gameObject.tag != "Player")gameObject.layer = LayerMask.NameToLayer("Color");
         //if(forDebug)Debug.Log(gameObject.name + ":" + gameObject.layer);
 
         //背景じゃなくてステージ上にあるオブジェクトの場合の処理
@@ -230,7 +230,7 @@ public class ColorObject2 : MonoBehaviour
         //colorTypeによって変色
         GetComponent<SpriteRenderer>().color = ChangeColorByType(colorType);
         
-        
+
         if(isObject)
         {
             //光にしか当たってない。
@@ -286,6 +286,8 @@ public class ColorObject2 : MonoBehaviour
             GetComponent<Rigidbody2D>().gravityScale = gravity;
             GetComponent<Rigidbody2D>().mass = 2;
         }
+        this.onLightRay = false;
+        this.onShadowRay = false;
     }
     
 

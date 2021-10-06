@@ -2,28 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//レバーにアタッチするクラス
 public class LeverScript : MonoBehaviour
 {
-    public int barPosition;//バーの状態
+    int barPosition;//バーの状態
     public bool existMidPos;//バーが真ん中で止まるかどうか
-    public bool canChangeBar;//プレイヤーが近くにいる時(バーを操作できる状態)
-    public GameObject barObject;//実際に動くバーのオブジェクト
-    float[] barAngleList = {160,90,20,90};//バーの傾きのリスト
+    bool canChangeBar;//プレイヤーが近くにいる時(バーを操作できる状態)
+    GameObject barObject;//実際に動くバーのオブジェクト
+    public float[] barAngleList = {160,90,20,90};//バーの傾きのリスト
 
     // Start is called before the first frame update
     void Start()
     {
+        //バーのオブジェクトを取得
+        barObject = transform.Find("BarObjects").gameObject.transform.Find("Lever1_bar").gameObject;
+
         if(existMidPos)barPosition = 1;
         else barPosition = 0;
+
+        //バーの傾きを初期化
+        barObject.transform.localEulerAngles = new Vector3(0,0,barAngleList[barPosition]);
+
         canChangeBar = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //プレイヤーが近くでCを押すと切り替わる
         if(canChangeBar && Input.GetKeyDown(KeyCode.C))
         {
-            //３段階で変えられる時
+            //３段階以上で変えられる時
             if(existMidPos)
             {
                 barPosition++;      
@@ -34,6 +43,7 @@ public class LeverScript : MonoBehaviour
                 barPosition += 2;
             }
 
+            //配列の最後まで来たら最初に戻る
             if(barPosition >= barAngleList.Length)barPosition = 0;
         }
 
@@ -64,5 +74,11 @@ public class LeverScript : MonoBehaviour
         {
             canChangeBar = false;
         }
+    }
+
+    //傾き具合を返すメソッド
+    public int Get_barPosition()
+    {
+        return barPosition;
     }
 }

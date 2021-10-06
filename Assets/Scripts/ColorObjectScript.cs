@@ -60,7 +60,7 @@ public class ColorObjectScript : MonoBehaviour
         active = true;
         if(gameObject.tag == "BackGround")gameObject.layer = LayerMask.NameToLayer("BACKGROUND");
         if(gameObject.tag == "Player")gameObject.layer = LayerMask.NameToLayer("Player");
-        gameManagerScript = GameObject.Find("GameManager").GetComponent<GameManagerScript>();
+        gameManagerScript = GameObject.Find("Managers").GetComponent<GameManagerScript>();
         if(isObject)
         {
             if(gameObject.tag != "Player")BodyObject = transform.Find("Body").gameObject;
@@ -143,7 +143,7 @@ public class ColorObjectScript : MonoBehaviour
     void FixedUpdate()
     {
         if(isChild)this.colorType = transform.root.GetComponent<ColorParentScript>().colorType;
-        if(gameObject.tag != "BackGround" && gameObject.tag != "Player")gameObject.layer = LayerMask.NameToLayer(this.colorType.ToString());
+        if(gameObject.tag != "BackGround" && gameObject.tag != "Player")gameObject.layer = LayerMask.NameToLayer("Color");
         //if(forDebug)Debug.Log(gameObject.name + ":" + gameObject.layer);
 
         //背景じゃなくてステージ上にあるオブジェクトの場合の処理

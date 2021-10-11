@@ -93,9 +93,9 @@ GameObject:
   - component: {fileID: 2197704299950343291}
   - component: {fileID: 6807364373385276138}
   - component: {fileID: 5880586868003734235}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: ButtonSwitch
-  m_TagString: Untagged
+  m_TagString: Stage
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -129,7 +129,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0009056926, y: 0.061190434}
+  m_Offset: {x: -0.0013432503, y: 0.09730114}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -140,7 +140,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.96195424, y: 0.21295606}
+  m_Size: {x: 0.9844434, y: 0.14073464}
   m_EdgeRadius: 0
 --- !u!114 &5880586868003734235
 MonoBehaviour:
@@ -154,8 +154,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b78da06d2fe4295b5a5070e4347bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isPushed: 0
-  pushButtonObject: {fileID: 5114589262183639741}
 --- !u!1 &5114589262183639741
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +275,7 @@ GameObject:
   - component: {fileID: 2257674915381411037}
   - component: {fileID: 5826533421399445889}
   - component: {fileID: 4291576750453575822}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Base
   m_TagString: Stage
   m_Icon: {fileID: 0}

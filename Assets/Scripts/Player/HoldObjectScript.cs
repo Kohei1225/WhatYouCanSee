@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//プレイヤーがモノを持ち運んだり投げたりするためのクラス
 public class HoldObjectScript: MonoBehaviour
 {
-    public GameObject objectFrontMe;
+    GameObject objectFrontMe;
 
     // Start is called before the first frame update
     void Start()
@@ -23,34 +24,19 @@ public class HoldObjectScript: MonoBehaviour
     {
         //Debug.Log("当たった");
         //もしも触れてるオブジェクトがカラーオブジェクトだったら
-        if(otherObject.transform.root.gameObject.GetComponent<ColorObjectScript>() != null)
+        if(otherObject.transform.parent.gameObject.GetComponent<ColorObjectVer3>())
         {
-            ColorObjectScript colorObject = otherObject.gameObject.transform.root.GetComponent<ColorObjectScript>();
-            //Debug.Log("前のオブジェクトはコンポーネントもってる");
+            GameObject touchingObject = otherObject.transform.parent.gameObject;
+            ColorObjectVer3 colorObject = touchingObject.GetComponent<ColorObjectVer3>();
+            
             //対象が運べる状態だったら
-            if(colorObject.isObject && colorObject.canHold && otherObject.transform.root.gameObject.tag == "ColorObject")
+            if(colorObject.isObject && colorObject.canHold && touchingObject.tag == "ColorObject")
             {
                 //プレイヤーが何ももってない時は記録しておく
-                if(!transform.root.gameObject.GetComponent<PlayerController>().isHoldingObject)
+                if(!transform.root.gameObject.GetComponent<PlayerController>().Get_isHoldingObject())
                 {
                     //Debug.Log("前にオブジェクトある");
-                    objectFrontMe = otherObject.gameObject;
-                }
-            }
-            else objectFrontMe = null;
-        }
-        else if(otherObject.transform.root.gameObject.GetComponent<ColorObject2>() != null)
-        {
-            ColorObject2 colorObject = otherObject.gameObject.transform.root.GetComponent<ColorObject2>();
-            //Debug.Log("前のオブジェクトはコンポーネントもってる");
-            //対象が運べる状態だったら
-            if(colorObject.isObject && colorObject.canHold && otherObject.transform.root.gameObject.tag == "ColorObject")
-            {
-                //プレイヤーが何ももってない時は記録しておく
-                if(!transform.root.gameObject.GetComponent<PlayerController>().isHoldingObject)
-                {
-                    //Debug.Log("前にオブジェクトある");
-                    objectFrontMe = otherObject.gameObject;
+                    objectFrontMe = touchingObject;
                 }
             }
             else objectFrontMe = null;
@@ -62,9 +48,10 @@ public class HoldObjectScript: MonoBehaviour
     void OnTriggerExit2D(Collider2D otherObject)
     {
         //もしも触れてるオブジェクトがカラーオブジェクトだったら
-        if(otherObject.transform.root.gameObject.GetComponent<ColorObjectScript>())
+        if(otherObject.transform.parent.gameObject.GetComponent<ColorObjectVer3>())
         {
-            ColorObjectScript colorObject = otherObject.gameObject.transform.root.gameObject.GetComponent<ColorObjectScript>();
+            GameObject touchingObject = otherObject.transform.parent.gameObject;
+            ColorObjectVer3 colorObject = touchingObject.GetComponent<ColorObjectVer3>();
 
             //対象が運べる状態だったら
             if(colorObject.isObject && colorObject.canHold)
@@ -79,23 +66,10 @@ public class HoldObjectScript: MonoBehaviour
                 objectFrontMe = null;
             }
         }
-        //もしも触れてるオブジェクトがカラーオブジェクトだったら
-        else if(otherObject.transform.root.gameObject.GetComponent<ColorObject2>())
-        {
-            ColorObject2 colorObject = otherObject.gameObject.transform.root.gameObject.GetComponent<ColorObject2>();
+    }
 
-            //対象が運べる状態だったら
-            if(colorObject.isObject && colorObject.canHold)
-            {
-                /*
-                //プレイヤーが何ももってない時は記録しておく
-                if(GetComponent<PlayerController>().havingObject)
-                {
-                    objectBeingHolden = otherObject.gameObject;
-                }
-                */
-                objectFrontMe = null;
-            }
-        }
+    public GameObject Get_objectFrontMe()
+    {
+        return this.objectFrontMe;
     }
 }

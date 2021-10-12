@@ -10,9 +10,9 @@ public class PlayerController : MonoBehaviour
 
     bool active;
     bool walk;                  //歩ける判定用  
-    bool jump;                  //ジャンプできる判定用
+    [SerializeField] bool jump;                  //ジャンプできる判定用
     int vec;                    //向いてる方向を示す変数
-    bool onStage;               //何かの上に乗ってるかを判定する用
+    [SerializeField] bool onStage;               //何かの上に乗ってるかを判定する用
     bool damage;                //ダメージを受けたかを判定する用
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
@@ -52,6 +52,15 @@ public class PlayerController : MonoBehaviour
         {
             //キーが押されたかを保存
             jump = Input.GetKeyDown(KeyCode.UpArrow);
+
+            if (jump && onStage)
+            {
+                if (isHoldingObject)
+                    GetComponent<Rigidbody2D>().AddForce(new Vector2(0, vForce * 0.75f));
+                else
+                    GetComponent<Rigidbody2D>().AddForce(new Vector2(0, vForce));
+                jump = false;
+            }
 
             walk = Input.GetKey(KeyCode.RightArrow)|Input.GetKey(KeyCode.LeftArrow);
             if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
@@ -106,16 +115,6 @@ public class PlayerController : MonoBehaviour
         if(walk)
         {
             transform.Translate(vel * vec,0,0);
-        }
-
-        //地面にいる状態ならジャンプできる
-        if(jump && onStage)
-        {
-            if(isHoldingObject)
-                GetComponent<Rigidbody2D>().AddForce(new Vector2(0,vForce*0.75f));
-            else
-                GetComponent<Rigidbody2D>().AddForce(new Vector2(0,vForce));
-            jump = false;
         }
 
         //何か持ってる時

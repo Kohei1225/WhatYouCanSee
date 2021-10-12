@@ -10,9 +10,9 @@ public class PlayerController : MonoBehaviour
 
     bool active;
     bool walk;                  //歩ける判定用  
-    bool jump;                  //ジャンプできる判定用
+    public bool jump;                  //ジャンプできる判定用
     int vec;                    //向いてる方向を示す変数
-    bool onStage;               //何かの上に乗ってるかを判定する用
+    public bool onStage;               //何かの上に乗ってるかを判定する用
     bool damage;                //ダメージを受けたかを判定する用
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour
         {
             //キーが押されたかを保存
             jump = Input.GetKeyDown(KeyCode.UpArrow);
+            
 
             walk = Input.GetKey(KeyCode.RightArrow)|Input.GetKey(KeyCode.LeftArrow);
             if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
@@ -97,16 +98,6 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
         }
-        
-    }
-
-    void FixedUpdate()
-    {
-        //左右どちらかが入力されてればその方向に移動
-        if(walk)
-        {
-            transform.Translate(vel * vec,0,0);
-        }
 
         //地面にいる状態ならジャンプできる
         if(jump && onStage)
@@ -116,6 +107,15 @@ public class PlayerController : MonoBehaviour
             else
                 GetComponent<Rigidbody2D>().AddForce(new Vector2(0,vForce));
             jump = false;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        //左右どちらかが入力されてればその方向に移動
+        if(walk)
+        {
+            transform.Translate(vel * vec,0,0);
         }
 
         //何か持ってる時

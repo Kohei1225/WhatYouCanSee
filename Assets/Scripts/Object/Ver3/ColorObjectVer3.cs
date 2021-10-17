@@ -171,7 +171,7 @@ public class ColorObjectVer3 : MonoBehaviour
                 break;
             
             case OBJECT_COLOR3.MAGENTA:
-                color = new Color(228f/255f,0,127f/255f);
+                color = new Color(225f/255f,0,255f/255f);
                 break;
 
             case OBJECT_COLOR3.YELLOW:

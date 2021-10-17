@@ -27,7 +27,7 @@ public class LightRayScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManagerScript = GameObject.Find("Managers").transform.Find("GameManager").gameObject.GetComponent<GameManagerScript>();
+        gameManagerScript = GameObject.Find("Managers").GetComponent<GameManagerScript>();
         rayLength = 30 * transform.parent.gameObject.transform.localScale.x * 5;
         rootObjectTheta = transform.root.gameObject.transform.rotation.z;
 
@@ -53,7 +53,6 @@ public class LightRayScript : MonoBehaviour
         bool finishFlag = false;
 
         if(firstTheta > parentLightTheta)finishFlag = true;;
-
             for(float i = 0;i < 10;i+=0.03125f)
             {
                 if(finishFlag)break;
@@ -96,6 +95,7 @@ public class LightRayScript : MonoBehaviour
                             //ステージにあるオブジェクトに当たった時
                             if(colorObject.isObject)
                             {
+                                colorObject.onRay = true;
                                 //既に何かしらのオブジェクトに当たってる時
                                 if(hasTouchedBody)
                                 {
@@ -110,6 +110,7 @@ public class LightRayScript : MonoBehaviour
                                     colorObject.onLightRay = true;
                                     if(!colorObject.noBody)
                                     {
+                                        if(colorObject.hasShadow)break;
                                         //if(forDebug)Debug.Log(hit.collider.gameObject.transform.parent.gameObject.name);
                                         this.hasTouchedBody = true;
                                         Debug.DrawRay(transform.position, hit.point - new Vector2(transform.position.x,transform.position.y), Color.blue, RAY_DISPLAY_TIME, false);

@@ -11,11 +11,10 @@ GameObject:
   - component: {fileID: 1278371836331074652}
   - component: {fileID: 1278371836331074653}
   - component: {fileID: 1278371836331074650}
-  - component: {fileID: 1278371836331074654}
-  - component: {fileID: 474931439653471392}
+  - component: {fileID: 6125248611709329939}
   m_Layer: 2
   m_Name: BackSquare
-  m_TagString: Untagged
+  m_TagString: BackGround
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -111,7 +110,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &1278371836331074654
+--- !u!114 &6125248611709329939
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,35 +119,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 1278371836331074651}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44bfd4594596a4432b879c33d89a493e, type: 3}
+  m_Script: {fileID: 11500000, guid: 0aca1afaef6ff424e90aa289be93893d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorType: 3
-  onRay: 0
-  outOfShadow: 0
+  colorType: 11
+  noBody: 0
+  active: 0
+  vartexList: []
+  edgeNum: 0
+  onLightRay: 0
+  onShadowRay: 0
   inSameColor: 0
-  noBody: 1
-  rayTime: 0
   isObject: 0
   forDebug: 0
-  touchingShadow: 0
-  objectNumber: 0
-  touchingObject: 0
-  BodyObject: {fileID: 0}
-  gravity: 0
-  active: 0
   hasShadow: 0
---- !u!114 &474931439653471392
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1278371836331074651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b5d05759a3094ec092f4b041f3ed885, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  xScale: 0
-  yScale: 0
+  canHold: 0
+  onThePlayer: 0

@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 1431182014310295913}
   - component: {fileID: 1431182014310295914}
   - component: {fileID: 1431182014310295915}
-  - component: {fileID: 1431182014310295916}
   - component: {fileID: 1431182014310295917}
-  m_Layer: 2
+  - component: {fileID: 1800099509448291574}
+  m_Layer: 9
   m_Name: BackHexagon
   m_TagString: BackGround
   m_Icon: {fileID: 0}
@@ -137,32 +137,6 @@ PolygonCollider2D:
       - {x: 0.26585832, y: -0.41318578}
       - {x: 0.28934646, y: -0.37281778}
       - {x: 0.3078693, y: -0.34262487}
---- !u!114 &1431182014310295916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1431182014310295918}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44bfd4594596a4432b879c33d89a493e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorType: 1
-  onRay: 0
-  outOfShadow: 0
-  inSameColor: 0
-  noBody: 1
-  rayTime: 1
-  isObject: 0
-  forDebug: 0
-  touchingShadow: 0
-  objectNumber: 0
-  touchingObject: 0
-  BodyObject: {fileID: 0}
-  gravity: 0
-  active: 0
 --- !u!50 &1431182014310295917
 Rigidbody2D:
   serializedVersion: 4
@@ -184,3 +158,28 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1800099509448291574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431182014310295918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0aca1afaef6ff424e90aa289be93893d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colorType: 8
+  noBody: 0
+  active: 0
+  vartexList: []
+  edgeNum: 0
+  onLightRay: 0
+  onShadowRay: 0
+  inSameColor: 0
+  isObject: 0
+  forDebug: 0
+  hasShadow: 0
+  canHold: 0
+  onThePlayer: 0

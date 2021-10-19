@@ -55,7 +55,16 @@ public class ColorObjectVer3 : MonoBehaviour
             gravity = GetComponent<Rigidbody2D>().gravityScale;
 
             //if(!gameManagerScript.existShadow)hasShadow = false;
-            BodyObject.transform.Find("ShadowCaster").gameObject.SetActive(this.hasShadow);
+            if(BodyObject.transform.Find("ShadowCaster"))
+                BodyObject.transform.Find("ShadowCaster").gameObject.SetActive(this.hasShadow);
+        }
+
+        //ゴールの場合
+        if(gameObject.name == "Goal")
+        {
+            gravity = 0;
+            this.hasShadow = false;
+            this.canHold = false;
         }
     }
 

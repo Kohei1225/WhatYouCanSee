@@ -220,7 +220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Stage1-4
   stageName: 1-4
-  isClear: 0
+  isClear: 1
 --- !u!1 &297426493
 GameObject:
   m_ObjectHideFlags: 0
@@ -499,7 +499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneName: Stage1-5
   stageName: 1-5
-  isClear: 0
+  isClear: 1
 --- !u!212 &731676509
 SpriteRenderer:
   m_ObjectHideFlags: 0

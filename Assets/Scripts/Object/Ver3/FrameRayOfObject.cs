@@ -8,7 +8,7 @@ public class FrameRayOfObject : MonoBehaviour
     public GameObject[] vartexList; //オブジェクトの頂点に配置したオブジェクトのリスト
     int vartexNum;                  //vartexListの要素数を記録するためだけの変数
     int colorSum = 0;               //同色背景に完全に重なってるRayの数
-    public bool[] hitColorList;     //同色背景に完全に重なってるかの結果を記録する配列
+    bool[] hitColorList;     //同色背景に完全に重なってるかの結果を記録する配列
     float distance;                 //Rayを飛ばす距離
     int maxLayer;                   //一番見た目の優先度が高かったLayerの値
     ColorObjectVer3 colorObject;

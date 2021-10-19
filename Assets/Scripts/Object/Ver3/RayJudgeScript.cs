@@ -6,7 +6,7 @@ using UnityEngine;
 public class RayJudgeScript : MonoBehaviour
 {
     public GameObject[] colliderList;//Ray用コライダーのリスト
-    public bool[] rayList;//値を保持するリスト
+    bool[] rayList;//値を保持するリスト
     ColorObjectVer3 colorObject;
     GameManagerScript gameManagerScript;
 

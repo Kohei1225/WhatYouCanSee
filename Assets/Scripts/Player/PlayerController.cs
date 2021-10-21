@@ -11,9 +11,10 @@ public class PlayerController : MonoBehaviour
     bool active;
     bool walk;                  //歩ける判定用  
     public bool jump;                  //ジャンプできる判定用
+    public bool damage{get; private set;}  //ダメージを受けたかを判定する用
     int vec;                    //向いてる方向を示す変数
     public bool onStage;               //何かの上に乗ってるかを判定する用
-    bool damage;                //ダメージを受けたかを判定する用
+    
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
     bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
@@ -42,7 +43,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         walk = false;
         if(Input.GetKey(KeyCode.Z))active = true;
 

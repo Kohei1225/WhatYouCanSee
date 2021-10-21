@@ -3,22 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //ボスキャラクターの抽象クラス
-public abstract class BossScript : MonoBehaviour
+public abstract class BossBase : MonoBehaviour
 {
-    int hp;             //体力
-    bool dead = false;  //既に死んだかの判定
-    float velocity;     //スピード
-    bool attack = false;
-
+    protected int hp;                           //体力
+    protected bool dead = false;                //既に死んだかの判定
+    protected float velocity;                   //スピード
+    protected bool attack = false;              //攻撃する判定
+    public int time{get; protected set;}        //時間測定用
+    public int timeInterval{get; protected set;}//インターバル用
 
     //通常状態の抽象メソッド
     public abstract void Idle();
 
+    //移動する抽象メソッド
+    public abstract void Move();
+
     //攻撃する抽象メソッド
     public abstract void Attack1();
-
     public abstract void Attack2();
-
     public abstract void Attack3();
 
     //攻撃を受けた時のメソッド
@@ -26,6 +28,8 @@ public abstract class BossScript : MonoBehaviour
     {
         //体力を減らしてからその後の処理をする
         this.hp--;
+        this.time = 0;
+        Debug.Log("hp:" + this.hp);
         if(this.hp > 0)
             Damage();
         else Die();
@@ -37,12 +41,6 @@ public abstract class BossScript : MonoBehaviour
     //死ぬ時の抽象メソッド
     public abstract void Die();
 
-    //体力を設定するメソッド
-    public void SetHp(int n){this.hp = n;}
-
-    //体力を返すメソッド
-    public int GetHp(){return this.hp;}
-
     //スピードを設定するメソッド
     public void SetVelocity(float vel){this.velocity = vel;}
 
@@ -51,10 +49,4 @@ public abstract class BossScript : MonoBehaviour
 
     //攻撃したかどうかを返すメソッド
     public bool GetAttack(){return this.attack;}
-
-    //既に死んだかを判定するメソッド
-    public void SetDead(bool dead){this.dead = dead;}
-
-    //既に死んだかを返すメソッド
-    public bool GetDead(){return this.dead;}
 }

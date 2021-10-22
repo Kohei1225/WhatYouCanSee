@@ -1,19 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GoalController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject textPanel;
+    private bool isFin = false;
+    private float time = 0;
+    private GameObject player;
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (isFin)
+        {
+            time += Time.deltaTime;
+            if(time >= 2)
+            {
+                //ステージセレクト画面へ
+                SceneManager.LoadScene("StageSelect");
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -22,6 +30,11 @@ public class GoalController : MonoBehaviour
         {
             GameObject player = collision.gameObject;
             player.SetActive(false);
+
+            Debug.Log("clear");
+            textPanel.SetActive(true);
+            textPanel.GetComponent<Text>().text = "Game Clear";
+            isFin = true;
         }
     }
 }

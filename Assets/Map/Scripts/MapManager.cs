@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
@@ -15,11 +17,14 @@ public class MapManager : MonoBehaviour
     //プレイヤースクリプト
     private PlayerController_Map playerScript;
 
+    public Text text;
+
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
         points = new Vector3[stageIcons.Length];
         playerScript = GameObject.FindWithTag("Player").GetComponent<PlayerController_Map>();
+        text = GameObject.Find("StageName").GetComponent<Text>();
 
         //点をセット
         for (int i = 0; i < stageIcons.Length; i++)
@@ -33,6 +38,33 @@ public class MapManager : MonoBehaviour
         lr.endColor = endColor;
         SetPointsToLine();
 
+    }
+
+    private void Update()
+    {
+        //アイコンの上だったら
+        if (!playerScript.GetCanMove())
+        {
+            //テキストUIにステージ名を表示(更新)
+            string StageName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetStageName();
+            text.text = StageName;
+
+            //スペースキーが押されたら
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                StartCoroutine(LoadScene());
+            }
+        }
+    }
+
+    private IEnumerator LoadScene()
+    {
+        //プレーヤー操作不能
+        playerScript.SetCanPush(false);
+        yield return new WaitForSeconds(2);
+        //シーン読み込み
+        string sceneName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetSceneName();
+        SceneManager.LoadScene(sceneName);
     }
 
     private void SetPointsToLine()

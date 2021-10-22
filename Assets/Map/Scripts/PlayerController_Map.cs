@@ -8,11 +8,12 @@ public class PlayerController_Map : MonoBehaviour
     public MapManager mapManager;
     private int goNo = 0;
     private bool canMove = false;
-    public float speed = 0.2f;
-    //最初は右向き
-    private float beforeKeyX = 1;
+    public float speed = 15f;
+    private float beforeKeyX = 0;
     //ステージポイントからプレイヤーをY軸方向にどのくらいずらすか
     public float shiftY = 1;
+    //キーが押せるか
+    private bool canPush = true;
 
     private Animator anim;
     private float firstLocalScaleX;
@@ -42,6 +43,9 @@ public class PlayerController_Map : MonoBehaviour
 
     private void KeyCheck()
     {
+        if (!canPush)
+            return;
+
         float keyX = Input.GetAxisRaw("Horizontal");
 
         if (keyX == 0)
@@ -79,7 +83,7 @@ public class PlayerController_Map : MonoBehaviour
         //次にいくポイント + 調整が目的地
         Vector3 to = clearedPoints[goNo] + Vector3.up * shiftY;
         //もし次の移動でステージポイントからはみ出そう、またはぴったりなら
-        if(GetLength(from, to) <= speed)
+        if(GetLength(from, to) <= speed * Time.deltaTime)
         {
             //調整
             transform.position = to;
@@ -90,7 +94,7 @@ public class PlayerController_Map : MonoBehaviour
         }
         Vector3 direction = GetVector(from, to);
         //移動
-        transform.Translate(direction * speed);
+        transform.Translate(direction * speed * Time.deltaTime);
     }
 
     //fromからtoまでの単位ベクトルを返す
@@ -108,5 +112,20 @@ public class PlayerController_Map : MonoBehaviour
     public void SetClearedPoints(List<Vector3> clearedPoints)
     {
         this.clearedPoints = clearedPoints;
+    }
+
+    public bool GetCanMove()
+    {
+        return canMove;
+    }
+
+    public int GetGoNo()
+    {
+        return goNo;
+    }
+
+    public void SetCanPush(bool canPush)
+    {
+        this.canPush = canPush;
     }
 }

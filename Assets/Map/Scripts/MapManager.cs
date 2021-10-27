@@ -16,6 +16,8 @@ public class MapManager : MonoBehaviour
     public Color endColor = Color.white;
     //プレイヤースクリプト
     private PlayerController_Map playerScript;
+    //プレイヤーアニメーション
+    private Animator playerAnim;
 
     public Text text;
 
@@ -25,6 +27,7 @@ public class MapManager : MonoBehaviour
         points = new Vector3[stageIcons.Length];
         playerScript = GameObject.FindWithTag("Player").GetComponent<PlayerController_Map>();
         text = GameObject.Find("StageName").GetComponent<Text>();
+        playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
 
         //点をセット
         for (int i = 0; i < stageIcons.Length; i++)
@@ -38,6 +41,27 @@ public class MapManager : MonoBehaviour
         lr.endColor = endColor;
         SetPointsToLine();
 
+        int num = 0;
+        for (int i = 0; i < stageIcons.Length; i++)
+        {
+            StageIcon script = stageIcons[i].GetComponent<StageIcon>();
+            if (!script.GetIsClear())
+            {
+                num = i;
+                break;
+            }
+        }
+        for(int i = 0; i < stageIcons.Length; i++)
+        {
+            if(i <= num)
+            {
+                stageIcons[i].SetActive(true);
+            }
+            else
+            {
+                stageIcons[i].SetActive(false);
+            }
+        }
     }
 
     private void Update()
@@ -61,6 +85,7 @@ public class MapManager : MonoBehaviour
     {
         //プレーヤー操作不能
         playerScript.SetCanPush(false);
+        playerScript.Jump();
         yield return new WaitForSeconds(2);
         //シーン読み込み
         string sceneName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetSceneName();
@@ -121,5 +146,10 @@ public class MapManager : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public GameObject getStageIcon(int no)
+    {
+        return stageIcons[no];
     }
 }

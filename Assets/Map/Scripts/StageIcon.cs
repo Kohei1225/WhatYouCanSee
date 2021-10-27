@@ -16,7 +16,6 @@ public class StageIcon : MonoBehaviour
     private void Start()
     {
         sr = GetComponent<SpriteRenderer>();
-        DesideColor();
     }
 
     public string GetSceneName()
@@ -37,24 +36,10 @@ public class StageIcon : MonoBehaviour
     public void Clear()
     {
         isClear = true;
-        DesideColor();
     }
 
     public bool GetIsClear()
     {
         return isClear;
-    }
-
-    //クリアしてるかで色をセット
-    private void DesideColor()
-    {
-        if (isClear)
-        {
-            sr.color = Color.blue;
-        }
-        else
-        {
-            sr.color = Color.red;
-        }
     }
 }

@@ -17,6 +17,12 @@ public class PlayerController_Map : MonoBehaviour
 
     private Animator anim;
     private float firstLocalScaleX;
+    //ジャンプの高さ
+    public float jumpHeight = 10;
+    //今ジャンプ中か
+    private bool isJump = false;
+    //ジャンプの速度
+    public float jumpVY = 0.25f;
 
     // Start is called before the first frame update
     void Start()
@@ -30,6 +36,10 @@ public class PlayerController_Map : MonoBehaviour
 
         anim = GetComponent<Animator>();
         firstLocalScaleX = transform.localScale.x;
+
+        //hereIconを見えるようにする
+        GameObject hereIcon = mapManager.getStageIcon(goNo).transform.GetChild(0).gameObject;
+        hereIcon.SetActive(true);
     }
 
     // Update is called once per frame
@@ -39,6 +49,14 @@ public class PlayerController_Map : MonoBehaviour
         KeyCheck();
         //移動
         MovePlayer();
+
+        if (isJump)
+        {
+            if (transform.position.y - clearedPoints[goNo].y + shiftY < jumpHeight)
+            {
+                transform.Translate(Vector3.up * jumpVY);
+            }
+        }
     }
 
     private void KeyCheck()
@@ -61,11 +79,15 @@ public class PlayerController_Map : MonoBehaviour
 
             //Debug.Log("beforeKeyX :" + beforeKeyX + "keyX :" + keyX);
 
-            //移動ポイント更新
-            goNo = newGoNo;
             //動けるようにする
             canMove = true;
             anim.SetBool("Walk", canMove);
+            //hereIconを見えないようにする
+            GameObject hereIcon = mapManager.getStageIcon(goNo).transform.GetChild(0).gameObject;
+            hereIcon.SetActive(false);
+            //移動ポイント更新
+            goNo = newGoNo;
+
             //向きを定める
             transform.localScale = new Vector3(firstLocalScaleX * keyX, transform.localScale.y, transform.localScale.z);
         }
@@ -90,6 +112,11 @@ public class PlayerController_Map : MonoBehaviour
             //動けなくする
             canMove = false;
             anim.SetBool("Walk", canMove);
+            //hereIconを見えるようにする
+            GameObject hereIcon = mapManager.getStageIcon(goNo).transform.GetChild(0).gameObject;
+            hereIcon.SetActive(true);
+
+
             return;
         }
         Vector3 direction = GetVector(from, to);
@@ -107,6 +134,12 @@ public class PlayerController_Map : MonoBehaviour
     private float GetLength(Vector3 from, Vector3 to)
     {
         return (to - from).magnitude;
+    }
+
+    public void Jump()
+    {
+        anim.SetBool("Jump", true);
+        isJump = true;
     }
 
     public void SetClearedPoints(List<Vector3> clearedPoints)

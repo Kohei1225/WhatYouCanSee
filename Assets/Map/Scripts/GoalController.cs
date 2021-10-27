@@ -21,6 +21,8 @@ public class GoalController : MonoBehaviour
     public float rotateSpeed = 200f;
     //プレイヤーの現在の角度
     private float angle;
+    //吸い込まれられる
+    private bool canSuck = false;
 
     private void Start()
     {
@@ -29,7 +31,7 @@ public class GoalController : MonoBehaviour
 
     private void Update()
     {
-        if (isToutch && !canGo)
+        if (canSuck && !canGo)
         {
             suckAnimation();
         }
@@ -96,9 +98,17 @@ public class GoalController : MonoBehaviour
             playerRB.velocity = Vector2.zero;
             playerRB.isKinematic = true;
 
-            isToutch = true;
+            CameraController camCtrl = GameObject.FindWithTag("MainCamera").GetComponent<CameraController>();
+            camCtrl.enabled = true;
             textPanel.SetActive(true);
             textPanel.GetComponent<Text>().text = "Game Clear";
+
+            canSuck = true;
         }
+    }
+
+    public void Set_canSuck(bool canSuck)
+    {
+        this.canSuck = canSuck;
     }
 }

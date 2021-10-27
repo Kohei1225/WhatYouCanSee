@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
     bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
+    private bool canCtrl = true;    //操作可能か
     GameObject objectBeingHolden;   //持ってるオブジェクト
     GameObject objectToHold;        //持ち上げる時に使う自身の子オブジェクト
     HoldObjectScript holdScript;    
@@ -42,6 +43,8 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!canCtrl)
+            return;
         
         walk = false;
         if(Input.GetKey(KeyCode.Z))active = true;
@@ -112,6 +115,9 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!canCtrl)
+            return;
+
         //左右どちらかが入力されてればその方向に移動
         if(walk)
         {
@@ -160,5 +166,15 @@ public class PlayerController : MonoBehaviour
     public bool Get_isHoldingObject()
     {
         return this.isHoldingObject;
+    }
+
+    public bool Get_canCtrl()
+    {
+        return canCtrl;
+    }
+
+    public void Set_canCtrl(bool canCtrl)
+    {
+        this.canCtrl = canCtrl;
     }
 }

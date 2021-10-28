@@ -21,7 +21,7 @@ public class RotateByLever : MonoBehaviour
     {
         //傾きを調整
         Vector3 barAngle = gameObject.transform.localEulerAngles;
-        float angleDifference = angleList[leverScript.Get_barPosition()] - barAngle.z;
+        float angleDifference = angleList[leverScript.barPosition] - barAngle.z;
 
         //十分傾いてたら傾ける操作をしない
         if(Mathf.Abs(angleDifference) > 0.1f)

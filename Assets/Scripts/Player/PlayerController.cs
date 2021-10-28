@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public float vel;           //歩く速度
     public float vForce;        //ジャンプする時に加える力
 
-    bool active;
+    public bool active{get;private set;}
     bool walk;                  //歩ける判定用  
     public bool jump;                  //ジャンプできる判定用
     public bool damage{get; private set;}  //ダメージを受けたかを判定する用
@@ -98,6 +98,9 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
         }
+
+        //地面にいるかを取得
+        onStage = transform.Find("Body").gameObject.transform.Find("Foot").gameObject.GetComponent<FootAreaScript>().touchingStage;
 
         //地面にいる状態ならジャンプできる
         if(jump && onStage)

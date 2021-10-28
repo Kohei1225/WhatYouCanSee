@@ -5,19 +5,16 @@ using UnityEngine;
 //足の当たり判定のクラス
 public class FootAreaScript : MonoBehaviour
 {
-    GameObject player;
-    public bool touchingStage;
+    public bool touchingStage{get; private set;}
 
     // Start is called before the first frame update
     void Start()
     {
-        player = transform.root.gameObject;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        player.GetComponent<PlayerController>().Set_onStage(touchingStage);
         touchingStage = false;
     }
 

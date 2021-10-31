@@ -21,8 +21,10 @@ public class GoalController : MonoBehaviour
     public float rotateSpeed = 200f;
     //プレイヤーの現在の角度
     private float angle;
-    //吸い込まれられる
+    //吸い込まれるフラグ
     private bool canSuck = false;
+    //戻るシーン名
+    public string worldSceneName;
 
     private void Start()
     {
@@ -43,7 +45,7 @@ public class GoalController : MonoBehaviour
                 //ステージクリアフラグオン
                 MapManager.isClear = true;
                 //ステージセレクト画面へ
-                SceneManager.LoadScene("StageSelect");
+                SceneManager.LoadScene(worldSceneName);
             }
         }
     }

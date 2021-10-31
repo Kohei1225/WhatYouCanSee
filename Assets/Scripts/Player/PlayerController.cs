@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public bool damage{get; private set;}  //ダメージを受けたかを判定する用
     int vec;                    //向いてる方向を示す変数
     public bool onStage;               //何かの上に乗ってるかを判定する用
+    private bool canCtrl = true;
     
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
@@ -43,6 +44,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!canCtrl)
+            return;
+
         walk = false;
         if(Input.GetKey(KeyCode.Z))active = true;
 
@@ -115,6 +119,9 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!canCtrl)
+            return;
+
         //左右どちらかが入力されてればその方向に移動
         if(walk)
         {
@@ -163,5 +170,15 @@ public class PlayerController : MonoBehaviour
     public bool Get_isHoldingObject()
     {
         return this.isHoldingObject;
+    }
+
+    public void Set_canCtrl(bool canCtrl)
+    {
+        this.canCtrl = canCtrl;
+    }
+
+    public bool Get_canCtrl()
+    {
+        return canCtrl;
     }
 }

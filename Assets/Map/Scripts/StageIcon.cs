@@ -8,8 +8,6 @@ public class StageIcon : MonoBehaviour
     [SerializeField] private string sceneName;
     //ステージ名
     [SerializeField] private string stageName;
-    //クリアしているか
-    [SerializeField] private bool isClear = true;
 
     private SpriteRenderer sr;
 
@@ -31,15 +29,5 @@ public class StageIcon : MonoBehaviour
     public Vector2 GetPosision()
     {
         return new Vector2(transform.position.x, transform.position.y);
-    }
-
-    public void Clear()
-    {
-        isClear = true;
-    }
-
-    public bool GetIsClear()
-    {
-        return isClear;
     }
 }

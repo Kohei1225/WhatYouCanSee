@@ -6,7 +6,7 @@ public class PlayerController_Map : MonoBehaviour
 {
     private List<Vector3> clearedPoints;
     public MapManager mapManager;
-    private int goNo = 0;
+    private static int goNo = 0;
     private bool canMove = false;
     public float speed = 15f;
     private float beforeKeyX = 0;
@@ -27,6 +27,8 @@ public class PlayerController_Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //clearedPoints = mapManager.GetClearedPoints();
+
         if (clearedPoints == null)
         {
             Debug.Log("clearedPointsがnull");
@@ -57,6 +59,8 @@ public class PlayerController_Map : MonoBehaviour
                 transform.Translate(Vector3.up * jumpVY);
             }
         }
+
+        //clearedPoints = mapManager.GetClearedPoints();
     }
 
     private void KeyCheck()
@@ -160,5 +164,10 @@ public class PlayerController_Map : MonoBehaviour
     public void SetCanPush(bool canPush)
     {
         this.canPush = canPush;
+    }
+
+    public bool GetCanPush()
+    {
+        return canPush;
     }
 }

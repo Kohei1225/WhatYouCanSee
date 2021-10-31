@@ -175,6 +175,7 @@ MonoBehaviour:
   firstColor: {r: 0.92933357, g: 1, b: 0, a: 1}
   endColor: {r: 0.92941177, g: 1, b: 0, a: 1}
   text: {fileID: 1014492924}
+  appearSpeed: 100
 --- !u!120 &297426496
 LineRenderer:
   m_ObjectHideFlags: 0

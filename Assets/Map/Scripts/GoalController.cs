@@ -40,6 +40,8 @@ public class GoalController : MonoBehaviour
             time += Time.deltaTime;
             if(time >= 2)
             {
+                //ステージクリアフラグオン
+                MapManager.isClear = true;
                 //ステージセレクト画面へ
                 SceneManager.LoadScene("StageSelect");
             }

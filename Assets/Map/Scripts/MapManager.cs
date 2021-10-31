@@ -9,7 +9,6 @@ public class MapManager : MonoBehaviour
     public GameObject[] stageIcons;
     private LineRenderer lr;
     //
-    private Vector3[] points;
     //始点の色(線)
     public Color firstColor = Color.white;
     //終点の色(線)
@@ -21,39 +20,33 @@ public class MapManager : MonoBehaviour
 
     public Text text;
 
+    public static bool isClear = false;
+
+    private Vector3 appearIconPos;
+    private bool isAppear = false;
+    public float appearSpeed = 0.1f;
+
+    //移動可能アイコン番号
+    [SerializeField] public static int lastGoNo = 0;
+
+    //挑戦中のステージのアイコン番号
+    public static int tryNo;
+
     private void Awake()
     {
         lr = GetComponent<LineRenderer>();
-        points = new Vector3[stageIcons.Length];
+        //Vector3[] points = new Vector3[stageIcons.Length];
         playerScript = GameObject.FindWithTag("Player").GetComponent<PlayerController_Map>();
         text = GameObject.Find("StageName").GetComponent<Text>();
         playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
-
-        //点をセット
-        for (int i = 0; i < stageIcons.Length; i++)
-        {
-            //追加
-            Vector3 pos = stageIcons[i].GetComponent<StageIcon>().GetPosision();
-            points[i] = pos;
-        }
 
         lr.startColor = firstColor;
         lr.endColor = endColor;
         SetPointsToLine();
 
-        int num = 0;
-        for (int i = 0; i < stageIcons.Length; i++)
-        {
-            StageIcon script = stageIcons[i].GetComponent<StageIcon>();
-            if (!script.GetIsClear())
-            {
-                num = i;
-                break;
-            }
-        }
         for(int i = 0; i < stageIcons.Length; i++)
         {
-            if(i <= num)
+            if(i <= lastGoNo)
             {
                 stageIcons[i].SetActive(true);
             }
@@ -62,12 +55,18 @@ public class MapManager : MonoBehaviour
                 stageIcons[i].SetActive(false);
             }
         }
+
+        if (isClear)
+        {
+            isClear = false;
+            Clear();
+        }
     }
 
     private void Update()
     {
-        //アイコンの上だったら
-        if (!playerScript.GetCanMove())
+        //アイコンの上かつプレイヤーのキーが押せる状態だったら
+        if (!playerScript.GetCanMove() && playerScript.GetCanPush())
         {
             //テキストUIにステージ名を表示(更新)
             string StageName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetStageName();
@@ -76,8 +75,36 @@ public class MapManager : MonoBehaviour
             //スペースキーが押されたら
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                //挑戦するステージアイコン記憶
+                tryNo = playerScript.GetGoNo();
+                //シーン読み込み
                 StartCoroutine(LoadScene());
             }
+        }
+
+        if (isAppear)
+        {
+            //線の最後の位置取得
+            Vector3 lastLinePos = lr.GetPosition(lastGoNo);
+            //少し目標に近づける
+            Vector3 deltaVec = appearIconPos - lastLinePos;
+            //もし次ではみ出そうなら
+            if(deltaVec.magnitude <= appearSpeed * Time.deltaTime)
+            {
+                //調整
+                lastLinePos = appearIconPos;
+                //終わり
+                isAppear = false;
+                //アイコンを見えるようにする
+                stageIcons[lastGoNo].SetActive(true);
+                SetPointsToLine();
+                //動けるようにする
+                playerScript.SetCanPush(true);
+                return;
+            }
+            lastLinePos += (deltaVec.normalized / deltaVec.magnitude) * appearSpeed * Time.deltaTime;
+            //線の最後の位置更新
+            lr.SetPosition(lastGoNo, lastLinePos);
         }
     }
 
@@ -92,6 +119,7 @@ public class MapManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
+    //今いける位置をLineRendererにセット
     private void SetPointsToLine()
     {
         List<Vector3> clearedPoints = GetClearedPoints();
@@ -103,49 +131,41 @@ public class MapManager : MonoBehaviour
         playerScript.SetClearedPoints(clearedPoints);
     }
 
-    //public Vector3[] GetPoints()
-    //{
-    //    return points;
-    //}
-
-    //public GameObject[] GetStageIcons()
-    //{
-    //    return stageIcons;
-    //}
-
-    private List<Vector3> GetClearedPoints()
+    //今いけるステージのアイコンの位置を取得
+    public List<Vector3> GetClearedPoints()
     {
         List<Vector3> clearedPoints = new List<Vector3>();
-        for (int i = 0; i < stageIcons.Length; i++)
+        for (int i = 0; i <= lastGoNo; i++)
         {
             //追加
             clearedPoints.Add(stageIcons[i].GetComponent<StageIcon>().GetPosision());
-
-            //もし未クリアのアイコンだったら
-            if (!stageIcons[i].GetComponent<StageIcon>().GetIsClear())
-            {
-                //ここで終了
-                break;
-            }
         }
         return clearedPoints;
     }
 
     //sceneNameのステージをクリアしたときの処理
-    public void Clear(string sceneName)
+    public void Clear()
     {
-        StageIcon stageIconScript;
-        foreach (GameObject stageIcon in stageIcons)
+        GameObject clearStageIcon = stageIcons[tryNo];
+        //もしクリアしたアイコンが既にクリア済みならreturn
+        if (tryNo != lastGoNo || stageIcons.Length == lastGoNo + 1)
         {
-            if ((stageIconScript = stageIcon.GetComponent<StageIcon>()).GetSceneName().Equals(sceneName))
-            {
-                //アイコンの更新
-                stageIconScript.Clear();
-                //線、移動可能範囲更新
-                SetPointsToLine();
-                return;
-            }
+            Debug.Log("クリア済み");
+            return;
         }
+        StageIcon stageIconScript = clearStageIcon.GetComponent<StageIcon>();
+        //アイコンの更新
+        lastGoNo = tryNo + 1;
+        //次のアイコン位置取得
+        appearIconPos = stageIcons[lastGoNo].transform.position;
+        //道が現れるフラグON
+        isAppear = true;
+        //動けなくする
+        playerScript.SetCanPush(false);
+        //新しい線を追加
+        Vector3 lastLinePos = clearStageIcon.transform.position;
+        lr.positionCount = lastGoNo + 1;
+        lr.SetPosition(lastGoNo, lastLinePos);
     }
 
     public GameObject getStageIcon(int no)

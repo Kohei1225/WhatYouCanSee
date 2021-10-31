@@ -70,6 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3fa11e479424047b62da414e0319ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forDebug: 0
 --- !u!1 &1351275497459184091
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3fa11e479424047b62da414e0319ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forDebug: 0
 --- !u!1 &1824822649483570028
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,6 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3fa11e479424047b62da414e0319ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forDebug: 0
 --- !u!1 &3081445585657471640
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,6 +283,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3fa11e479424047b62da414e0319ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forDebug: 0
 --- !u!1 &4433591462954359127
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,6 +295,7 @@ GameObject:
   - component: {fileID: 6936378702482599354}
   - component: {fileID: 5991428427894296842}
   - component: {fileID: 6273857415926140271}
+  - component: {fileID: 6915843984886743139}
   m_Layer: 6
   m_Name: Body
   m_TagString: ColorObject
@@ -360,6 +365,18 @@ EdgeCollider2D:
   m_AdjacentEndPoint: {x: 0, y: 0}
   m_UseAdjacentStartPoint: 0
   m_UseAdjacentEndPoint: 0
+--- !u!114 &6915843984886743139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4433591462954359127}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1440d043849b4abfa12999115caccea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5074230286182494633
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +433,7 @@ MonoBehaviour:
   - {x: -0.9476315, y: -0.9442629, z: 0}
   m_ShapePathHash: -721213775
   m_Mesh: {fileID: 0}
-  m_InstanceId: 104210
+  m_InstanceId: 74830
 --- !u!1 &5714184023104438757
 GameObject:
   m_ObjectHideFlags: 0
@@ -487,6 +504,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3fa11e479424047b62da414e0319ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forDebug: 0
 --- !u!1 &6338585650151385293
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,6 +575,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3fa11e479424047b62da414e0319ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forDebug: 0
 --- !u!1 &6367141809591260140
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,7 +589,6 @@ GameObject:
   - component: {fileID: 5842183678010477463}
   - component: {fileID: 797132388937661301}
   - component: {fileID: 8705312643731892929}
-  - component: {fileID: 6732802943301069557}
   - component: {fileID: 8172483589460526970}
   - component: {fileID: 820057275005085270}
   m_Layer: 8
@@ -668,7 +686,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorType: 1
   isObject: 1
-  forDebug: 0
   hasShadow: 0
   canHold: 0
 --- !u!114 &797132388937661301
@@ -687,7 +704,6 @@ MonoBehaviour:
   - {fileID: 6338585650151385293}
   - {fileID: 6560196270633766528}
   - {fileID: 1351275497459184091}
-  hitColorList: 
   layerMask: 0
 --- !u!114 &8705312643731892929
 MonoBehaviour:
@@ -709,19 +725,6 @@ MonoBehaviour:
   - {fileID: 3081445585657471640}
   - {fileID: 5714184023104438757}
   - {fileID: 1824822649483570028}
-  rayList: 
---- !u!114 &6732802943301069557
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6367141809591260140}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1440d043849b4abfa12999115caccea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!50 &8172483589460526970
 Rigidbody2D:
   serializedVersion: 4
@@ -837,6 +840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa3fa11e479424047b62da414e0319ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forDebug: 0
 --- !u!1 &6788244767395182564
 GameObject:
   m_ObjectHideFlags: 0

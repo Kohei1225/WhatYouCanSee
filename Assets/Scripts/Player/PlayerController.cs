@@ -8,12 +8,13 @@ public class PlayerController : MonoBehaviour
     public float vel;           //歩く速度
     public float vForce;        //ジャンプする時に加える力
 
-    bool active;
+    public bool active{get;private set;}
     bool walk;                  //歩ける判定用  
     public bool jump;                  //ジャンプできる判定用
+    public bool damage{get; private set;}  //ダメージを受けたかを判定する用
     int vec;                    //向いてる方向を示す変数
     public bool onStage;               //何かの上に乗ってるかを判定する用
-    bool damage;                //ダメージを受けたかを判定する用
+    
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
     bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
@@ -42,7 +43,6 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
         walk = false;
         if(Input.GetKey(KeyCode.Z))active = true;
 
@@ -98,6 +98,9 @@ public class PlayerController : MonoBehaviour
         {
             GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
         }
+
+        //地面にいるかを取得
+        onStage = transform.Find("Body").gameObject.transform.Find("Foot").gameObject.GetComponent<FootAreaScript>().touchingStage;
 
         //地面にいる状態ならジャンプできる
         if(jump && onStage)

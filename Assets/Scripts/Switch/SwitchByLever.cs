@@ -12,7 +12,7 @@ public class SwitchByLever : MonoBehaviour
     void Awake()
     {
         leverScript = LeverObject.GetComponent<LeverScript>();
-        if(leverScript.Get_barPosition() == 0)switchObject.SetActive(true);
+        if(leverScript.barPosition == 0)switchObject.SetActive(true);
         else switchObject.SetActive(false);
     }
 
@@ -25,7 +25,7 @@ public class SwitchByLever : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(leverScript.Get_barPosition() == 0)switchObject.SetActive(true);
+        if(leverScript.barPosition == 0)switchObject.SetActive(true);
         else switchObject.SetActive(false);
     }
 }

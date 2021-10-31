@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1278371836331074653}
   - component: {fileID: 1278371836331074650}
   - component: {fileID: 6125248611709329939}
-  m_Layer: 2
+  m_Layer: 9
   m_Name: BackSquare
   m_TagString: BackGround
   m_Icon: {fileID: 0}
@@ -123,15 +123,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   colorType: 11
-  noBody: 0
-  active: 0
-  vartexList: []
-  edgeNum: 0
-  onLightRay: 0
-  onShadowRay: 0
-  inSameColor: 0
   isObject: 0
-  forDebug: 0
   hasShadow: 0
   canHold: 0
-  onThePlayer: 0

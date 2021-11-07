@@ -197,6 +197,9 @@ public class PandaScript : BossBase
         //死ぬ処理
         Debug.Log("ダメージ。あ！死んだ！！");
         animController.SetBool("HasDown",true);
+
+        //攻撃判定のオブジェクトを消す
+        blackBody.SetActive(false);
         
         //攻撃を受けたらレバーの位置をリセット
         if(leverObject)

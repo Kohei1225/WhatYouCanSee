@@ -6,7 +6,7 @@ public class PlayerController_Map : MonoBehaviour
 {
     private List<Vector3> clearedPoints;
     public MapManager mapManager;
-    private static int goNo = 0;
+    private int goNo;
     private bool canMove = false;
     public float speed = 15f;
     private float beforeKeyX = 0;
@@ -27,7 +27,8 @@ public class PlayerController_Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //clearedPoints = mapManager.GetClearedPoints();
+        //挑戦中のステージ番号から読み取り
+        goNo = MapManager.tryNo;
 
         if (clearedPoints == null)
         {

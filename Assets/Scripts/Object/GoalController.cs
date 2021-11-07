@@ -25,10 +25,14 @@ public class GoalController : MonoBehaviour
     private bool canSuck = false;
     //戻るシーン名
     public string worldSceneName;
+    //オーディオソース
+    private AudioSource audioSource;
+    //音素材
+    public AudioClip[] audioClip;
 
     private void Start()
     {
-        
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -65,6 +69,8 @@ public class GoalController : MonoBehaviour
             player.transform.position = transform.position;
             canGo = true;
             player.SetActive(false);
+            //音ならす
+            audioSource.PlayOneShot(audioClip[1]);
             return;
         }
         //ワープに向かって少し移動
@@ -108,6 +114,8 @@ public class GoalController : MonoBehaviour
             textPanel.GetComponent<Text>().text = "Game Clear";
 
             canSuck = true;
+            //音ならす
+            audioSource.PlayOneShot(audioClip[0]);
         }
     }
 

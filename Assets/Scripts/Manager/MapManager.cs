@@ -6,6 +6,33 @@ using UnityEngine.UI;
 
 public class MapManager : MonoBehaviour
 {
+    //ワールド名
+    public enum WorldName {
+        LABORATORY,
+        NATURE,
+        ABANDONED_FACTORY,
+        CITY
+    }
+    //ワールド数
+    private static int worldNum = System.Enum.GetValues(typeof(WorldName)).Length;
+    //今いけるステージの番号
+    public static int[] lastStageGoNos = new int[]{
+        4,
+        1,
+        1,
+        1
+    };
+    //ワールドごとのステージ数
+    public static int[] stageNum = new int[]{
+        5,
+        6,
+        6,
+        5
+    };
+    //ワールドの番号
+    private WorldName worldName;
+
+
     public GameObject[] stageIcons;
     private LineRenderer lr;
     //
@@ -27,13 +54,20 @@ public class MapManager : MonoBehaviour
     public float appearSpeed = 0.1f;
 
     //移動可能アイコン番号
-    [SerializeField] public static int lastGoNo = 0;
+    public int lastGoNo = 0;
 
     //挑戦中のステージのアイコン番号
-    public static int tryNo;
+    public static int tryNo = 0;
+
+    private AudioSource audioSource;
+    public AudioClip[] audioClips;
 
     private void Awake()
     {
+        //今のワールドのクリア状況を読み取る
+        lastGoNo = Get_lastGoNo();
+
+        //DontDestroyOnLoad(this);
         lr = GetComponent<LineRenderer>();
         //Vector3[] points = new Vector3[stageIcons.Length];
         playerScript = GameObject.FindWithTag("Player").GetComponent<PlayerController_Map>();
@@ -44,7 +78,7 @@ public class MapManager : MonoBehaviour
         lr.endColor = endColor;
         SetPointsToLine();
 
-        for(int i = 0; i < stageIcons.Length; i++)
+        for (int i = 0; i < stageIcons.Length; i++)
         {
             if(i <= lastGoNo)
             {
@@ -61,6 +95,14 @@ public class MapManager : MonoBehaviour
             isClear = false;
             Clear();
         }
+        //テキストUIにステージ名を表示(更新)
+        string StageName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetStageName();
+        text.text = StageName;
+    }
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -75,8 +117,6 @@ public class MapManager : MonoBehaviour
             //スペースキーが押されたら
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                //挑戦するステージアイコン記憶
-                tryNo = playerScript.GetGoNo();
                 //シーン読み込み
                 StartCoroutine(LoadScene());
             }
@@ -112,10 +152,38 @@ public class MapManager : MonoBehaviour
     {
         //プレーヤー操作不能
         playerScript.SetCanPush(false);
-        playerScript.Jump();
+        //もし今いるのが次のワールドに行くものだったら
+        StageIcon stageIcon = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>();
+        if (stageIcon.GetType() == typeof(WorldIcon))
+        {
+            WorldIcon worldIcon = (WorldIcon)stageIcon;
+            //次に進むものだったら
+            if (worldIcon.Get_isNext())
+            {
+                //次のワールドのプレイヤー位置は0
+                tryNo = 0;
+            }
+            //戻るものだったら
+            else
+            {
+                //次のワールドのプレイヤー位置はワールドのステージ数-1
+                tryNo = stageNum[(int)worldName - 1] - 1;
+            }
+            //音再生
+            audioSource.PlayOneShot(audioClips[1]);
+        }
+        else
+        {
+            //挑戦するステージアイコン記憶
+            tryNo = playerScript.GetGoNo();
+            //プレイヤージャンプ
+            playerScript.Jump();
+            //音再生
+            audioSource.PlayOneShot(audioClips[0]);
+        }
         yield return new WaitForSeconds(2);
         //シーン読み込み
-        string sceneName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetSceneName();
+        string sceneName = stageIcon.GetSceneName();
         SceneManager.LoadScene(sceneName);
     }
 
@@ -166,10 +234,23 @@ public class MapManager : MonoBehaviour
         Vector3 lastLinePos = clearStageIcon.transform.position;
         lr.positionCount = lastGoNo + 1;
         lr.SetPosition(lastGoNo, lastLinePos);
+        //lastGoNosにも登録
+        Set_lastGoNo(lastGoNo);
     }
 
     public GameObject getStageIcon(int no)
     {
         return stageIcons[no];
+    }
+
+    //ワールドに応じた移動可能番号を取得
+    private int Get_lastGoNo()
+    {
+        return lastStageGoNos[(int)worldName];
+    }
+    //ワールドに応じた移動可能番号をセット
+    private void Set_lastGoNo(int lastGoNo)
+    {
+        lastStageGoNos[(int)worldName] = lastGoNo;
     }
 }

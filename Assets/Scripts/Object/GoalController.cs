@@ -47,7 +47,7 @@ public class GoalController : MonoBehaviour
             if(time >= 2)
             {
                 //ステージクリアフラグオン
-                MapManager.isClear = true;
+                MapManager.screenStatus = MapManager.ScreenStatuses.CLEAR;
                 //ステージセレクト画面へ
                 SceneManager.LoadScene(worldSceneName);
             }

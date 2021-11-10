@@ -12,8 +12,8 @@ public class PlayerController_Map : MonoBehaviour
     private float beforeKeyX = 0;
     //ステージポイントからプレイヤーをY軸方向にどのくらいずらすか
     public float shiftY = 1;
-    //キーが押せるか
-    private bool canPush = true;
+    ////キーが押せるか
+    //private bool canPush = true;
 
     private Animator anim;
     private float firstLocalScaleX;
@@ -23,6 +23,10 @@ public class PlayerController_Map : MonoBehaviour
     private bool isJump = false;
     //ジャンプの速度
     public float jumpVY = 0.25f;
+
+    public CameraController_Map cameraController_map;
+
+    public GameObject stagePanel;
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +47,8 @@ public class PlayerController_Map : MonoBehaviour
         //hereIconを見えるようにする
         GameObject hereIcon = mapManager.getStageIcon(goNo).transform.GetChild(0).gameObject;
         hereIcon.SetActive(true);
+        //ステージパネルを見えるようにする
+        stagePanel.SetActive(true);
     }
 
     // Update is called once per frame
@@ -59,6 +65,11 @@ public class PlayerController_Map : MonoBehaviour
             {
                 transform.Translate(Vector3.up * jumpVY);
             }
+            //ジャンプが終わったら
+            else
+            {
+                isJump = false;
+            }
         }
 
         //clearedPoints = mapManager.GetClearedPoints();
@@ -66,12 +77,15 @@ public class PlayerController_Map : MonoBehaviour
 
     private void KeyCheck()
     {
-        if (!canPush)
-            return;
+        //if (!canPush)
+        //    return;
 
         float keyX = Input.GetAxisRaw("Horizontal");
 
         if (keyX == 0)
+            return;
+
+        if (MapManager.screenStatus != MapManager.ScreenStatuses.NORMAL)
             return;
 
         if (canMove && keyX != beforeKeyX || !canMove)
@@ -90,11 +104,26 @@ public class PlayerController_Map : MonoBehaviour
             //hereIconを見えないようにする
             GameObject hereIcon = mapManager.getStageIcon(goNo).transform.GetChild(0).gameObject;
             hereIcon.SetActive(false);
+            //ステージパネルを見えないようにする
+            stagePanel.SetActive(false);
             //移動ポイント更新
             goNo = newGoNo;
 
             //向きを定める
             transform.localScale = new Vector3(firstLocalScaleX * keyX, transform.localScale.y, transform.localScale.z);
+
+
+            int goWorldNo = (int)mapManager.getStageIcon(goNo).GetComponent<StageIcon>().worldName;
+            //もし移動さきが新しいワールドだったら
+            if (CameraController_Map.goWorldNo != goWorldNo)
+            {
+                Vector3 from = transform.position;
+                //次にいくポイント + 調整が目的地
+                Vector3 to = clearedPoints[goNo] + Vector3.up * shiftY;
+
+                cameraController_map.CuluculateRate(goWorldNo, to - from);
+
+            }
         }
 
         //前回の押したキーを記憶
@@ -120,13 +149,19 @@ public class PlayerController_Map : MonoBehaviour
             //hereIconを見えるようにする
             GameObject hereIcon = mapManager.getStageIcon(goNo).transform.GetChild(0).gameObject;
             hereIcon.SetActive(true);
+            //ステージパネルを見えるようにする
+            stagePanel.SetActive(true);
 
-
+            //カメラ位置調整(カメラ移動の終わり)
+            cameraController_map.TranslateGoPos();
             return;
         }
         Vector3 direction = GetVector(from, to);
         //移動
         transform.Translate(direction * speed * Time.deltaTime);
+
+        //カメラの移動
+        cameraController_map.MoveCamera(direction * speed * Time.deltaTime);
     }
 
     //fromからtoまでの単位ベクトルを返す
@@ -162,13 +197,18 @@ public class PlayerController_Map : MonoBehaviour
         return goNo;
     }
 
-    public void SetCanPush(bool canPush)
-    {
-        this.canPush = canPush;
-    }
+    //public void SetCanPush(bool canPush)
+    //{
+    //    this.canPush = canPush;
+    //}
 
-    public bool GetCanPush()
-    {
-        return canPush;
+    //public bool GetCanPush()
+    //{
+    //    return canPush;
+    //}
+
+    public bool Get_isJump() {
+        return isJump;
     }
+    
 }

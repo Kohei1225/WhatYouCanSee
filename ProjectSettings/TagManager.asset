@@ -9,6 +9,7 @@ TagManager:
   - Ray
   - Stage
   - Goal
+  - Mask
   layers:
   - Default
   - TransparentFX

@@ -40,7 +40,8 @@ public class ChangeAlpha : MonoBehaviour
             {
                 isFin = true;
             }
-            alpha = Mathf.Lerp(0, 1, newAlpha);
+            alpha = Mathf.Clamp(newAlpha, 0, 1);
+
         }
     }
 

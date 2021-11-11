@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController_Map : MonoBehaviour
 {
     private List<Vector3> clearedPoints;
     public MapManager mapManager;
     private int goNo;
+    private int nowNo;
     private bool canMove = false;
     public float speed = 15f;
     private float beforeKeyX = 0;
@@ -28,6 +30,9 @@ public class PlayerController_Map : MonoBehaviour
 
     public GameObject stagePanel;
 
+    public Text worldName_text;
+    public WorldSignboardScript worldSignboardScript;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -47,8 +52,13 @@ public class PlayerController_Map : MonoBehaviour
         //hereIconを見えるようにする
         GameObject hereIcon = mapManager.getStageIcon(goNo).transform.GetChild(0).gameObject;
         hereIcon.SetActive(true);
-        //ステージパネルを見えるようにする
+        //ステージパネルを下げている状態にする
         stagePanel.SetActive(true);
+        //看板の名前を更新
+        int worldNo = (int)mapManager.getStageIcon(goNo).GetComponent<StageIcon>().worldNo;
+        string worldName = mapManager.worldName[worldNo];
+        //ワールド名変更
+        worldName_text.text = worldName;
     }
 
     // Update is called once per frame
@@ -106,6 +116,8 @@ public class PlayerController_Map : MonoBehaviour
             hereIcon.SetActive(false);
             //ステージパネルを見えないようにする
             stagePanel.SetActive(false);
+            //元の位置記憶
+            nowNo = goNo;
             //移動ポイント更新
             goNo = newGoNo;
 
@@ -113,15 +125,20 @@ public class PlayerController_Map : MonoBehaviour
             transform.localScale = new Vector3(firstLocalScaleX * keyX, transform.localScale.y, transform.localScale.z);
 
 
-            int goWorldNo = (int)mapManager.getStageIcon(goNo).GetComponent<StageIcon>().worldName;
+            int goWorldNo = (int)mapManager.getStageIcon(goNo).GetComponent<StageIcon>().worldNo;
+            int nowWorldNo = (int)mapManager.getStageIcon(nowNo).GetComponent<StageIcon>().worldNo;
             //もし移動さきが新しいワールドだったら
-            if (CameraController_Map.goWorldNo != goWorldNo)
+            if (nowWorldNo != goWorldNo)
             {
                 Vector3 from = transform.position;
                 //次にいくポイント + 調整が目的地
                 Vector3 to = clearedPoints[goNo] + Vector3.up * shiftY;
 
                 cameraController_map.CuluculateRate(goWorldNo, to - from);
+
+                //看板をしまう
+                worldSignboardScript.Init(true);
+                worldSignboardScript.Set_isMove(true);
 
             }
         }
@@ -154,6 +171,17 @@ public class PlayerController_Map : MonoBehaviour
 
             //カメラ位置調整(カメラ移動の終わり)
             cameraController_map.TranslateGoPos();
+            //もしついた先が新しい場所だったら
+            //if (worldSignboardScript.Get_isFin())
+            //{
+                int worldNo = (int)mapManager.getStageIcon(goNo).GetComponent<StageIcon>().worldNo;
+                string worldName = mapManager.worldName[worldNo];
+                //ワールド名変更
+                worldName_text.text = worldName;
+                //看板を出す
+                worldSignboardScript.Init(false);
+                worldSignboardScript.Set_isMove(true);
+            //}
             return;
         }
         Vector3 direction = GetVector(from, to);

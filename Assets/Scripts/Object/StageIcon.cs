@@ -9,7 +9,7 @@ public class StageIcon : MonoBehaviour
     //ステージ名
     [SerializeField] private string stageName;
     //ワールド
-    public MapManager.WorldName worldName;
+    public MapManager.WorldNo worldNo;
 
     private SpriteRenderer sr;
 

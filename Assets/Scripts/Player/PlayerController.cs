@@ -5,8 +5,15 @@ using UnityEngine;
 //プレイヤーを操作するためのクラス
 public class PlayerController : MonoBehaviour
 {
-    public float vel;           //歩く速度
-    public float vForce;        //ジャンプする時に加える力
+    /// <summary>
+    ///  移動速度
+    /// </summary>
+    public float vel;
+
+    /// <summary>
+    /// ジャンプスピード
+    /// </summary>
+    public float jumpSpeed = 35f;        //ジャンプする時に加える力
 
     public bool active{get;private set;}
     bool walk;                  //歩ける判定用  
@@ -24,6 +31,7 @@ public class PlayerController : MonoBehaviour
     HoldObjectScript holdScript;    
     Animator animController;        //アニメーター
     GameObject topOfHead;           //頭のてっぺんに置いてあるオブジェクト
+    Rigidbody2D rigidBody;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +47,7 @@ public class PlayerController : MonoBehaviour
         objectToHold = transform.Find("Body").transform.Find("CatchArea").gameObject;
         holdScript = objectToHold.GetComponent<HoldObjectScript>();
         topOfHead = transform.Find("TopOfHead").gameObject;
+        rigidBody = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -100,7 +109,7 @@ public class PlayerController : MonoBehaviour
 
         if(damage)
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+            rigidBody.velocity = new Vector2(0,0);
         }
 
         //地面にいるかを取得
@@ -109,10 +118,14 @@ public class PlayerController : MonoBehaviour
         //地面にいる状態ならジャンプできる
         if(jump && onStage)
         {
+            var vel = rigidBody.velocity;
+
             if(isHoldingObject)
-                GetComponent<Rigidbody2D>().AddForce(new Vector2(0,vForce*0.75f));
+                vel.y = jumpSpeed*0.75f;
             else
-                GetComponent<Rigidbody2D>().AddForce(new Vector2(0,vForce));
+                vel.y = jumpSpeed;
+
+            rigidBody.velocity = vel;
             jump = false;
         }
     }

@@ -29,20 +29,20 @@ public class HeadPointScript : MonoBehaviour
     void OnTriggerEnter2D(Collider2D otherObject)
     {
         //プレイヤーに当たったら
-        if(otherObject.transform.root.gameObject
-        && otherObject.transform.root.gameObject.GetComponent<PlayerController>())
+        if(otherObject.transform.parent.gameObject
+        && otherObject.transform.parent.gameObject.GetComponent<PlayerController>())
         {
             GameObject playerObject = otherObject.transform.root.gameObject;
             PlayerController pc = playerObject.GetComponent<PlayerController>();
             //Debug.Log("damage:" + pc.damage + " dadmageTime:" + bossScript.dadmageTime + " interval:" + bossScript.damageTimeInterval);
 
             //踏めないタイミングだったら何もしない
-            if(pc.damage || bossScript.damageTime < bossScript.damageTimeInterval)return;
+            if(pc.damage || bossScript._IsNotAttacked)return;
 
             //踏めるタイミングならプレイヤーを上に飛ばしてダメージ処理
-            Rigidbody2D rb = playerObject.GetComponent<Rigidbody2D>();
-            Vector3 force = new Vector3(0,pc.vForce,0);
-            rb.AddForce(force);
+            var vel = playerObject.GetComponent<Rigidbody2D>().velocity;
+            vel.y = playerObject.GetComponent<PlayerController>().jumpSpeed;
+            playerObject.GetComponent<Rigidbody2D>().velocity = vel;
             bossScript.BeAttacked();
 
             //Debug.Log("プレイヤー当たった");

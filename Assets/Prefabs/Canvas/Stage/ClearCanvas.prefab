@@ -92,7 +92,7 @@ GameObject:
   - component: {fileID: 5129980233836987421}
   - component: {fileID: 5129980233836987418}
   m_Layer: 5
-  m_Name: StageCanvas
+  m_Name: ClearCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

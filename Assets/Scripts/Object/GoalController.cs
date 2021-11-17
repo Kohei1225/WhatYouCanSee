@@ -123,7 +123,7 @@ public class GoalController : MonoBehaviour
         //player.transform.Rotate(rotateSpeed * Time.deltaTime * Vector3.forward);
 
         //プレイヤーの縮小
-        player.transform.localScale = new Vector3();
+        //player.transform.localScale = new Vector3();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -49,6 +49,8 @@ public class PauseUI : MonoBehaviour
 
     public void WorldMove()
     {
+        //マップマネージャーの状態を普通にする
+        MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
         SceneManager.LoadScene(sceneName);
     }
 }

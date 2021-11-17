@@ -243,7 +243,7 @@ MonoBehaviour:
   - {x: -0.5, y: 0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 1741504
+  m_InstanceId: 165328
 --- !u!1 &7674285460488513119
 GameObject:
   m_ObjectHideFlags: 0
@@ -330,13 +330,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f75a281f4664fce84e1ad5b0f576fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rayLength: 0
-  firstTheta: 0
-  rootObjectTheta: 0
-  LightTheta: 0
-  forDebug: 0
-  vecPointObject: {fileID: 0}
-  PointTheta: 0
 --- !u!1 &7674285460578040809
 GameObject:
   m_ObjectHideFlags: 0
@@ -383,7 +376,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7674285460578040809}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 074b3e1a6386546af8c6068de6bdab59, type: 3}
+  m_Script: {fileID: 11500000, guid: 8f580e4e890fc4173b0b714bd4c11388, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 0

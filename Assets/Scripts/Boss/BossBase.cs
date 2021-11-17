@@ -5,20 +5,68 @@ using UnityEngine;
 //ボスキャラクターの抽象クラス
 public abstract class BossBase : MonoBehaviour
 {
-    protected int hp;                           //体力
-    protected bool dead = false;                //既に死んだかの判定
-    protected float moveSpeed;                  //スピード
-    protected bool canAttack = true;              //攻撃する判定
-    protected int dir = 1;                      //向いてる方向(-1:左向き,1:右向き)
-    protected float bossSize;                   //体のサイズ
-    protected bool hasStartBattle = false;
-    protected Animator animController;                  //アニメーターを格納する変数
 
-    public int attackTime{get; protected set;}          //時間測定(攻撃)用
-    public int attackTimeInterval{get; protected set;}  //インターバル(攻撃)用
-    public int damageTime{get; protected set;}          //時間測定(ダメージ)用
-    public int damageTimeInterval{get; protected set;}  //インターバル(ダメージ)用。無敵時間
+    #region define
+    /// <summary> ボスの状態 </summary>
+    protected enum StateEnum
+    {
+        /// <summary>何もしない状態</summary>
+        None,
+        /// <summary>動ける状態</summary>
+        Move,
+        /// <summary>死んだ状態</summary>
+        Dead,
+    }
+    #endregion
+
+    #region field
+    /// <summary> ボスの状態 </summary>
+    protected StateEnum _State = StateEnum.None;
+    /// <summary> 体力 </summary>
+    protected int _CurrentHP;
+    /// <summary> 既に死んだかの判定 </summary>
+    protected bool _IsDead = false;
+    /// <summary> スピード </summary>
+    protected float _MoveSpeed;
+    /// <summary> 攻撃する判定 </summary>
+    protected bool _CanAttack = true;
+    /// <summary> 向いてる方向(-1:左向き,1:右向き) </summary>
+    protected int _Dir = 1;
+    /// <summary> 体のサイズ </summary>
+    protected float _BossSize;
     
+    protected bool _HasStartBattle = false;
+    /// <summary> アニメーターを格納する変数 </summary>
+    protected Animator _AnimController;
+
+
+    /// <summary> 時間測定(攻撃)用 </summary>
+    public int _AttackTime{get; protected set;}
+    /// <summary> インターバル(攻撃)用 </summary>
+    public int _AttackTimeInterval{get; protected set;}  
+    /// <summary> 時間測定(ダメージ)用 </summary>
+    public int _DamageTime{get; protected set;}          
+    /// <summary> インターバル(ダメージ)用。無敵時間 </summary>
+    public int _DamageTimeInterval{get; protected set;}
+    /// <summary> 攻撃を受けない状態か </summary>
+    public bool _IsNotAttacked { get; protected set; }
+    #endregion
+
+    #region property
+    /// <summary> ダメージ中かどうか </summary>
+    public bool InDamageInterval
+    {
+        get { return _DamageTime < _DamageTimeInterval; }
+    }
+
+    /// <summary> 次の攻撃ができるか </summary>
+    public bool CanAttack
+    {
+        get { return _AttackTime >= _AttackTimeInterval; }
+    }
+    #endregion
+
+    #region abstract function
 
     //通常状態の抽象メソッド
     public abstract void Idle();
@@ -26,7 +74,7 @@ public abstract class BossBase : MonoBehaviour
     //移動する抽象メソッド
     public abstract void Move();
 
-    //攻撃する抽象メソッド
+    //攻撃する抽象,kll;opvb    cvcf, mメソッド
     public abstract void Attack1();
     public abstract void Attack2();
     public abstract void Attack3();
@@ -36,32 +84,35 @@ public abstract class BossBase : MonoBehaviour
 
     //死ぬ時の抽象メソッド
     public abstract void Down();
+    #endregion
 
-    //攻撃を受けた時のメソッド
+    #region public function
+    /// <summary> 攻撃を受けた時 </summary>
     public void BeAttacked()
     {
         //Debug.Log("BeAttacked()");
         //体力を減らしてからその後の処理をする
-        this.hp--;
-        this.damageTime = 0;
-        //Debug.Log("hp:" + this.hp);
-        if(this.hp > 0)
+        this._CurrentHP--;
+        this._DamageTime = 0;
+        if(this._CurrentHP > 0)
             Damage();
         else Down();
-    }    
+    }
 
-    //プレイヤーの方向を向くメソッド
-    public void TurnToPlayer()
+
+    /// <summary> プレイヤーの方向を向く </summary>
+    public void TurnTo(GameObject obj)
     {
-        float playerXPos = GameObject.Find("Player").transform.position.x;
-        float myXPos = transform.position.x;
+        var objXPos = obj?.transform.position.x;
+        var myXPos = transform.position.x;
         //プレイヤーが自分より左にいるときはdirを-1,右にいるときは1にする。
-        if(playerXPos < myXPos)this.dir = 1;
-        else if(myXPos < playerXPos)this.dir = -1;
+        if (objXPos < myXPos) _Dir = -1;
+        else if (myXPos < objXPos) _Dir = 1;
 
         //dirの方向によって画像の向きを変える
-        transform.localScale = new Vector3(dir * bossSize,bossSize,1);
+        transform.localScale = new Vector3(-_Dir * _BossSize, _BossSize, 1);
 
         //Debug.Log("TurnToPlayer()");
     }
+    #endregion
 }

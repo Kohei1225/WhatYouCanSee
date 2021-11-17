@@ -10,7 +10,9 @@ public class GoalController : MonoBehaviour
     //playerが触れたらtrue
     private bool isToutch = false;
     private float time = 0;
-    private GameObject player = null;
+    public GameObject player = null;
+    private float minScale;
+    public float denominatorNum = 3;
     //すぐにステージ遷移ができるbool
     private bool canGo = false;
     //暗くなるbool
@@ -37,6 +39,7 @@ public class GoalController : MonoBehaviour
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        minScale = player.transform.localScale.x / denominatorNum;
     }
 
     private void Update()

@@ -9,11 +9,12 @@ TagManager:
   - Ray
   - Stage
   - Goal
+  - Mask
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PostProcessing
   - Water
   - UI
   - Real
@@ -46,12 +47,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: UI
-    uniqueID: 2116073775
+  - name: BackGround
+    uniqueID: 847136405
     locked: 0
   - name: Icon
     uniqueID: 1631340577
     locked: 0
+  - name: StageUI
+    uniqueID: 2116073775
+    locked: 0
   - name: Player
     uniqueID: 155139223
+    locked: 0
+  - name: BlackPanel
+    uniqueID: 2854444149
+    locked: 0
+  - name: BoardUI
+    uniqueID: 1908432107
     locked: 0

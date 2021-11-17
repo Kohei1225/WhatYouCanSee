@@ -10,9 +10,13 @@ public class GoalController : MonoBehaviour
     //playerが触れたらtrue
     private bool isToutch = false;
     private float time = 0;
-    private GameObject player = null;
+    public GameObject player = null;
+    private float minScale;
+    public float denominatorNum = 3;
     //すぐにステージ遷移ができるbool
     private bool canGo = false;
+    //暗くなるbool
+    private bool canDark = false;
     //ワープに吸い込まれるスピード
     public float suckedSpeed = 0.1f;
     //ワープの周りを回る角度のはやさ
@@ -30,27 +34,39 @@ public class GoalController : MonoBehaviour
     //音素材
     public AudioClip[] audioClip;
 
+    public MaskManager maskManager;
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        minScale = player.transform.localScale.x / denominatorNum;
     }
 
     private void Update()
     {
-        if (canSuck && !canGo)
+        if (canSuck && !canDark)
         {
             suckAnimation();
         }
-        if (canGo)
+        else if (canDark)
+        {
+            //マスクが無くなったら
+            if (!maskManager.Get_canMove())
+            {
+                canDark = false;
+                canGo = true;
+            }
+        }
+        else if(canGo)
         {
             time += Time.deltaTime;
-            if(time >= 2)
-            {
+            if (time >= 2) {
                 //ステージクリアフラグオン
-                MapManager.isClear = true;
+                MapManager.screenStatus = MapManager.ScreenStatuses.CLEAR;
                 //ステージセレクト画面へ
                 SceneManager.LoadScene(worldSceneName);
             }
+
         }
     }
 
@@ -67,8 +83,16 @@ public class GoalController : MonoBehaviour
         {
             //playerをワープ位置まで移動
             player.transform.position = transform.position;
-            canGo = true;
-            player.SetActive(false);
+            canDark = true;
+            canSuck = false;
+            //見えなくする
+            player.GetComponent<SpriteRenderer>().enabled = false;
+            //円マスクが小さくなる
+            //スピードを1/2にする
+            maskManager.Set_speed(maskManager.Get_speed() / 2f);
+            maskManager.Set_isShrink(true);
+            maskManager.Set_canMove(true);
+
             //音ならす
             audioSource.PlayOneShot(audioClip[1]);
             return;

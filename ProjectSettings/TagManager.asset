@@ -8,40 +8,60 @@ TagManager:
   - ColorObject
   - Ray
   - Stage
+  - Goal
+  - Mask
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - PostProcessing
   - Water
   - UI
   - Real
   - Stage
-  - BLACK
-  - WHITE
-  - RED
-  - GREEN
-  - BLUE
-  - CYAN
-  - MAGENTA
-  - YELLOW
-  - PURPLE
-  - ORRANGE
-  - LIME
-  - GRAY
+  - Color
   - BACKGROUND
   - Ray
-  - Player
-  - Object1
-  - Object2
-  - Object3
-  - Object4
-  - Object5
-  - Object6
-  - Object7
-  - Object8
-  - Object9
+  - For Only Real
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: BackGround
+    uniqueID: 847136405
+    locked: 0
+  - name: Icon
+    uniqueID: 1631340577
+    locked: 0
+  - name: StageUI
+    uniqueID: 2116073775
+    locked: 0
+  - name: Player
+    uniqueID: 155139223
+    locked: 0
+  - name: BlackPanel
+    uniqueID: 2854444149
+    locked: 0
+  - name: BoardUI
+    uniqueID: 1908432107
     locked: 0

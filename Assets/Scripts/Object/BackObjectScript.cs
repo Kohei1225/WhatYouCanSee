@@ -17,15 +17,15 @@ public class BackObjectScript : MonoBehaviour
     {
         xScale = transform.localScale.x;
         yScale = transform.localScale.y;
-        gameManagerScript = GameObject.Find("Managers").transform.Find("GameManager").gameObject.GetComponent<GameManagerScript>();
+        gameManagerScript = GameObject.Find("Managers").GetComponent<GameManagerScript>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        for(int i = 0;i < gameManagerScript.objectList.Length;i++)
+        for(int i = 0;i < gameManagerScript.Get_colorObjectList().Length;i++)
         {
-            GameObject target = gameManagerScript.objectList[i];
+            GameObject target = gameManagerScript.Get_colorObjectList()[i];
 
             //自身に入ってたら
             float right = target.transform.position.x + Mathf.Abs(target.transform.localScale.x)/2f;

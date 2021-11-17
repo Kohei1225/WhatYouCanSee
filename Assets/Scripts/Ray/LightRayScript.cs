@@ -9,11 +9,12 @@ public class LightRayScript : MonoBehaviour
     float yPos;
     float xPos;
     public float rayLength;
-    public float firstTheta;
+    public float firstTheta;    //こいつ自体が持ってる角度。この角度にプラスしていく
     bool hasTouchedBody = false;//既に実体があるオブジェクトに当たったとき用。(もしかして影の判定できるのでは？)
     public float rootObjectTheta;//親の大元のオブジェクトの角度
     public float parentLightTheta;//光が出る角度の範囲
     int layerMask;
+    public bool forDebug;
 
     GameManagerScript gameManagerScript;
     Light2D parent2DLight;
@@ -26,7 +27,7 @@ public class LightRayScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManagerScript = GameObject.Find("Managers").transform.Find("GameManager").gameObject.GetComponent<GameManagerScript>();
+        gameManagerScript = GameObject.Find("Managers").GetComponent<GameManagerScript>();
         rayLength = 30 * transform.parent.gameObject.transform.localScale.x * 5;
         rootObjectTheta = transform.root.gameObject.transform.rotation.z;
 
@@ -51,6 +52,7 @@ public class LightRayScript : MonoBehaviour
 
         bool finishFlag = false;
 
+        if(firstTheta > parentLightTheta)finishFlag = true;;
             for(float i = 0;i < 10;i+=0.03125f)
             {
                 if(finishFlag)break;
@@ -74,6 +76,7 @@ public class LightRayScript : MonoBehaviour
                 
                 int objectNum = -11;
                 //Debug.Log("光です");
+
                 foreach(RaycastHit2D hit in Physics2D.RaycastAll(transform.position, vec, rayLength, layerMask))
                 {
                     //Debug.DrawRay(transform.position, hit.point - new Vector2(transform.position.x,transform.position.y), Color.blue, RAY_DISPLAY_TIME, false);
@@ -87,21 +90,28 @@ public class LightRayScript : MonoBehaviour
                         if(hit.collider.gameObject.transform.parent.gameObject.GetComponent<ColorObject2>())
                         {
                             ColorObject2 colorObject = hit.collider.gameObject.transform.parent.gameObject.GetComponent<ColorObject2>();
-                            //Debug.Log("hit:" + hit.collider.gameObject.transform.parent.gameObject.name);
-                            //ステージのオブジェクトに当たった時
+                            //if(forDebug)Debug.Log("hit:" + hit.collider.gameObject.transform.parent.gameObject.name);
+
+                            //ステージにあるオブジェクトに当たった時
                             if(colorObject.isObject)
                             {
+                                colorObject.onRay = true;
                                 //既に何かしらのオブジェクトに当たってる時
                                 if(hasTouchedBody)
                                 {
-                                    colorObject.onShadowRay = true;
+                                    //if(hit.collider.gameObject.transform.parent.gameObject.name == "SquareBlockVer2 (3)")Debug.Log("影判定されてる");
+                                    if(colorObject.hasShadow)colorObject.onShadowRay = true;
+                                    else colorObject.onLightRay = true;
                                 }
                                 //初めてオブジェクトに当たる時
                                 else
                                 {
+                                    //
+                                    colorObject.onLightRay = true;
                                     if(!colorObject.noBody)
                                     {
-                                        colorObject.onLightRay = true;
+                                        if(colorObject.hasShadow)break;
+                                        //if(forDebug)Debug.Log(hit.collider.gameObject.transform.parent.gameObject.name);
                                         this.hasTouchedBody = true;
                                         Debug.DrawRay(transform.position, hit.point - new Vector2(transform.position.x,transform.position.y), Color.blue, RAY_DISPLAY_TIME, false);
                                     }

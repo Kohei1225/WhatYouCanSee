@@ -6,6 +6,8 @@ using UnityEngine.Experimental.Rendering.Universal;
 //色を持ってるオブジェクトにアタッチするクラス。消え得るオブジェクトを覆っていたら印を付けてあげる。
 public class ColorObject2 : MonoBehaviour
 {
+    //いらない変数多すぎ、
+
     //色情報のenum
     public enum OBJECT_COLOR2
     {
@@ -32,7 +34,7 @@ public class ColorObject2 : MonoBehaviour
     public bool noBody;
     int time = 0;
     
-    
+    public int[,] rayList;
     
     public int objectNumber;
     public bool touchingObject;
@@ -75,66 +77,11 @@ public class ColorObject2 : MonoBehaviour
         if(isObject)
         {
             if(gameObject.tag != "Player")BodyObject = transform.Find("Body").gameObject;
-            //Debug.Log("あれ？？");
             gravity = GetComponent<Rigidbody2D>().gravityScale;
 
             //this.hasShadow = true;
             BodyObject.transform.Find("ShadowCaster").gameObject.SetActive(this.hasShadow);
         }
-
-        switch(this.colorType)
-        {
-            case OBJECT_COLOR2.BLACK:
-                GetComponent<SpriteRenderer>().color = new Color(0,0,0);
-                break;
-
-            case OBJECT_COLOR2.WHITE:
-                GetComponent<SpriteRenderer>().color = new Color(1,1,1);
-                break;
-
-            case OBJECT_COLOR2.RED:
-                GetComponent<SpriteRenderer>().color = new Color(1,0,0);
-                break;
-
-            case OBJECT_COLOR2.GREEN:
-                GetComponent<SpriteRenderer>().color = new Color(59f/255f,175f/255f,117f/255f);
-                break;
-            
-            case OBJECT_COLOR2.BLUE:
-                GetComponent<SpriteRenderer>().color = new Color(0,0,1);
-                break;
-
-            case OBJECT_COLOR2.CYAN:
-                GetComponent<SpriteRenderer>().color = new Color(0,156f/255f,209f/255f);
-                break;
-            
-            case OBJECT_COLOR2.MAGENTA:
-                GetComponent<SpriteRenderer>().color = new Color(228f/255f,0,127f/255f);
-                break;
-
-            case OBJECT_COLOR2.YELLOW:
-                GetComponent<SpriteRenderer>().color = new Color(1,1,0);
-                break;
-
-            case OBJECT_COLOR2.PURPLE:
-                GetComponent<SpriteRenderer>().color = new Color(167f/255f,87f/255f,168f/255f);
-
-                break;
-            case OBJECT_COLOR2.ORRANGE:
-                GetComponent<SpriteRenderer>().color = new Color(1,165f/255f,0);
-                break;
-
-            case OBJECT_COLOR2.LIME:
-                GetComponent<SpriteRenderer>().color = new Color(0,1,0);
-                break;
-            case OBJECT_COLOR2.GRAY:
-                GetComponent<SpriteRenderer>().color = new Color(118f/255,118f/255f,118f/255f);
-                break;
-
-            default:break;
-        }
-        
-        
     }
 
     // Update is called once per frame
@@ -147,7 +94,7 @@ public class ColorObject2 : MonoBehaviour
     void FixedUpdate()
     {
         //if(isChild)this.colorType = transform.root.GetComponent<ColorParentScript>().colorType;
-        if(gameObject.tag != "BackGround" && gameObject.tag != "Player")gameObject.layer = LayerMask.NameToLayer(this.colorType.ToString());
+        if(gameObject.tag != "BackGround" && gameObject.tag != "Player")gameObject.layer = LayerMask.NameToLayer("Color");
         //if(forDebug)Debug.Log(gameObject.name + ":" + gameObject.layer);
 
         //背景じゃなくてステージ上にあるオブジェクトの場合の処理
@@ -175,276 +122,60 @@ public class ColorObject2 : MonoBehaviour
             if(!onShadowRay)outOfShadow = true;
 
             
-            switch(this.colorType)
+            //オブジェクトが黒色かそれ以外の時
+            if(this.colorType == OBJECT_COLOR2.BLACK)
             {
-                    //色が黒色の場合
-                    case OBJECT_COLOR2.BLACK:
-                        GetComponent<SpriteRenderer>().color = new Color(0,0,0);
-                        //影が存在する時
-                        if(gameManagerScript.existShadow)
+                //影が存在する時
+                if(gameManagerScript.existShadow)
+                {
+                    noBody = false;
+                    //影の中にいる時は実体が消える
+                    if(!outOfShadow)noBody = true;
+                }
+                //影が存在しない時
+                else
+                {
+                    if(inSameColor)
+                    {
+                        if(!touchingShadow)
                         {
-                            noBody = false;
-                            //影の中にいる時は実体が消える
-                            if(!outOfShadow)noBody = true;
+                            noBody = true;
                         }
-                        //影が存在しない時
-                        else
-                        {
-                            if(inSameColor)
-                            {
-                                if(!touchingShadow)
-                                {
-                                    noBody = true;
-                                }
-                                //Debug.Log("おんなじ色");
-                            }
-                            //被ってなかったら消えない
-                            else 
-                            {
-                                noBody = false;
-                            }
-                            
-                            if(touchingShadow)noBody = false;
-                        }
-                        
-                        //逆にそれ以外は実体は消えない
-                        //else noBody = false;
-                        //BodyObject.SetActive(!noBody);
-                        break;
-                    
-                    //色が白色の場合
-                    case OBJECT_COLOR2.WHITE:
-                        //Debug.Log("白色の処理");
-                        GetComponent<SpriteRenderer>().color = new Color(1,1,1);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色が赤色の場合
-                    case OBJECT_COLOR2.RED:
-                        GetComponent<SpriteRenderer>().color = new Color(1,0,0);
-                        //影の中にいる場合は実態が残る
-                        if(!outOfShadow)noBody = false;
-                        BodyObject.SetActive(!noBody);
-                        break;
-
-                    //色が緑色の場合
-                    case OBJECT_COLOR2.GREEN:
-                        GetComponent<SpriteRenderer>().color = new Color(59f/255f,175f/255f,117f/255f);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色が青色の場合
-                    case OBJECT_COLOR2.BLUE:
-                        GetComponent<SpriteRenderer>().color = new Color(0,0,1);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色がシアンの場合
-                    case OBJECT_COLOR2.CYAN:
-                        GetComponent<SpriteRenderer>().color = new Color(0,156f/255f,209f/255f);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色がマゼンタの場合
-                    case OBJECT_COLOR2.MAGENTA:
-                        GetComponent<SpriteRenderer>().color = new Color(228f/255f,0,127f/255f);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色が黄色の場合
-                    case OBJECT_COLOR2.YELLOW:
-                        GetComponent<SpriteRenderer>().color = new Color(1,1,0);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色が紫色の場合
-                    case OBJECT_COLOR2.PURPLE:
-                        GetComponent<SpriteRenderer>().color = new Color(167f/255f,87f/255f,168f/255f);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色がオレンジ色の場合
-                    case OBJECT_COLOR2.ORRANGE:
-                        GetComponent<SpriteRenderer>().color = new Color(1,165f/255f,0);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色が黄緑色の場合
-                    case OBJECT_COLOR2.LIME:
-                        GetComponent<SpriteRenderer>().color = new Color(0,1,0);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-
-                    //色が灰色の場合
-                    case OBJECT_COLOR2.GRAY:
-                        GetComponent<SpriteRenderer>().color = new Color(118f/255,118f/255f,118f/255f);
-                        //同色オブジェクトと被ってたら消える
-                        if(inSameColor)
-                        {
-                            if(!touchingShadow)
-                            {
-                                noBody = true;
-                            }
-                            //Debug.Log("おんなじ色");
-                        }
-                        //被ってなかったら消えない
-                        else 
-                        {
-                            noBody = false;
-                        }
-                        
-                        if(touchingShadow)noBody = false;
-                        break;
-                    //色が黒色の場合
-                    case OBJECT_COLOR2.BACKGROUND:
+                        //Debug.Log("おんなじ色");
+                    }
+                    //被ってなかったら消えない
+                    else 
+                    {
                         noBody = false;
-                        //影の中にいる時は実体が消える
-                        if(!outOfShadow)noBody = true;
-                        //逆にそれ以外は実体は消えない
-                        //else noBody = false;
-                        //BodyObject.SetActive(!noBody);
-                        break;
-
-                    default:break;
+                    }
+                            
+                    if(touchingShadow)noBody = false;
+                }
+                        
+                //逆にそれ以外は実体は消えない
+                //else noBody = false;
+                //BodyObject.SetActive(!noBody);
+            }
+            else
+            {
+                //同色オブジェクトと被ってたら消える
+                if(inSameColor)
+                {
+                    if(!touchingShadow)
+                    {
+                        noBody = true;
+                    }
+                    //Debug.Log("おんなじ色");
+                }
+                //被ってなかったら消えない
+                else 
+                {
+                    noBody = false;
+                }
+                        
+                if(touchingShadow)noBody = false;
             }
             
-            
-
             if(!active)noBody = false;
 
             //影に関する処理
@@ -496,60 +227,10 @@ public class ColorObject2 : MonoBehaviour
             
         }
 
-
-        switch(this.colorType)
-        {
-            case OBJECT_COLOR2.BLACK:
-                GetComponent<SpriteRenderer>().color = new Color(0,0,0);
-                break;
-
-            case OBJECT_COLOR2.WHITE:
-                GetComponent<SpriteRenderer>().color = new Color(1,1,1);
-                break;
-
-            case OBJECT_COLOR2.RED:
-                GetComponent<SpriteRenderer>().color = new Color(1,0,0);
-                break;
-
-            case OBJECT_COLOR2.GREEN:
-                GetComponent<SpriteRenderer>().color = new Color(59f/255f,175f/255f,117f/255f);
-                break;
-                
-            case OBJECT_COLOR2.BLUE:
-                GetComponent<SpriteRenderer>().color = new Color(0,0,1);
-                break;
-
-            case OBJECT_COLOR2.CYAN:
-                GetComponent<SpriteRenderer>().color = new Color(0,156f/255f,209f/255f);
-                break;
-                
-            case OBJECT_COLOR2.MAGENTA:
-                GetComponent<SpriteRenderer>().color = new Color(228f/255f,0,127f/255f);
-                break;
-
-            case OBJECT_COLOR2.YELLOW:
-                GetComponent<SpriteRenderer>().color = new Color(1,1,0);
-                break;
-
-            case OBJECT_COLOR2.PURPLE:
-                GetComponent<SpriteRenderer>().color = new Color(167f/255f,87f/255f,168f/255f);
-                break;
-
-            case OBJECT_COLOR2.ORRANGE:
-                GetComponent<SpriteRenderer>().color = new Color(1,165f/255f,0);
-                break;
-
-            case OBJECT_COLOR2.LIME:
-                GetComponent<SpriteRenderer>().color = new Color(0,1,0);
-                break;
-    
-            case OBJECT_COLOR2.GRAY:
-                GetComponent<SpriteRenderer>().color = new Color(118f/255,118f/255f,118f/255f);
-                break;
-
-            default:break;
-        }
+        //colorTypeによって変色
+        GetComponent<SpriteRenderer>().color = ChangeColorByType(colorType);
         
+
         if(isObject)
         {
             //光にしか当たってない。
@@ -569,7 +250,6 @@ public class ColorObject2 : MonoBehaviour
             }
             ControlBody(noBody);
         }
-        
     }
 
 
@@ -582,8 +262,6 @@ public class ColorObject2 : MonoBehaviour
         Vector3 pos = transform.position;
         if(flag || touchingObject)
         {
-
-           
             pos.z = 10;
         }
         else
@@ -608,6 +286,8 @@ public class ColorObject2 : MonoBehaviour
             GetComponent<Rigidbody2D>().gravityScale = gravity;
             GetComponent<Rigidbody2D>().mass = 2;
         }
+        this.onLightRay = false;
+        this.onShadowRay = false;
     }
     
 
@@ -617,5 +297,63 @@ public class ColorObject2 : MonoBehaviour
         if(value < min)return min;
         if(max < value)return max;
         return value;
+    }
+
+    //オブジェクトの色を変えるメソッド
+    Color ChangeColorByType(OBJECT_COLOR2 colorType)
+    {
+        Color color = new Color(0,0,0);
+        switch(this.colorType)
+        {
+            case OBJECT_COLOR2.BLACK:
+                color = new Color(0,0,0);
+                break;
+
+            case OBJECT_COLOR2.WHITE:
+                color = new Color(1,1,1);
+                break;
+
+            case OBJECT_COLOR2.RED:
+                color = new Color(1,0,0);
+                break;
+
+            case OBJECT_COLOR2.GREEN:
+                color = new Color(59f/255f,175f/255f,117f/255f);
+                break;
+            
+            case OBJECT_COLOR2.BLUE:
+                color = new Color(0,0,1);
+                break;
+
+            case OBJECT_COLOR2.CYAN:
+                color = new Color(0,156f/255f,209f/255f);
+                break;
+            
+            case OBJECT_COLOR2.MAGENTA:
+                color = new Color(228f/255f,0,127f/255f);
+                break;
+
+            case OBJECT_COLOR2.YELLOW:
+                color = new Color(1,1,0);
+                break;
+
+            case OBJECT_COLOR2.PURPLE:
+                color = new Color(167f/255f,87f/255f,168f/255f);
+
+                break;
+            case OBJECT_COLOR2.ORRANGE:
+                color = new Color(1,165f/255f,0);
+                break;
+
+            case OBJECT_COLOR2.LIME:
+                color = new Color(0,1,0);
+                break;
+            case OBJECT_COLOR2.GRAY:
+                color =  new Color(118f/255,118f/255f,118f/255f);
+                break;
+
+            default:break;
+        }
+        return color;
     }
 }

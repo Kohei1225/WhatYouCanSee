@@ -40,6 +40,8 @@ public class GoalController : MonoBehaviour
 
     public MaskManager maskManager;
 
+    public GameObject pauseCanvas;
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -147,6 +149,9 @@ public class GoalController : MonoBehaviour
             canSuck = true;
             //音ならす
             audioSource.PlayOneShot(audioClip[0]);
+
+            //ポーズキャンバスを見えなくする
+            pauseCanvas.SetActive(false);
         }
     }
 

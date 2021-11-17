@@ -11,8 +11,12 @@ public class GoalController : MonoBehaviour
     private bool isToutch = false;
     private float time = 0;
     public GameObject player = null;
+    //最小サイズ
     private float minScale;
+    //何分の1のサイズになるか
     public float denominatorNum = 3;
+    //縮小スピード
+    private float smallSpeed = 0.1f;
     //すぐにステージ遷移ができるbool
     private bool canGo = false;
     //暗くなるbool
@@ -117,13 +121,16 @@ public class GoalController : MonoBehaviour
         //プレイヤーの回転更新
         player.transform.rotation = rotation;
         //player.transform.Rotate(rotateSpeed * Time.deltaTime * Vector3.forward);
+
+        //プレイヤーの縮小
+        player.transform.localScale = new Vector3();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.parent.gameObject.name == "Player")
         {
-            player = collision.transform.parent.gameObject;
+            //player = collision.transform.parent.gameObject;
             angle = player.transform.rotation.z;
             //プレイヤー操作不能
             player.GetComponent<PlayerController>().Set_canCtrl(false);

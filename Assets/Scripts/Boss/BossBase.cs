@@ -40,16 +40,17 @@ public abstract class BossBase : MonoBehaviour
     protected Animator _AnimController;
 
 
-    /// <summary> 時間測定(攻撃)用 </summary>
-    public int _AttackTime{get; protected set;}
-    /// <summary> インターバル(攻撃)用 </summary>
-    public int _AttackTimeInterval{get; protected set;}  
+    /// <summary> 攻撃インターバル </summary>
+    protected int _AttackInterval;
+    /// <summary> 攻撃のインターバル測定用 </summary>
+    protected TimerScript _AttackIntervalTimer = new TimerScript();
+
     /// <summary> 時間測定(ダメージ)用 </summary>
     public int _DamageTime{get; protected set;}          
     /// <summary> インターバル(ダメージ)用。無敵時間 </summary>
     public int _DamageTimeInterval{get; protected set;}
     /// <summary> 攻撃を受けない状態か </summary>
-    public bool _IsNotAttacked { get; protected set; }
+    public bool _IsUnableBeAttacked { get; protected set; }
     #endregion
 
     #region property
@@ -62,7 +63,7 @@ public abstract class BossBase : MonoBehaviour
     /// <summary> 次の攻撃ができるか </summary>
     public bool CanAttack
     {
-        get { return _AttackTime >= _AttackTimeInterval; }
+        get { return _AttackIntervalTimer.IsTimeUp; }
     }
     #endregion
 

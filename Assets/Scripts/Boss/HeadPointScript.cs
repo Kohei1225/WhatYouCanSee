@@ -37,7 +37,7 @@ public class HeadPointScript : MonoBehaviour
             //Debug.Log("damage:" + pc.damage + " dadmageTime:" + bossScript.dadmageTime + " interval:" + bossScript.damageTimeInterval);
 
             //踏めないタイミングだったら何もしない
-            if(pc.damage || bossScript._IsNotAttacked)return;
+            if(pc.damage || bossScript._IsUnableBeAttacked)return;
 
             //踏めるタイミングならプレイヤーを上に飛ばしてダメージ処理
             var vel = playerObject.GetComponent<Rigidbody2D>().velocity;

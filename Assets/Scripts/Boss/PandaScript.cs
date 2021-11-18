@@ -62,9 +62,11 @@ public class PandaScript : BossBase
     /// <summary> いろんな時間計測用インスタンス </summary>
     TimerScript _Timer = new TimerScript();
     /// <summary> 爪攻撃のスピード </summary>
-    float _SwingUpTime = 1f;
+    private float _SwingUpTime = 1f;
     /// <summary> 攻撃後の隙の時間 </summary>
     private float _SwingDownTime = 2.0f;
+    /// <summary> 何もしない時間 </summary>
+    private float _WaitTime = 1.0f;
     #endregion
 
     #region property
@@ -776,6 +778,7 @@ public class PandaScript : BossBase
     #region Task Wait function
     void TaskWaitEnter()
     {
+        _Timer.ResetTimer(_WaitTime);
     }
 
     bool TaskWaitUpdate()

@@ -28,25 +28,30 @@ public class HeadPointScript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D otherObject)
     {
-        //プレイヤーに当たったら
-        if(otherObject.transform.parent.gameObject
-        && otherObject.transform.parent.gameObject.GetComponent<PlayerController>())
+        //触れた対象を一旦保存
+        GameObject playerObject = otherObject.transform.root?.gameObject;
+        PlayerController pc = playerObject?.GetComponent<PlayerController>();
+
+        //対象がプレイヤーの足意外なら終了
+        if (pc == null || otherObject.gameObject.name != "Foot")
         {
-            GameObject playerObject = otherObject.transform.root.gameObject;
-            PlayerController pc = playerObject.GetComponent<PlayerController>();
-            //Debug.Log("damage:" + pc.damage + " dadmageTime:" + bossScript.dadmageTime + " interval:" + bossScript.damageTimeInterval);
-
-            //踏めないタイミングだったら何もしない
-            if(pc.damage || bossScript._IsUnableBeAttacked)return;
-
-            //踏めるタイミングならプレイヤーを上に飛ばしてダメージ処理
-            var vel = playerObject.GetComponent<Rigidbody2D>().velocity;
-            vel.y = playerObject.GetComponent<PlayerController>().jumpSpeed;
-            playerObject.GetComponent<Rigidbody2D>().velocity = vel;
-            bossScript.BeAttacked();
-
-            //Debug.Log("プレイヤー当たった");
+            //Debug.Log("Unable to Attack Panda!!");
+            return;
         }
+
+        //プレイヤーに当たったら
+
+        //Debug.Log("damage:" + pc.damage + " dadmageTime:" + bossScript.dadmageTime + " interval:" + bossScript.damageTimeInterval);
+
+        //踏めないタイミングだったら何もしない
+        if(pc.damage || bossScript._IsUnableBeAttacked)return;
+
+        //踏めるタイミングならプレイヤーを上に飛ばしてダメージ処理
+        var vel = playerObject.GetComponent<Rigidbody2D>().velocity;
+        vel.y = playerObject.GetComponent<PlayerController>().jumpSpeed;
+        playerObject.GetComponent<Rigidbody2D>().velocity = vel;
+        bossScript.BeAttacked();
+        //Debug.Log("プレイヤー当たった");
         //Debug.Log(otherObject.gameObject.transform.root.gameObject.name);
     }
 }

@@ -27,7 +27,7 @@ public class PandaScript : BossBase
     #endregion
 
     #region serialize
-    [SerializeField] private int firstHp = 3;       //パンダの体力
+    [SerializeField] private int _MaxHp = 9;       //パンダの体力
     [SerializeField] private float firstMoveSpeed;  //パンダのスピード
     [SerializeField] GameObject backGroundObject;
     [SerializeField] private GameObject leverObject; //レバーのオブジェクト
@@ -59,11 +59,12 @@ public class PandaScript : BossBase
 
     /// <summary> 攻撃した回数 </summary>
     private int _AttackCounter = 0;
-
+    /// <summary> いろんな時間計測用インスタンス </summary>
+    TimerScript _Timer = new TimerScript();
     /// <summary> 爪攻撃のスピード </summary>
-    float _SwingUpTime = 0.5f;
+    float _SwingUpTime = 1f;
     /// <summary> 攻撃後の隙の時間 </summary>
-    private float _SwingDownTime = 1.0f;
+    private float _SwingDownTime = 2.0f;
     #endregion
 
     #region property
@@ -89,7 +90,7 @@ public class PandaScript : BossBase
     // Start is called before the first frame update
     void Start()
     {
-        _CurrentHP = firstHp;
+        _CurrentHP = _MaxHp;
         _MoveSpeed = firstMoveSpeed;
         _AttackInterval = 2;
         _DamageTimeInterval = 1;
@@ -267,23 +268,24 @@ public class PandaScript : BossBase
                 break;
         }
     }
-
+    /// <summary> 戦い方のタイプ(残りHPで変わる) </summary>
+    int _BattleType = 2;
     private void SelectTasks()
     {
-        switch (_CurrentHP)
+        switch (_BattleType)
         {
             //状態１
-            case 3:
+            case 2:
                 {
                     //Debug.Log(Distance);
                     if(!CanAttack)
                     {
-                       _TaskList.AddTask(TaskEnum.Walk);
                         break;
                     }
                     // 攻撃範囲に入ってきたら攻撃
                     if (Distance < DISTANCE1)
                     {
+                        _TaskList.AddTask(TaskEnum.Wait);
                         Attack1();
                     }
                     else _TaskList.AddTask(TaskEnum.Walk);
@@ -291,14 +293,14 @@ public class PandaScript : BossBase
                 }
                 break;
             //状態２
-            case 2:
+            case 1:
                 {
                     _TaskList.AddTask(TaskEnum.Walk);
 
                 }
                 break;
             //状態３
-            case 1:
+            case 0:
                 {
                     //プレイヤーが近くでジャンプしたら防御
                     if(!_Player.GetComponent<PlayerController>().onStage && Distance < 5)
@@ -406,7 +408,7 @@ public class PandaScript : BossBase
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Wait);
 
-
+        _BattleType = (_CurrentHP - 1) / 3;
         //ダメージを受けた時の処理(アニメーション再生とか)
         Debug.Log("ダメージ受けた！！残り残機:" + this._CurrentHP);
         
@@ -419,7 +421,7 @@ public class PandaScript : BossBase
         else Debug.Log("パンダにレバーが設定されてないよ！！");
 
         //ラストは攻撃間隔を短くする
-        if (_CurrentHP == 1)
+        if (_BattleType == 0)
         {
             _AttackInterval = 1;
             _SwingUpTime = 0.2f;
@@ -432,7 +434,7 @@ public class PandaScript : BossBase
     public override void Down()
     {
         //死ぬ処理
-        Debug.Log("ダメージ。あ！死んだ！！");
+        //Debug.Log("ダメージ。あ！死んだ！！");
         _AnimController.SetBool("HasDown",true);
         _AnimController.SetBool("IsDefend", false);
         _AnimController.Play("Panda_Down", 0, 0);
@@ -467,7 +469,7 @@ public class PandaScript : BossBase
 
 
     #region Task function
-    TimerScript _Timer = new TimerScript();
+
 
     #region Task Idle function
     void TaskIdleEnter()

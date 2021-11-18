@@ -14,6 +14,8 @@ public class PandaScript : BossBase
         Jump,
         MiniJump,
         ClawAttack,
+        SwingUp,    //攻撃前
+        SwingDown,  //攻撃後
         Kick,
         Charge,
         SuperKick,
@@ -57,8 +59,11 @@ public class PandaScript : BossBase
 
     /// <summary> 攻撃した回数 </summary>
     private int _AttackCounter = 0;
-    
-    
+
+    /// <summary> 爪攻撃のスピード </summary>
+    float _SwingUpTime = 0.5f;
+    /// <summary> 攻撃後の隙の時間 </summary>
+    private float _SwingDownTime = 1.0f;
     #endregion
 
     #region property
@@ -86,8 +91,7 @@ public class PandaScript : BossBase
     {
         _CurrentHP = firstHp;
         _MoveSpeed = firstMoveSpeed;
-        _AttackTimeInterval = 3;
-        _AttackTime = _AttackTimeInterval;
+        _AttackInterval = 2;
         _DamageTimeInterval = 1;
         _DamageTime = _DamageTimeInterval;
         _AnimController = GetComponent<Animator>();
@@ -104,6 +108,8 @@ public class PandaScript : BossBase
         _TaskList.DefineTask(TaskEnum.Jump, TaskJumpEnter, TaskJumpUpdate, TaskJumpExit);
         _TaskList.DefineTask(TaskEnum.MiniJump, TaskMiniJumpEnter, TaskMiniJumpUpdate, TaskMiniJumpExit);
         _TaskList.DefineTask(TaskEnum.ClawAttack, TaskClawEnter, TaskClawUpdate, TaskClawExit);
+        _TaskList.DefineTask(TaskEnum.SwingUp, TaskSwingUpEnter, TaskSwingUpUpdate, TaskSwingUpExit);
+        _TaskList.DefineTask(TaskEnum.SwingDown, TaskSwingDownEnter, TaskSwingDownUpdate, TaskSwingDownExit);
         _TaskList.DefineTask(TaskEnum.Kick,TaskKickEnter,TaskKickUpdate,TaskKickExit);
         _TaskList.DefineTask(TaskEnum.SuperKick, TaskSuperKickEnter, TaskSuperKickUpdate, TaskSuperKickExit);
         _TaskList.DefineTask(TaskEnum.ReturnPostion, TaskReturnEnter, TaskReturnUpdate, TaskReturnExit);
@@ -243,13 +249,15 @@ public class PandaScript : BossBase
                         {
                             // 一連のタスクを登録する
                             SelectTasks();
+                            
                         }
                         
                     }
 
-                    // UnityのUpdate関数の中で _TaskList.UpdateTask()を呼ぶ
-                    // 登録されているタスクが処理され,タスクが終われば次のタスクがセットされる. 次のタスクが無い時は空になる.
+                    // セットしてるタスクのUpdate()を呼ぶ
                     _TaskList.UpdateTask();
+                    // 攻撃のインターバルを測定する
+                    _AttackIntervalTimer.UpdateTimer();
                 }
                 break;
             case StateEnum.Dead:
@@ -268,14 +276,18 @@ public class PandaScript : BossBase
             case 3:
                 {
                     //Debug.Log(Distance);
+                    if(!CanAttack)
+                    {
+                       _TaskList.AddTask(TaskEnum.Walk);
+                        break;
+                    }
                     // 攻撃範囲に入ってきたら攻撃
                     if (Distance < DISTANCE1)
                     {
-                        _TaskList.AddTask(TaskEnum.ClawAttack);
-                        _TaskList.AddTask(TaskEnum.Wait);
+                        Attack1();
                     }
                     else _TaskList.AddTask(TaskEnum.Walk);
-                    _TaskList.AddTask(TaskEnum.Walk);
+                    
                 }
                 break;
             //状態２
@@ -288,25 +300,31 @@ public class PandaScript : BossBase
             //状態３
             case 1:
                 {
-                    //プレイヤーがジャンプしたら防御
-                    if(!_Player.GetComponent<PlayerController>().onStage)
+                    //プレイヤーが近くでジャンプしたら防御
+                    if(!_Player.GetComponent<PlayerController>().onStage && Distance < 5)
                     {
                         _TaskList.AddTask(TaskEnum.Defend);
                     }
 
+                    if(!CanAttack)
+                    {
+                        Debug.Log("AttackTime!!!!");
+                        break;
+                    }
+            
                     //
                     if(Distance > DISTANCE2)
                     {
-                        _TaskList.AddTask(TaskEnum.Walk);
+                        _TaskList.AddTask(TaskEnum.Walk); 
                     }
 
                     //
                     if (Distance < DISTANCE1)
                     {
-                        _TaskList.AddTask(TaskEnum.ClawAttack);
-                        _TaskList.AddTask(TaskEnum.ClawAttack);
-                        _TaskList.AddTask(TaskEnum.ClawAttack);
-                        _TaskList.AddTask(TaskEnum.ClawAttack);
+                        Attack1();
+                        Attack1();
+                        Attack1();
+                        Attack1();
                         _AttackCounter++;
                     }
 
@@ -314,9 +332,9 @@ public class PandaScript : BossBase
                     else if (Distance < DISTANCE2)
                     {
                         _TaskList.AddTask(TaskEnum.Kick);
-                        _TaskList.AddTask(TaskEnum.ClawAttack);
-                        _TaskList.AddTask(TaskEnum.ClawAttack);
-                        _TaskList.AddTask(TaskEnum.ClawAttack);
+                        Attack1();
+                        Attack1();
+                        Attack1();
                         _TaskList.AddTask(TaskEnum.Wait);
                         _TaskList.AddTask(TaskEnum.Defend);
                         _AttackCounter++;
@@ -333,7 +351,7 @@ public class PandaScript : BossBase
                         _Timer.ResetTimer(3.0f);
                         _AttackCounter = 0;
                     }
-                    Debug.Log("Attack::" + _AttackCounter);
+                    //Debug.Log("Attack::" + _AttackCounter);
                 }
                 break;
         }
@@ -363,24 +381,14 @@ public class PandaScript : BossBase
     //攻撃1(引っ掻きのみ)
     public override void Attack1()
     {
-        _AnimController.SetBool("CanKick",false);
-        _AnimController.SetBool("CanAttack",true);
+        _TaskList.AddTask(TaskEnum.SwingUp);
+        _TaskList.AddTask(TaskEnum.SwingDown);
     }
 
     //攻撃2(飛び蹴り追加)
     public override void Attack2()
     {
-        if(!transform.Find("Foot").gameObject.GetComponent<FootAreaScript>().touchingStage)
-            return;
-
-        //攻撃２の処理
-        _AnimController.SetBool("CanKick",true);
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        Vector2 force = new Vector2(-_Dir*600f*rb.mass,500f*rb.mass);
-        
-        rb.AddForce(force);
-        this._CanAttack = true;
-        this._AttackTime = this._AttackTimeInterval;
+        _TaskList.AddTask(TaskEnum.Kick);
     }
 
     //攻撃3(連続攻撃)
@@ -394,6 +402,7 @@ public class PandaScript : BossBase
     {
         _TaskList.CancelAllTask();
         _TaskList.AddTask(TaskEnum.Damage);
+        _TaskList.AddTask(TaskEnum.Defend);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Wait);
 
@@ -412,7 +421,9 @@ public class PandaScript : BossBase
         //ラストは攻撃間隔を短くする
         if (_CurrentHP == 1)
         {
-            _AttackTimeInterval = 0;
+            _AttackInterval = 1;
+            _SwingUpTime = 0.2f;
+            _SwingDownTime = 0.4f;
         }
         //animController.SetBool("HasDamage", false);
     }
@@ -423,6 +434,8 @@ public class PandaScript : BossBase
         //死ぬ処理
         Debug.Log("ダメージ。あ！死んだ！！");
         _AnimController.SetBool("HasDown",true);
+        _AnimController.SetBool("IsDefend", false);
+        _AnimController.Play("Panda_Down", 0, 0);
 
         //攻撃判定のオブジェクトを消す
         blackBody.SetActive(false);
@@ -517,7 +530,8 @@ public class PandaScript : BossBase
     void TaskKickEnter()
     {
         TurnTo(_Player);
-        _AnimController.SetBool("CanKick", true);
+        _AnimController.SetBool("IsKick", true);
+        _AnimController.Play("Panda_Kick", 0, 0);
         var vel = GetComponent<Rigidbody2D>().velocity;
         vel = kickVel;
         vel.x *= _Dir;
@@ -538,7 +552,7 @@ public class PandaScript : BossBase
 
     void TaskKickExit()
     {
-        _AnimController.SetBool("CanKick", false);
+        _AnimController.SetBool("IsKick", false);
     }
     #endregion
 
@@ -546,7 +560,8 @@ public class PandaScript : BossBase
     void TaskSuperKickEnter()
     {
         TurnTo(_Player);
-        _AnimController.SetBool("CanKick", true);
+        _AnimController.SetBool("IsKick", true);
+        _AnimController.Play("Panda_Kick", 0, 0);
 
         var vel = GetComponent<Rigidbody2D>().velocity;
         vel = kickVel;
@@ -574,7 +589,7 @@ public class PandaScript : BossBase
 
     void TaskSuperKickExit()
     {
-        _AnimController.SetBool("CanKick", false);
+        _AnimController.SetBool("IsKick", false);
         _Timer.ResetTimer(1.0f);
     }
     #endregion
@@ -614,7 +629,50 @@ public class PandaScript : BossBase
     void TaskClawExit()
     {
         _AnimController.SetBool("CanAttack", false);
-        _Timer.ResetTimer(_AttackTimeInterval);
+        _Timer.ResetTimer(_AttackInterval);
+    }
+    #endregion
+
+    #region Task SwingUp function
+    void TaskSwingUpEnter()
+    {
+        TurnTo(_Player);
+        _Timer.ResetTimer(_SwingUpTime);
+        _AnimController.Play("Panda_SwingUp", 0, 0);
+    }
+
+    bool TaskSwingUpUpdate()
+    {
+        _Timer.UpdateTimer();
+        return _Timer.IsTimeUp;
+    }
+
+    void TaskSwingUpExit()
+    {
+    }
+    #endregion
+
+    #region Task SwingDown function
+
+    
+    void TaskSwingDownEnter()
+    {
+         //TurnTo(_Player);
+        _Timer.ResetTimer(_SwingDownTime);
+        _AnimController.SetBool("IsAttack", true);
+        _AnimController.Play("Panda_SwingDown", 0, 0 );
+    }
+
+    bool TaskSwingDownUpdate()
+    {
+        _Timer.UpdateTimer();
+        return _Timer.IsTimeUp;
+    }
+
+    void TaskSwingDownExit()
+    {
+        _AttackIntervalTimer.ResetTimer(_AttackInterval);
+        _AnimController.SetBool("IsAttack", false);
     }
     #endregion
 
@@ -622,7 +680,8 @@ public class PandaScript : BossBase
     void TaskReturnEnter()
     {
         TurnTo(_Player);
-        _AnimController.SetBool("CanKick", true);
+        _AnimController.SetBool("IsKick", true);
+        _AnimController.Play("Panda_Kick", 0, 0);
         var rb = GetComponent<Rigidbody2D>();
         var vel = rb.velocity;
         var diff = 0f;
@@ -637,7 +696,7 @@ public class PandaScript : BossBase
             diff = _RightSetPos.transform.position.x - transform.position.x;
         }
         
-        Debug.Log("diff::" + diff);
+        //Debug.Log("diff::" + diff);
         vel.x = diff *(4f/5f);
         vel.y = 30;
 
@@ -661,7 +720,7 @@ public class PandaScript : BossBase
 
     void TaskReturnExit()
     {
-        _AnimController.SetBool("CanKick", false);
+        _AnimController.SetBool("IsKick", false);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         _Timer.ResetTimer(2.0f);
     }
@@ -670,9 +729,11 @@ public class PandaScript : BossBase
     #region Task Damage function
     void TaskDamageEnter()
     {
-        _IsNotAttacked = true;
+        _IsUnableBeAttacked = true;
         _Timer.ResetTimer(1.0f);
         _AnimController.SetBool("HasDamage", true);
+        _AnimController.Play("Panda_Damage", 0, 0);
+        _AnimController.SetBool("IsDefend", false);
     }
 
     bool TaskDamageUpdate()
@@ -690,14 +751,18 @@ public class PandaScript : BossBase
     #endregion
 
     #region Task Defend function
+    float _DefendTime = 2.0f;
+
     void TaskDefendEnter()
     {
+        _Timer.ResetTimer(_DefendTime);
         _AnimController.SetBool("IsDefend", true);
     }
 
     bool TaskDefendUpdate()
     {
-        return Distance > 2;
+        _Timer.UpdateTimer();
+        return Distance > 2 && _Timer.IsTimeUp;
     }
 
     void TaskDefendExit()
@@ -719,7 +784,7 @@ public class PandaScript : BossBase
 
     void TaskWaitExit()
     {
-        _IsNotAttacked = false;
+        _IsUnableBeAttacked = false;
     }
     #endregion
     #endregion

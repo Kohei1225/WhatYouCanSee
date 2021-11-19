@@ -23,6 +23,7 @@ public class PandaScript : BossBase
         Damage,
         Defend,
         Wait,
+        
     }
     #endregion
 
@@ -67,7 +68,8 @@ public class PandaScript : BossBase
     private float _SwingDownTime = 2.0f;
     /// <summary> 防御する時間 </summary>
     private float _DefendTime = 2.0f;
-
+    /// <summary> 溜める時間 </summary>
+    private float _ChargeTime = 2.0f;
     #endregion
 
     #region property
@@ -110,7 +112,7 @@ public class PandaScript : BossBase
         _TaskList.DefineTask(TaskEnum.Idle, TaskIdleEnter, TaskIdleUpdate, TaskIdleExit);
         _TaskList.DefineTask(TaskEnum.Walk, TaskWalkEnter, TaskWalkUpdate, TaskWalkExit);
         _TaskList.DefineTask(TaskEnum.Jump, TaskJumpEnter, TaskJumpUpdate, TaskJumpExit);
-        _TaskList.DefineTask(TaskEnum.MiniJump, TaskMiniJumpEnter, TaskMiniJumpUpdate, TaskMiniJumpExit);
+        _TaskList.DefineTask(TaskEnum.Charge, TaskChargeEnter, TaskChargeUpdate, TaskChargeExit);
         _TaskList.DefineTask(TaskEnum.ClawAttack, TaskClawEnter, TaskClawUpdate, TaskClawExit);
         _TaskList.DefineTask(TaskEnum.SwingUp, TaskSwingUpEnter, TaskSwingUpUpdate, TaskSwingUpExit);
         _TaskList.DefineTask(TaskEnum.SwingDown, TaskSwingDownEnter, TaskSwingDownUpdate, TaskSwingDownExit);
@@ -166,7 +168,6 @@ public class PandaScript : BossBase
 
                     if(ply.damage)
                     {
-                        Idle();
                         break;
                     }
 
@@ -194,6 +195,7 @@ public class PandaScript : BossBase
                     {
                         if(ply.damage)
                         {
+                            Idle();
                             _State = StateEnum.None;
                         }
                         else
@@ -221,6 +223,7 @@ public class PandaScript : BossBase
     int _BattleType = 2;
     private void SelectTasks()
     {
+        //プレイヤーが見えない間は動き続ける
         if(IsNoPlayer)
         {
             Move();
@@ -241,6 +244,7 @@ public class PandaScript : BossBase
                     if (Distance < DISTANCE1)
                     {
                         Wait(0.25f);
+                       // _TaskList.AddTask(TaskEnum.Charge);
                         Attack1();
                     }
                     else Move();
@@ -326,10 +330,11 @@ public class PandaScript : BossBase
                     //
                     if (_AttackCounter > 2)
                     {
+                        Charge(2.0f);
                         _TaskList.AddTask(TaskEnum.ReturnPostion);
-                        _TaskList.AddTask(TaskEnum.Wait);
+                        Wait(2.0f);
                         _TaskList.AddTask(TaskEnum.SuperKick);
-                        _TaskList.AddTask(TaskEnum.Wait);
+                        Wait(2.0f);
                         _Timer.ResetTimer(3.0f);
                         _AttackCounter = 0;
                     }
@@ -386,6 +391,10 @@ public class PandaScript : BossBase
     public override void Attack1()
     {
         _TaskList.AddTask(TaskEnum.SwingUp);
+        if (_BattleType != 0)
+        {
+            Charge(0.5f);
+        }
         _TaskList.AddTask(TaskEnum.SwingDown);
     }
 
@@ -411,7 +420,6 @@ public class PandaScript : BossBase
     {
         _TaskList.CancelAllTask();
         _TaskList.AddTask(TaskEnum.Damage);
-        //_TaskList.AddTask(TaskEnum.Defend);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         Defend(2.0f);
         //_TaskList.AddTask(TaskEnum.Wait);
@@ -485,6 +493,13 @@ public class PandaScript : BossBase
         _TaskList.AddTask(TaskEnum.Defend);
     }
 
+    public void Charge(float chargeTime)
+    {
+        //時間を設定してタスクを追加
+        _ChargeTime = chargeTime;
+        _TaskList.AddTask(TaskEnum.Charge);
+    }
+
 
     /// <summary> 背景に合わせて身体を有効/無効化 </summary>
     void CheckBackColorAndControlBody()
@@ -513,6 +528,7 @@ public class PandaScript : BossBase
         _AnimController.SetBool("CanAttack", false);
         _AnimController.SetBool("CanKick", false);
         _AnimController.SetBool("IsIdle", true);
+        _AnimController.SetBool("IsBattle", false);
     }
 
     bool TaskIdleUpdate()
@@ -632,20 +648,38 @@ public class PandaScript : BossBase
     }
     #endregion
 
-    #region Task MiniJump function
-    void TaskMiniJumpEnter()
-    {
+    #region Task Charge function
 
+    int _FrameNumber;
+    float _Xpos;
+
+    void TaskChargeEnter()
+    {
+        _Timer.ResetTimer(_ChargeTime);
+        _FrameNumber = 0;
+        _Xpos = transform.position.x;
     }
 
-    bool TaskMiniJumpUpdate()
+    bool TaskChargeUpdate()
     {
-        return true;
+        var pos = transform.position;
+        var dir = 1;
+        if(_FrameNumber%2 == 0)
+        {
+            dir = -1;
+        }
+        pos.x = _Xpos + dir * 0.2f;
+        transform.position = pos;
+
+        _FrameNumber++;
+        _Timer.UpdateTimer();
+
+        return _Timer.IsTimeUp;
     }
 
-    void TaskMiniJumpExit()
+    void TaskChargeExit()
     {
-
+        _AnimController.SetBool("IsDefend", false);
     }
     #endregion
 

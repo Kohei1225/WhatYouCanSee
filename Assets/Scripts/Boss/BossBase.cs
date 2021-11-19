@@ -50,7 +50,7 @@ public abstract class BossBase : MonoBehaviour
     /// <summary> インターバル(ダメージ)用。無敵時間 </summary>
     public float _DamageTimeInterval{get; protected set;}
     /// <summary> 攻撃を受けない状態か </summary>
-    public bool _IsUnableBeAttacked { get; protected set; }
+    protected bool _IsUnableBeAttacked;
 
     /// <summary> 何もしない時間の測定用 </summary>
     protected TimerScript _WaitTimer = new TimerScript();
@@ -60,9 +60,9 @@ public abstract class BossBase : MonoBehaviour
 
     #region property
     /// <summary> ダメージ中かどうか </summary>
-    public bool InDamageInterval
+    public bool IsUnableBeAttacked
     {
-        get { return _DamageTime < _DamageTimeInterval; }
+        get { return _IsUnableBeAttacked; }
     }
 
     /// <summary> 次の攻撃ができるか </summary>

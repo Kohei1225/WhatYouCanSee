@@ -424,6 +424,7 @@ public class PandaScript : BossBase
         Defend(2.0f);
         //_TaskList.AddTask(TaskEnum.Wait);
 
+        // 攻撃タイプを更新
         var preBattleType = _BattleType;
         _BattleType = (_CurrentHP - 1) / 3;
 
@@ -794,7 +795,7 @@ public class PandaScript : BossBase
     {
         _AnimController.SetBool("IsKick", false);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
-        _Timer.ResetTimer(2.0f);
+        _IsUnableBeAttacked = false;
     }
     #endregion
 

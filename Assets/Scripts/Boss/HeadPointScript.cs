@@ -44,12 +44,15 @@ public class HeadPointScript : MonoBehaviour
         //Debug.Log("damage:" + pc.damage + " dadmageTime:" + bossScript.dadmageTime + " interval:" + bossScript.damageTimeInterval);
 
         //踏めないタイミングだったら何もしない
-        if(pc.damage || bossScript._IsUnableBeAttacked)return;
+        if(pc.damage)return;
 
         //踏めるタイミングならプレイヤーを上に飛ばしてダメージ処理
         var vel = playerObject.GetComponent<Rigidbody2D>().velocity;
         vel.y = playerObject.GetComponent<PlayerController>().jumpSpeed;
         playerObject.GetComponent<Rigidbody2D>().velocity = vel;
+
+        //無敵時間だったらダメージは受けない
+        if (bossScript.IsUnableBeAttacked) return;
         bossScript.BeAttacked();
         //Debug.Log("プレイヤー当たった");
         //Debug.Log(otherObject.gameObject.transform.root.gameObject.name);

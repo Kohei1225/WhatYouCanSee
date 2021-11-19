@@ -163,14 +163,16 @@ public class PandaScript : BossBase
             case StateEnum.None:
                 // None時に毎フレーム呼ばれる処理
                 {
+
+                    if(ply.damage)
+                    {
+                        Idle();
+                        break;
+                    }
+
+                    //一回でもある程度近づいてきたらバトル開始
                     if (Distance < BATTLE_START_DISTANCE)
                     {  
-                        if(ply.damage)
-                        {
-                            break;
-                        }
-
-                        //一回でもある程度近づいてきたらバトル開始
                         _HasStartBattle = true;
                         _AnimController.SetBool("IsBattle",true);
                         _State = StateEnum.Move;
@@ -190,7 +192,7 @@ public class PandaScript : BossBase
                     //登録された一連のタスクの処理がすべて完了したら、次の一連のタスクを登録する
                     if (_TaskList.IsEnd)
                     {
-                        if(IsNoPlayer || ply.damage)
+                        if(ply.damage)
                         {
                             _State = StateEnum.None;
                         }
@@ -219,6 +221,12 @@ public class PandaScript : BossBase
     int _BattleType = 2;
     private void SelectTasks()
     {
+        if(IsNoPlayer)
+        {
+            Move();
+            return;
+        }
+
         switch (_BattleType)
         {
             //状態１
@@ -335,11 +343,42 @@ public class PandaScript : BossBase
     public override void Idle()
     {
         //通常状態の処理
-
+        _TaskList.AddTask(TaskEnum.Idle);
     }
 
     public override void Move()
     {
+        var obj = _Player;
+
+        if(IsNoPlayer)
+        {
+            //今の向きによって対象物を決める
+            if(_Dir == 1)
+            {
+                obj = _RightSetPos;
+            }
+            else
+            {
+                obj = _LeftSetPos;
+            }
+
+            //目的地にある程度近づいたら対象を変える
+            if (Mathf.Abs(transform.position.x - obj.transform.position.x) < 2)
+            {
+                if (obj == _RightSetPos)
+                {
+                    obj = _LeftSetPos;
+                }
+                else
+                {
+                    obj = _RightSetPos;
+                }
+            }
+        }
+
+        //向きを決める
+        TurnTo(obj);
+
         _TaskList.AddTask(TaskEnum.Walk);
     }
 
@@ -491,8 +530,7 @@ public class PandaScript : BossBase
 
     void TaskWalkEnter()
     {
-        //プレイヤーの方向を向く
-        TurnTo(_Player);
+        
     }
 
     bool TaskWalkUpdate()

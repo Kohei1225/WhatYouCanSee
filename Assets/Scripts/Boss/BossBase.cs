@@ -51,6 +51,11 @@ public abstract class BossBase : MonoBehaviour
     public float _DamageTimeInterval{get; protected set;}
     /// <summary> 攻撃を受けない状態か </summary>
     public bool _IsUnableBeAttacked { get; protected set; }
+
+    /// <summary> 何もしない時間の測定用 </summary>
+    protected TimerScript _WaitTimer = new TimerScript();
+    /// <summary> 何もしない時間 </summary>
+    protected float _WaitTime = 1.0f;
     #endregion
 
     #region property
@@ -69,21 +74,22 @@ public abstract class BossBase : MonoBehaviour
 
     #region abstract function
 
-    //通常状態の抽象メソッド
+    /// <summary> 通常状態 </summary>
     public abstract void Idle();
-
-    //移動する抽象メソッド
+    /// <summary> 移動 </summary>
     public abstract void Move();
-
-    //攻撃する抽象,kll;opvb    cvcf, mメソッド
+    /// <summary> 攻撃１ </summary>
     public abstract void Attack1();
+    /// <summary> 攻撃２ </summary>
     public abstract void Attack2();
+    /// <summary> 攻撃３ </summary>
     public abstract void Attack3();
-
-    //ダメージを受けた時のメソッド
+    /// <summary> ダメージ </summary>
     public abstract void Damage();
-
-    //死ぬ時の抽象メソッド
+    /// <summary> 任意の時間何もしない </summary>
+    /// <param name="waitTime">待つ時間</param>
+    public abstract void Wait(float waitTime);
+    /// <summary> ダウン </summary>
     public abstract void Down();
     #endregion
 

@@ -65,8 +65,7 @@ public class PandaScript : BossBase
     private float _SwingUpTime = 1f;
     /// <summary> 攻撃後の隙の時間 </summary>
     private float _SwingDownTime = 2.0f;
-    /// <summary> 何もしない時間 </summary>
-    private float _WaitTime = 1.0f;
+
     #endregion
 
     #region property
@@ -231,10 +230,10 @@ public class PandaScript : BossBase
                     // 攻撃範囲に入ってきたら攻撃
                     if (Distance < DISTANCE1)
                     {
-                        _TaskList.AddTask(TaskEnum.Wait);
+                        Wait(_WaitTime);
                         Attack1();
                     }
-                    else _TaskList.AddTask(TaskEnum.Walk);
+                    else Move();
                     
                 }
                 break;
@@ -246,7 +245,7 @@ public class PandaScript : BossBase
                         break;
                     }
 
-                    _TaskList.AddTask(TaskEnum.Walk);
+                    Move();
                     if(Distance < DISTANCE1)
                     {
                         //3回は爪攻撃をする
@@ -262,7 +261,7 @@ public class PandaScript : BossBase
                         if(_AttackCounter >= 2)
                         {
                             Attack2();
-                            _TaskList.AddTask(TaskEnum.Wait);
+                            Wait(_WaitTime);
                             _AttackCounter = 0;
                         }
 
@@ -288,7 +287,7 @@ public class PandaScript : BossBase
                     //
                     if(Distance > DISTANCE2)
                     {
-                        _TaskList.AddTask(TaskEnum.Walk); 
+                        Move(); 
                     }
 
                     //
@@ -308,7 +307,7 @@ public class PandaScript : BossBase
                         Attack1();
                         Attack1();
                         Attack1();
-                        _TaskList.AddTask(TaskEnum.Wait);
+                        Wait(_WaitTime);
                         _TaskList.AddTask(TaskEnum.Defend);
                         _AttackCounter++;
 
@@ -331,46 +330,42 @@ public class PandaScript : BossBase
 
     }
 
-    //通常状態
     public override void Idle()
     {
         //通常状態の処理
 
     }
 
-    //移動
     public override void Move()
     {
-        //Debug.Log("Move()");
-        //移動の処理        
-        //animController.SetBool("",true);
-        if(_AnimController.GetCurrentAnimatorClipInfo(0)[0].clip.name != "Panda_Move")
-            return;
-
-        //移動する
-        transform.Translate(-_MoveSpeed*_Dir,0f,0f);
+        _TaskList.AddTask(TaskEnum.Walk);
     }
 
-    //攻撃1(引っ掻きのみ)
+    /// <summary> 爪攻撃 </summary>
     public override void Attack1()
     {
         _TaskList.AddTask(TaskEnum.SwingUp);
         _TaskList.AddTask(TaskEnum.SwingDown);
     }
 
-    //攻撃2(飛び蹴り追加)
+    /// <summary> 飛び蹴り </summary>
     public override void Attack2()
     {
         _TaskList.AddTask(TaskEnum.Kick);
     }
 
-    //攻撃3(連続攻撃)
+
     public override void Attack3()
     {
-        //攻撃３の処理
+        //パンダは何もなし
     }
 
-    //ダメージ処理
+    public override void Wait(float waitTime)
+    {
+        _WaitTime = waitTime;
+        _TaskList.AddTask(TaskEnum.Wait);
+    }
+
     public override void Damage()
     {
         _TaskList.CancelAllTask();
@@ -398,6 +393,7 @@ public class PandaScript : BossBase
             leverObject.GetComponent<LeverScript>().ResetBarPos();
         else Debug.Log("パンダにレバーが設定されてないよ！！");
 
+
         if(_BattleType == 1)
         {
             _AttackInterval = 1.0f;
@@ -419,7 +415,6 @@ public class PandaScript : BossBase
         //animController.SetBool("HasDamage", false);
     }
 
-    //倒れる処理
     public override void Down()
     {
         //死ぬ処理
@@ -483,12 +478,13 @@ public class PandaScript : BossBase
 
     void TaskWalkEnter()
     {
+        //プレイヤーの方向を向く
         TurnTo(_Player);
     }
 
     bool TaskWalkUpdate()
     {
-        //Debug.Log("dir::" + dir);
+        //向いてる方向に進む
         transform.Translate(_Dir * _MoveSpeed, 0, 0);
         return true;
     }
@@ -765,7 +761,7 @@ public class PandaScript : BossBase
     #region Task Wait function
     void TaskWaitEnter()
     {
-        _Timer.ResetTimer(_WaitTime);
+        _WaitTimer.ResetTimer(_WaitTime);
     }
 
     bool TaskWaitUpdate()

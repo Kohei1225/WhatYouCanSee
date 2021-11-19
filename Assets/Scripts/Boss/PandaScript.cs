@@ -90,6 +90,12 @@ public class PandaScript : BossBase
         get { return !_Player.transform.Find("Body").gameObject.activeSelf; }
     }
 
+    /// <summary> 死んでるかどうか </summary>
+    public bool IsDead
+    {
+        get { return _State == StateEnum.Dead; }
+    }
+
     #endregion
 
     // Start is called before the first frame update

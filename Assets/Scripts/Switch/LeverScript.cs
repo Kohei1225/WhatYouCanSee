@@ -5,12 +5,15 @@ using UnityEngine;
 //レバーにアタッチするクラス
 public class LeverScript : MonoBehaviour
 {
+    [SerializeField] LeverScript _SyncLever = null;
+    private bool firstLever = false;
     public int barPosition{get;private set;}//バーの状態
     public bool existMidPos;//バーが真ん中で止まるかどうか
     bool canChangeBar;//プレイヤーが近くにいる時(バーを操作できる状態)
     GameObject barObject;//実際に動くバーのオブジェクト
     public float[] barAngleList = {160,90,20,90};//バーの傾きのリスト
     private int firstBarPos = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +51,10 @@ public class LeverScript : MonoBehaviour
 
             //配列の最後まで来たら最初に戻る
             if(barPosition >= barAngleList.Length)barPosition = 0;
+
+            //他のレバーが連動するなら連動させる
+            firstLever = true;
+            _SyncLever?.SyncLeverPos(this.barPosition);
         }
 
         //バーの傾きを調整
@@ -83,5 +90,21 @@ public class LeverScript : MonoBehaviour
     public void ResetBarPos()
     {
         this.barPosition = firstBarPos;
+        firstLever = true;
+        _SyncLever?.SyncLeverPos(this.barPosition);
     }
+
+    public void SyncLeverPos(int barPos)
+    {
+        if(firstLever)
+        {
+            this.firstLever = false;
+            return;
+        }
+
+        //
+        this.barPosition = barPos;
+        _SyncLever.SyncLeverPos(barPos);
+    }
+
 }

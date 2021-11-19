@@ -13,11 +13,13 @@ public class SoundVolume : MonoBehaviour
     public GameObject pauseObject;
     public GameObject optionObject;
     //オーディオミキサー
-    public AudioMixer audioMixer;
+    private AudioMixer audioMixer;
 
     // Start is called before the first frame update
     void Start()
     {
+        audioMixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
+
         //開始時にスライダーの値をオーディオミキサーから読み取る
         float bgmVolume;
         audioMixer.GetFloat("BGMVolume", out bgmVolume);

@@ -32,7 +32,7 @@ public class GoalController : MonoBehaviour
     //吸い込まれるフラグ
     private bool canSuck = false;
     //戻るシーン名
-    public string worldSceneName;
+    private string worldSceneName = "WorldSelect";
     public MaskManager maskManager;
 
     public GameObject pauseCanvas;

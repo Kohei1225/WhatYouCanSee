@@ -263,7 +263,7 @@ public class PandaScript : BossBase
                     if(Distance < DISTANCE1)
                     {
                         //2回は爪攻撃をする
-                        if (_AttackCounter < 2)
+                        if (_AttackCounter < 1)
                         {
                             Attack1();
                             _AttackCounter++;
@@ -271,7 +271,7 @@ public class PandaScript : BossBase
                         else
                         {
                             Attack1();
-                            Charge(0.5f);
+                            Charge(0.3f);
                             Attack2();
                             _AttackCounter = 0;
                         }
@@ -281,7 +281,7 @@ public class PandaScript : BossBase
                         //
                         Charge(1.0f);
                         Attack2();
-                        Wait(_WaitTime);
+                        Wait(1.5f);
                     }
 
                 }
@@ -305,6 +305,7 @@ public class PandaScript : BossBase
                     //
                     if (Distance < DISTANCE1)
                     {
+                        Wait(0.5f);
                         Attack1();
                         Attack1();
                         Attack1();
@@ -331,6 +332,7 @@ public class PandaScript : BossBase
                     if (_AttackCounter > 2)
                     {
                         Attack3();
+                        Wait(2.0f);
                         _AttackCounter = 0;
                     }
                     //Debug.Log("Attack::" + _AttackCounter);
@@ -388,7 +390,7 @@ public class PandaScript : BossBase
         _TaskList.AddTask(TaskEnum.SwingUp);
         if (_BattleType != 0)
         {
-            Charge(0.5f);
+            Charge(0.3f);
         }
         _TaskList.AddTask(TaskEnum.SwingDown);
     }
@@ -406,7 +408,6 @@ public class PandaScript : BossBase
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         Charge(2.5f);
         _TaskList.AddTask(TaskEnum.SuperKick);
-        Wait(2.0f);
     }
 
     public override void Wait(float waitTime)
@@ -447,9 +448,9 @@ public class PandaScript : BossBase
         if(_BattleType == 1)
         {
             Attack2();
-            _AttackInterval = 1.0f;
+            _AttackInterval = 0.75f;
             _SwingUpTime = 0.5f;
-            _SwingDownTime = 0.4f;
+            _SwingDownTime = 0.5f;
         }
 
         //ラストは攻撃間隔を短くする
@@ -457,7 +458,7 @@ public class PandaScript : BossBase
         {
             _AttackInterval = 0.5f;
             _SwingUpTime = 0.2f;
-            _SwingDownTime = 0.4f;
+            _SwingDownTime = 0.25f;
         }
 
         

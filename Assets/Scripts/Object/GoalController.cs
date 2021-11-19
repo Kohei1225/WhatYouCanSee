@@ -33,18 +33,12 @@ public class GoalController : MonoBehaviour
     private bool canSuck = false;
     //戻るシーン名
     public string worldSceneName;
-    //オーディオソース
-    private AudioSource audioSource;
-    //音素材
-    public AudioClip[] audioClip;
-
     public MaskManager maskManager;
 
     public GameObject pauseCanvas;
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
         minScale = player.transform.localScale.x / denominatorNum;
     }
 
@@ -100,7 +94,7 @@ public class GoalController : MonoBehaviour
             maskManager.Set_canMove(true);
 
             //音ならす
-            audioSource.PlayOneShot(audioClip[1]);
+            SoundManager.Instance.PlaySE("Warped");
             return;
         }
         //ワープに向かって少し移動
@@ -148,7 +142,7 @@ public class GoalController : MonoBehaviour
 
             canSuck = true;
             //音ならす
-            audioSource.PlayOneShot(audioClip[0]);
+            SoundManager.Instance.PlaySE("Sucked");
 
             //ポーズキャンバスを見えなくする
             pauseCanvas.SetActive(false);

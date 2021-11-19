@@ -241,7 +241,32 @@ public class PandaScript : BossBase
             //状態２
             case 1:
                 {
+                    if (!CanAttack)
+                    {
+                        break;
+                    }
+
                     _TaskList.AddTask(TaskEnum.Walk);
+                    if(Distance < DISTANCE1)
+                    {
+                        //3回は爪攻撃をする
+                        if (_AttackCounter < 3)
+                        {
+                            Attack1();
+                            _AttackCounter++;
+                        }
+                    }
+                    if(Distance < DISTANCE2)
+                    {
+                        //
+                        if(_AttackCounter >= 2)
+                        {
+                            Attack2();
+                            _TaskList.AddTask(TaskEnum.Wait);
+                            _AttackCounter = 0;
+                        }
+
+                    }
 
                 }
                 break;
@@ -354,7 +379,14 @@ public class PandaScript : BossBase
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Wait);
 
+        var preBattleType = _BattleType;
         _BattleType = (_CurrentHP - 1) / 3;
+
+        //攻撃タイプが変わったら攻撃回数をリセット
+        if (preBattleType != _BattleType)
+        {
+            _AttackCounter = 0;
+        }
         //ダメージを受けた時の処理(アニメーション再生とか)
         Debug.Log("ダメージ受けた！！残り残機:" + this._CurrentHP);
         
@@ -366,13 +398,24 @@ public class PandaScript : BossBase
             leverObject.GetComponent<LeverScript>().ResetBarPos();
         else Debug.Log("パンダにレバーが設定されてないよ！！");
 
+        if(_BattleType == 1)
+        {
+            _AttackInterval = 1.0f;
+            _SwingUpTime = 0.5f;
+            _SwingDownTime = 0.4f;
+        }
+
         //ラストは攻撃間隔を短くする
         if (_BattleType == 0)
         {
-            _AttackInterval = 1;
+            _AttackInterval = 0.5f;
             _SwingUpTime = 0.2f;
             _SwingDownTime = 0.4f;
         }
+
+        
+
+
         //animController.SetBool("HasDamage", false);
     }
 

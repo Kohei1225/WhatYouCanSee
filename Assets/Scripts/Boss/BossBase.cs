@@ -41,14 +41,14 @@ public abstract class BossBase : MonoBehaviour
 
 
     /// <summary> 攻撃インターバル </summary>
-    protected int _AttackInterval;
+    protected float _AttackInterval;
     /// <summary> 攻撃のインターバル測定用 </summary>
     protected TimerScript _AttackIntervalTimer = new TimerScript();
 
     /// <summary> 時間測定(ダメージ)用 </summary>
-    public int _DamageTime{get; protected set;}          
+    public float _DamageTime{get; protected set;}          
     /// <summary> インターバル(ダメージ)用。無敵時間 </summary>
-    public int _DamageTimeInterval{get; protected set;}
+    public float _DamageTimeInterval{get; protected set;}
     /// <summary> 攻撃を受けない状態か </summary>
     public bool _IsUnableBeAttacked { get; protected set; }
     #endregion

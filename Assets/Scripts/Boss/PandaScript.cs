@@ -65,6 +65,8 @@ public class PandaScript : BossBase
     private float _SwingUpTime = 1f;
     /// <summary> 攻撃後の隙の時間 </summary>
     private float _SwingDownTime = 2.0f;
+    /// <summary> 防御する時間 </summary>
+    private float _DefendTime = 2.0f;
 
     #endregion
 
@@ -372,7 +374,8 @@ public class PandaScript : BossBase
         _TaskList.AddTask(TaskEnum.Damage);
         //_TaskList.AddTask(TaskEnum.Defend);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
-        _TaskList.AddTask(TaskEnum.Wait);
+        Defend(2.0f);
+        //_TaskList.AddTask(TaskEnum.Wait);
 
         var preBattleType = _BattleType;
         _BattleType = (_CurrentHP - 1) / 3;
@@ -433,6 +436,16 @@ public class PandaScript : BossBase
 
         this._IsDead = true;
     }
+
+    /// <summary> 防御 </summary>
+    /// <param name="defendTime">防御する時間</param>
+    public void Defend(float defendTime)
+    {
+        //時間を設定してタスクを追加
+        _DefendTime = defendTime;
+        _TaskList.AddTask(TaskEnum.Defend);
+    }
+
 
     /// <summary> 背景に合わせて身体を有効/無効化 </summary>
     void CheckBackColorAndControlBody()
@@ -738,7 +751,6 @@ public class PandaScript : BossBase
     #endregion
 
     #region Task Defend function
-    float _DefendTime = 2.0f;
 
     void TaskDefendEnter()
     {

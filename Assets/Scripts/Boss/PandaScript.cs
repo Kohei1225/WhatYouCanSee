@@ -305,7 +305,7 @@ public class PandaScript : BossBase
                     //
                     if (Distance < DISTANCE1)
                     {
-                        Wait(0.5f);
+                        Wait(0.2f);
                         Attack1();
                         Attack1();
                         Attack1();
@@ -406,7 +406,7 @@ public class PandaScript : BossBase
     {
         Defend(1.0f);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
-        Charge(2.5f);
+        Charge(0.75f);
         _TaskList.AddTask(TaskEnum.SuperKick);
     }
 
@@ -459,6 +459,15 @@ public class PandaScript : BossBase
             _AttackInterval = 0.5f;
             _SwingUpTime = 0.2f;
             _SwingDownTime = 0.25f;
+            if(_CurrentHP == 1)
+            {
+                Attack3();
+            }
+            else
+            {
+                Attack2();
+            }
+
         }
 
         
@@ -636,7 +645,7 @@ public class PandaScript : BossBase
         }
         var des = desObj.transform.position.x;
 
-        transform.Translate(_Dir * 0.5f, 0, 0);
+        transform.Translate(_Dir * 0.95f, 0, 0);
         
 
         var diff = Mathf.Abs(transform.position.x - des);
@@ -667,11 +676,11 @@ public class PandaScript : BossBase
     {
         var pos = transform.position;
         var dir = 1;
-        if(_FrameNumber%2 == 0)
+        if((_FrameNumber/2)%2 == 0)
         {
             dir = -1;
         }
-        pos.x = _Xpos + dir * 0.2f;
+        pos.x = _Xpos + dir * 0.25f;
         transform.position = pos;
 
         _FrameNumber++;

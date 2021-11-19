@@ -59,7 +59,7 @@ public abstract class BossBase : MonoBehaviour
     #endregion
 
     #region property
-    /// <summary> ダメージ中かどうか </summary>
+    /// <summary> 無敵かどうか </summary>
     public bool IsUnableBeAttacked
     {
         get { return _IsUnableBeAttacked; }

@@ -84,12 +84,12 @@ public abstract class BossBase : MonoBehaviour
     public abstract void Attack2();
     /// <summary> 攻撃３ </summary>
     public abstract void Attack3();
-    /// <summary> ダメージ </summary>
+    /// <summary> 攻撃を受けた際 </summary>
     public abstract void Damage();
     /// <summary> 任意の時間何もしない </summary>
     /// <param name="waitTime">待つ時間</param>
     public abstract void Wait(float waitTime);
-    /// <summary> ダウン </summary>
+    /// <summary> 倒される </summary>
     public abstract void Down();
     #endregion
 

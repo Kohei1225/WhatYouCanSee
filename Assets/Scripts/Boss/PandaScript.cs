@@ -222,7 +222,7 @@ public class PandaScript : BossBase
             //状態１
             case 2:
                 {
-                    //Debug.Log(Distance);
+                    //インターバルが終わってなければ攻撃しない
                     if(!CanAttack)
                     {
                         break;
@@ -230,7 +230,7 @@ public class PandaScript : BossBase
                     // 攻撃範囲に入ってきたら攻撃
                     if (Distance < DISTANCE1)
                     {
-                        Wait(_WaitTime);
+                        Wait(0.25f);
                         Attack1();
                     }
                     else Move();
@@ -370,7 +370,7 @@ public class PandaScript : BossBase
     {
         _TaskList.CancelAllTask();
         _TaskList.AddTask(TaskEnum.Damage);
-        _TaskList.AddTask(TaskEnum.Defend);
+        //_TaskList.AddTask(TaskEnum.Defend);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Wait);
 
@@ -766,8 +766,8 @@ public class PandaScript : BossBase
 
     bool TaskWaitUpdate()
     {
-        _Timer.UpdateTimer();
-        return _Timer.IsTimeUp;
+        _WaitTimer.UpdateTimer();
+        return _WaitTimer.IsTimeUp;
     }
 
     void TaskWaitExit()

@@ -132,68 +132,12 @@ public class PandaScript : BossBase
             UpdateState();
 
             //戦える状態だったら戦う
-            if(!_IsDead && !_Player.GetComponent<PlayerController>().damage )
+            if (!_IsDead && !_Player.GetComponent<PlayerController>().damage)
             {
-                //Debug.Log(GameObject.Find("Player").transform.Find("Body").gameObject);
-                _AnimController.SetBool("IsIdle",false);
-                //if(animController.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Panda_Damage")
-                  //  animController.SetBool("HasDamage",false);
+                _AnimController.SetBool("IsIdle", false);
 
                 //身体の処理
                 CheckBackColorAndControlBody();
-
-                //攻撃にインターバルをつける。一定の時間が経つまでは攻撃できない。
-                //if(this.attackTime < attackTimeInterval)
-                //{
-                //    this.attackTime++;
-                //    Debug.Log("足してるはず");
-                //    animController.SetBool("CanKick",false);
-                //    animController.SetBool("CanAttack",false);
-                //}
-                //else this.canAttack = true;
-
-                
-                if(_DamageTime < _DamageTimeInterval)_DamageTime++;
-
-                //キックしたら印をつける
-                if(_AnimController.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Panda_Kick"
-                    && !transform.Find("Foot").gameObject.GetComponent<FootAreaScript>().touchingStage)
-                    hasKick = true;
-
-                //キックした後に着地したらアニメーションを終わらせる
-                //if(hasKick && transform.Find("Foot").gameObject.GetComponent<FootAreaScript>().touchingStage)
-                //{
-                //    hasKick = false;
-                //    animController.SetBool("CanKick",false);
-                //    GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
-                //}
-
-                //if(animController.GetCurrentAnimatorClipInfo(0)[0].clip.name == "Panda_Move")
-                //    TurnToPlayer();
-
-                //ある程度プレイヤーに近づくまでジリジリ近づく
-                //if( (this.hp == 3 && Distance > DISTANCE1) 
-                //|| (this.hp <= 2 && Distance > DISTANCE2))
-                //    Move();
-
-                //else if(this.canAttack)
-                //{
-                    //引っ掻き攻撃
-                //    if(Distance < DISTANCE1)
-                //        Attack1();
-
-                    //飛び蹴り攻撃
-                //    else if(this.hp <= 2 && Distance < DISTANCE2)
-                //        Attack2();
-                
-                //    this.canAttack = false;
-                //    attackTime = 0;
-                    //Debug.Log("attackTime:" + attackTime);
-                //}
-            }
-            else 
-            {
-                //Idle();
             }
         }
         //一定の距離近づいたらバトルが始まる
@@ -239,6 +183,7 @@ public class PandaScript : BossBase
                     if (_CurrentHP <= 0)
                     {
                         _State = StateEnum.Dead;
+                        break;
                     }
 
                     //登録された一連のタスクの処理がすべて完了したら、次の一連のタスクを登録する
@@ -254,7 +199,6 @@ public class PandaScript : BossBase
                             SelectTasks();
                             
                         }
-                        
                     }
 
                     // セットしてるタスクのUpdate()を呼ぶ

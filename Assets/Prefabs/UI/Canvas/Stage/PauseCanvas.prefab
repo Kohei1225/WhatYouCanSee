@@ -162,8 +162,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 1879734392861894083}
   m_HandleRect: {fileID: 1879734393694258354}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 20
+  m_MinValue: -1
+  m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
@@ -300,8 +300,8 @@ MonoBehaviour:
   m_FillRect: {fileID: 1879734394559139226}
   m_HandleRect: {fileID: 1879734393881751851}
   m_Direction: 0
-  m_MinValue: -80
-  m_MaxValue: 20
+  m_MinValue: -1
+  m_MaxValue: 1
   m_WholeNumbers: 0
   m_Value: 0
   m_OnValueChanged:
@@ -1081,6 +1081,7 @@ MonoBehaviour:
   SEVolumeSlider: {fileID: 1879734392637836510}
   pauseObject: {fileID: 1879734394161067540}
   optionObject: {fileID: 1879734394124088773}
+  deltaVolume: 20
 --- !u!1 &1879734393263880958
 GameObject:
   m_ObjectHideFlags: 0

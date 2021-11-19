@@ -27,6 +27,13 @@ public class MapManager : MonoBehaviour
         "Labo_BGM02",
         "Labo_BGM04",
     };
+    public string[] stageBGMFileName =
+    {
+        "Labo_BGM03",
+        "Labo_BGM01",
+        "Labo_BGM02",
+        "Labo_BGM04",
+    };
 
     private GameObject[] stageIcons;
     //アイコンの数
@@ -58,7 +65,7 @@ public class MapManager : MonoBehaviour
     public float appearSpeed = 0.1f;
 
     //移動可能アイコン番号
-    public static int lastGoNo = 5;
+    public static int lastGoNo = 15;
 
     //挑戦中のステージのアイコン番号
     public static int tryNo = 0;
@@ -145,6 +152,8 @@ public class MapManager : MonoBehaviour
                 SoundManager.Instance.PlaySE("SelectStage");
                 //状態を選択状態にする
                 screenStatus = ScreenStatuses.SELECT;
+                //ゲームマネージャーにこれから再生する音ファイル名を渡す
+                GameManagerScript.stageBGMFileName = stageBGMFileName[(int)stageIcon.worldNo];
             }
         }
         else if (screenStatus == ScreenStatuses.CLEAR)

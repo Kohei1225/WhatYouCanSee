@@ -13,7 +13,7 @@ public class SoundVolume : MonoBehaviour
     public GameObject pauseObject;
     public GameObject optionObject;
     //オーディオミキサー
-    public AudioMixer audioMixer;
+    private AudioMixer audioMixer;
     //デシベルの最小値と最大値の差
     //スライダーの最小値は-1、最大値は1
     public float deltaVolume = 20;
@@ -21,8 +21,11 @@ public class SoundVolume : MonoBehaviour
     private float volumeToValue;
 
     // Start is called before the first frame update
+
     void Start()
     {
+        audioMixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
+
         volumeToValue = 1 / (deltaVolume / 2);
         //開始時にスライダーの値をオーディオミキサーから読み取る
         float bgmVolume;

@@ -70,6 +70,12 @@ public abstract class BossBase : MonoBehaviour
     {
         get { return _AttackIntervalTimer.IsTimeUp; }
     }
+
+    /// <summary> 死んでるかどうか </summary>
+    public bool IsDead
+    {
+        get { return _CurrentHP <= 0; }
+    }
     #endregion
 
     #region abstract function

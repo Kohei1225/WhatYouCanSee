@@ -107,7 +107,7 @@ public abstract class BossBase : MonoBehaviour
     }
 
 
-    /// <summary> プレイヤーの方向を向く </summary>
+    /// <summary> 任意のオブジェクトの方向を向く </summary>
     public void TurnTo(GameObject obj)
     {
         var objXPos = obj?.transform.position.x;

@@ -262,23 +262,26 @@ public class PandaScript : BossBase
                     Move();
                     if(Distance < DISTANCE1)
                     {
-                        //3回は爪攻撃をする
-                        if (_AttackCounter < 3)
+                        //2回は爪攻撃をする
+                        if (_AttackCounter < 2)
                         {
                             Attack1();
                             _AttackCounter++;
                         }
-                    }
-                    if(Distance < DISTANCE2)
-                    {
-                        //
-                        if(_AttackCounter >= 2)
+                        else
                         {
+                            Attack1();
+                            Charge(0.5f);
                             Attack2();
-                            Wait(_WaitTime);
                             _AttackCounter = 0;
                         }
-
+                    }
+                    else if(Distance > DISTANCE2)
+                    {
+                        //
+                        Charge(1.0f);
+                        Attack2();
+                        Wait(_WaitTime);
                     }
 
                 }
@@ -298,11 +301,6 @@ public class PandaScript : BossBase
                         break;
                     }
             
-                    //
-                    if(Distance > DISTANCE2)
-                    {
-                        Move(); 
-                    }
 
                     //
                     if (Distance < DISTANCE1)
@@ -313,9 +311,8 @@ public class PandaScript : BossBase
                         Attack1();
                         _AttackCounter++;
                     }
-
                     //
-                    else if (Distance < DISTANCE2)
+                    else if (Distance > DISTANCE2)
                     {
                         _TaskList.AddTask(TaskEnum.Kick);
                         Attack1();
@@ -324,18 +321,16 @@ public class PandaScript : BossBase
                         Wait(_WaitTime);
                         _TaskList.AddTask(TaskEnum.Defend);
                         _AttackCounter++;
-
+                    }
+                    else
+                    {
+                        Move();
                     }
 
                     //
                     if (_AttackCounter > 2)
                     {
-                        Charge(2.0f);
-                        _TaskList.AddTask(TaskEnum.ReturnPostion);
-                        Wait(2.0f);
-                        _TaskList.AddTask(TaskEnum.SuperKick);
-                        Wait(2.0f);
-                        _Timer.ResetTimer(3.0f);
+                        Attack3();
                         _AttackCounter = 0;
                     }
                     //Debug.Log("Attack::" + _AttackCounter);
@@ -404,10 +399,14 @@ public class PandaScript : BossBase
         _TaskList.AddTask(TaskEnum.Kick);
     }
 
-
+    /// <summary> プレイヤーの方向に突撃 </summary>
     public override void Attack3()
     {
-        //パンダは何もなし
+        Defend(1.0f);
+        _TaskList.AddTask(TaskEnum.ReturnPostion);
+        Charge(2.5f);
+        _TaskList.AddTask(TaskEnum.SuperKick);
+        Wait(2.0f);
     }
 
     public override void Wait(float waitTime)
@@ -447,6 +446,7 @@ public class PandaScript : BossBase
 
         if(_BattleType == 1)
         {
+            Attack2();
             _AttackInterval = 1.0f;
             _SwingUpTime = 0.5f;
             _SwingDownTime = 0.4f;
@@ -645,7 +645,8 @@ public class PandaScript : BossBase
     void TaskSuperKickExit()
     {
         _AnimController.SetBool("IsKick", false);
-        _Timer.ResetTimer(1.0f);
+        _Timer.ResetTimer(2.0f);
+        TurnTo(_Player);
     }
     #endregion
 

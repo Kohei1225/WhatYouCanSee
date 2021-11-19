@@ -268,7 +268,7 @@ public class PandaScript : BossBase
                     Move();
 
                     //プレイヤーが近くでジャンプしたら防御
-                    if (!_Player.GetComponent<PlayerController>().onStage && Distance < DISTANCE1)
+                    if (!_Player.GetComponent<PlayerController>().onStage && Distance < DISTANCE1*1.5f)
                     {
                         Defend(2.0f);
                     }
@@ -634,6 +634,7 @@ public class PandaScript : BossBase
     void TaskKickExit()
     {
         _AnimController.SetBool("IsKick", false);
+        TurnTo(_Player);
     }
     #endregion
 

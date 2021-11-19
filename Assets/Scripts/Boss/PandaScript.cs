@@ -266,12 +266,21 @@ public class PandaScript : BossBase
                     }
 
                     Move();
-                    if(Distance < DISTANCE1)
+
+                    //プレイヤーが近くでジャンプしたら防御
+                    if (!_Player.GetComponent<PlayerController>().onStage && Distance < DISTANCE1)
+                    {
+                        Defend(2.0f);
+                    }
+
+                    if (Distance < DISTANCE1)
                     {
                         //2回は爪攻撃をする
                         if (_AttackCounter < 1)
                         {
                             Attack1();
+                            Wait(2.0f);
+                            Defend(1.0f);
                             _AttackCounter++;
                         }
                         else
@@ -298,7 +307,7 @@ public class PandaScript : BossBase
                     //プレイヤーが近くでジャンプしたら防御
                     if(!_Player.GetComponent<PlayerController>().onStage && Distance < 5)
                     {
-                        _TaskList.AddTask(TaskEnum.Defend);
+                        Defend(2.0f);
                     }
 
                     if(!CanAttack)
@@ -308,7 +317,7 @@ public class PandaScript : BossBase
                     }
             
 
-                    //
+                    //近くにいたら爪攻撃
                     if (Distance < DISTANCE1)
                     {
                         Wait(0.2f);
@@ -318,24 +327,25 @@ public class PandaScript : BossBase
                         Attack1();
                         _AttackCounter++;
                     }
-                    //
+                    //遠くにいたら飛び蹴りからの爪攻撃
                     else if (Distance > DISTANCE2)
                     {
-                        _TaskList.AddTask(TaskEnum.Kick);
+                        Attack2();
                         Attack1();
                         Attack1();
                         Attack1();
-                        Wait(_WaitTime);
-                        _TaskList.AddTask(TaskEnum.Defend);
+                        Wait(0.2f);
+                        Defend(2.0f);
                         _AttackCounter++;
                     }
+                    //その中間にいたら近づく
                     else
                     {
                         Move();
                     }
 
-                    //
-                    if (_AttackCounter > 2)
+                    // 2回以上攻撃したら突撃攻撃
+                    if (_AttackCounter >= 2)
                     {
                         Attack3();
                         Wait(2.0f);

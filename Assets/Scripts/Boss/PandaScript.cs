@@ -344,8 +344,6 @@ public class PandaScript : BossBase
                     {
                         Move();
                     }
-
-                    //Debug.Log("Attack::" + _AttackCounter);
                 }
                 break;
         }
@@ -454,6 +452,7 @@ public class PandaScript : BossBase
             _AttackInterval = 0.75f;
             _SwingUpTime = 0.5f;
             _SwingDownTime = 0.5f;
+            _LeverSwitch?.ChangeBarPos();
         }
 
         //ラストは攻撃間隔を短くする
@@ -470,7 +469,9 @@ public class PandaScript : BossBase
             {
                 Attack2();
             }
-
+            _LeverSwitch?.ChangeBarPos();
+            _LeverSwitch?.ChangeBarPos();
+            _LeverSwitch?.ChangeBarPos();
         }
         //animController.SetBool("HasDamage", false);
     }

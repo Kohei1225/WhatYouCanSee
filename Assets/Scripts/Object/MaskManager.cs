@@ -8,10 +8,11 @@ public class MaskManager : MonoBehaviour
     [SerializeField] private bool isShrink = false;
     public float speed = 100;
     public float maxScale = 200;
+    public GameObject blackBoard;
     // Start is called before the first frame update
     void Start()
     {
-
+        blackBoard.SetActive(true);
     }
 
     // Update is called once per frame

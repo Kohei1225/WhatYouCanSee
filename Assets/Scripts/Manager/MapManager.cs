@@ -20,6 +20,13 @@ public class MapManager : MonoBehaviour
         "Abandoned Factory",
         "City"
     };
+    public string[] worldBGMFileName =
+    {
+        "Labo_BGM03",
+        "Labo_BGM01",
+        "Labo_BGM02",
+        "Labo_BGM04",
+    };
 
     private GameObject[] stageIcons;
     //アイコンの数
@@ -55,9 +62,6 @@ public class MapManager : MonoBehaviour
 
     //挑戦中のステージのアイコン番号
     public static int tryNo = 0;
-
-    private AudioSource audioSource;
-    public AudioClip[] audioClips;
 
     //LineRendererが動けるか
     private bool canMoveLine = false;
@@ -106,7 +110,8 @@ public class MapManager : MonoBehaviour
         SetPointsToLine();
 
         //テキストUIにステージ名を表示(更新)
-        string StageName = stageIcons[tryNo].GetComponent<StageIcon>().GetStageName();
+        StageIcon nowStageIcon = stageIcons[tryNo].GetComponent<StageIcon>();
+        string StageName = nowStageIcon.GetStageName();
         stageName_text.text = StageName;
 
         if (screenStatus == ScreenStatuses.CLEAR)
@@ -117,7 +122,6 @@ public class MapManager : MonoBehaviour
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -138,7 +142,7 @@ public class MapManager : MonoBehaviour
                 //プレイヤージャンプ
                 playerScript.Jump();
                 //音再生
-                audioSource.PlayOneShot(audioClips[0]);
+                SoundManager.Instance.PlaySE("SelectStage");
                 //状態を選択状態にする
                 screenStatus = ScreenStatuses.SELECT;
             }
@@ -297,5 +301,10 @@ public class MapManager : MonoBehaviour
     private int Get_lastGoNo()
     {
         return lastGoNo;
+    }
+
+    public void PlayWorldBGM(int worldNo)
+    {
+        SoundManager.Instance.PlayBGM(worldBGMFileName[worldNo]);
     }
 }

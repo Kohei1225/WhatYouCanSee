@@ -59,6 +59,8 @@ public class PlayerController_Map : MonoBehaviour
         string worldName = mapManager.worldName[worldNo];
         //ワールド名変更
         worldName_text.text = worldName;
+        //アイコンにあるワールドから流す曲を決める
+        mapManager.PlayWorldBGM(worldNo);
     }
 
     // Update is called once per frame
@@ -171,17 +173,15 @@ public class PlayerController_Map : MonoBehaviour
 
             //カメラ位置調整(カメラ移動の終わり)
             cameraController_map.TranslateGoPos();
-            //もしついた先が新しい場所だったら
-            //if (worldSignboardScript.Get_isFin())
-            //{
-                int worldNo = (int)mapManager.getStageIcon(goNo).GetComponent<StageIcon>().worldNo;
-                string worldName = mapManager.worldName[worldNo];
-                //ワールド名変更
-                worldName_text.text = worldName;
-                //看板を出す
-                worldSignboardScript.Init(false);
-                worldSignboardScript.Set_isMove(true);
-            //}
+            int worldNo = (int)mapManager.getStageIcon(goNo).GetComponent<StageIcon>().worldNo;
+            string worldName = mapManager.worldName[worldNo];
+            //ワールド名変更
+            worldName_text.text = worldName;
+            //看板を出す
+            worldSignboardScript.Init(false);
+            worldSignboardScript.Set_isMove(true);
+            //アイコンにあるワールドから流す曲を決める
+            mapManager.PlayWorldBGM(worldNo);
             return;
         }
         Vector3 direction = GetVector(from, to);

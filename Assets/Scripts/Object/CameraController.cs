@@ -34,7 +34,7 @@ public class CameraController : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         firstPos = transform.position;
-        lastPos = lastPosObj.transform.position;
+        lastPos = new Vector3(lastPosObj.transform.position.x, lastPosObj.transform.position.y, -10);
         firstOrthographicSize = cam.orthographicSize;
 
         movePosPerSec = (lastPos - firstPos) / zoomSec;

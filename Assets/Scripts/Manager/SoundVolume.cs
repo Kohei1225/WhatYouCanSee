@@ -19,6 +19,12 @@ public class SoundVolume : MonoBehaviour
     public float deltaVolume = 20;
     //オーディオミキサーの音量からスライダーの値にこれをかけて変換する
     private float volumeToValue;
+    //トグル(チェックボックス)
+    public Toggle BGMToggle;
+    public Toggle SEToggle;
+    //ミュートか覚えるためのbool
+    public static bool isMute_BGM;
+    public static bool isMute_SE;
 
     // Start is called before the first frame update
 
@@ -39,6 +45,10 @@ public class SoundVolume : MonoBehaviour
         //float masterVolume;
         //audioMixer.GetFloat("SEVolume", out masterVolume);
         //MasterVolumeSlider.value = masterVolume;
+
+        //開始時にトグルの値をオーディオミキサーから読み取る
+        SoundManager.Instance.SetMuteBGM(isMute_BGM);
+        SoundManager.Instance.SetMuteSE(isMute_SE);
     }
 
     // Update is called once per frame
@@ -82,5 +92,17 @@ public class SoundVolume : MonoBehaviour
     {
         audioMixer.SetFloat("MasterVolume", masterVolume / volumeToValue);
         //Debug.Log("Master:" + masterVolume);
+    }
+
+    public void MuteBGM(bool isMute)
+    {
+        isMute_BGM = isMute;
+        SoundManager.Instance.SetMuteBGM(isMute);
+    }
+
+    public void MuteSE(bool isMute)
+    {
+        isMute_SE = isMute;
+        SoundManager.Instance.SetMuteSE(isMute);
     }
 }

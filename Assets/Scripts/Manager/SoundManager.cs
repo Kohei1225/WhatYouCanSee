@@ -115,4 +115,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         AudioClip newSE = audioClips_SE[GetIndex_SE(fileName)];
         audioSource_SE.PlayOneShot(newSE);
     }
+
+    //これはトグルようではない
+    public void SetMuteBGM(bool isMute)
+    {
+        audioSource_BGM.mute = isMute;
+    }
+
+    //これはトグルようではない
+    public void SetMuteSE(bool isMute)
+    {
+        audioSource_SE.mute = isMute;
+    }
 }

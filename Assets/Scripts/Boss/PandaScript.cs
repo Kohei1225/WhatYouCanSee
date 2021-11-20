@@ -11,10 +11,6 @@ public class PandaScript : BossBase
     {
         Idle,
         Walk,
-        
-        Jump,
-        MiniJump,
-        ClawAttack,
         SwingUp,    //攻撃前
         SwingDown,  //攻撃後
         Kick,
@@ -24,25 +20,31 @@ public class PandaScript : BossBase
         Damage,
         Defend,
         Wait,
-        
     }
     #endregion
 
     #region serialize
-    [SerializeField] private int _MaxHp = 9;       //パンダの体力
-    [SerializeField] private float firstMoveSpeed;  //パンダのスピード
-    [SerializeField] GameObject backGroundObject;
-    [SerializeField] private LeverScript _LeverSwitch; //レバーのオブジェクト
+    /// <summary> パンダの体力 </summary>
+    [SerializeField] private int _MaxHp = 9;       
+    /// <summary> パンダの移動スピード </summary>
+    [SerializeField] private float _MoveSpeed = 0.075f;  
+    /// <summary> 背景のスクリプト </summary>
+    [SerializeField]private ColorObjectVer3 _BackColorScript = null;
+    /// <summary> レバーのオブジェクト </summary>
+    [SerializeField] private LeverScript _LeverSwitch; //
+    /// <summary> プレイヤーのオブジェクト </summary>
     [SerializeField] private GameObject _Player = null;
+    /// <summary> 右側の固定位置 </summary>
     [SerializeField] private GameObject _RightSetPos = null;
+    /// <summary> 左側の固定位置 </summary>
     [SerializeField] private GameObject _LeftSetPos = null;
     /// <summary> 飛び蹴りベクトル </summary>
-    [SerializeField] private Vector2 kickVel = new Vector2(25f, 20f);
+    [SerializeField] private Vector2 _kickVel = new Vector2(25f, 20f);
     #endregion
 
     #region field
     /// <summary> バトルを開始する距離 </summary>
-    private const float BATTLE_START_DISTANCE = 40f; 
+    private const float BATTLE_START_DISTANCE = 50f; 
     /// <summary> 攻撃１をする距離 </summary>
     private const float DISTANCE1 = 7.5f;             
     /// <summary> 攻撃２をする距離 </summary>
@@ -50,15 +52,11 @@ public class PandaScript : BossBase
     /// <summary>  </summary>
     private bool hasKick = false;
     /// <summary> 身体の黒い部分(主に攻撃判定) </summary>
-    private GameObject blackBody = null;                   
+    private GameObject _BlackBody = null;                   
     /// <summary> 身体の白い部分 </summary>
-    private GameObject whiteBody = null;                   
-    /// <summary> 背景のスクリプト </summary>
-    private ColorObjectVer3 backColorScript = null;        
-
-    /// <summary> タスクリストのインスタンス </summary>
-    private TaskList<TaskEnum> _TaskList = new TaskList<TaskEnum>();
-
+    private GameObject _WhiteBody = null;                   
+          
+    
     /// <summary> 攻撃した回数 </summary>
     private int _AttackCounter = 0;
     /// <summary> いろんな時間計測用インスタンス </summary>
@@ -71,6 +69,9 @@ public class PandaScript : BossBase
     private float _DefendTime = 2.0f;
     /// <summary> 溜める時間 </summary>
     private float _ChargeTime = 2.0f;
+
+    /// <summary> タスクリストのインスタンス </summary>
+    private TaskList<TaskEnum> _TaskList = new TaskList<TaskEnum>();
     #endregion
 
     #region property
@@ -91,47 +92,38 @@ public class PandaScript : BossBase
         get { return !_Player.transform.Find("Body").gameObject.activeSelf; }
     }
 
-    /// <summary> 死んでるかどうか </summary>
-    public bool IsDead
-    {
-        get { return _State == StateEnum.Dead; }
-    }
-
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         _CurrentHP = _MaxHp;
-        _MoveSpeed = firstMoveSpeed;
         _AttackInterval = 2;
         _DamageTimeInterval = 1;
         _DamageTime = _DamageTimeInterval;
         _AnimController = GetComponent<Animator>();
         _BossSize = transform.localScale.x;
-        blackBody = transform.Find("Black").gameObject;
-        whiteBody = transform.Find("White").gameObject;
-        blackBody.SetActive(false);
-        backColorScript = backGroundObject?.GetComponent<ColorObjectVer3>();
-        //Debug.Log("attackTime:" + attackTime + " inter:" + attackTimeInterval);
+        _BlackBody = transform.Find("Black").gameObject;
+        _WhiteBody = transform.Find("White").gameObject;
+        _BlackBody.SetActive(false);
+
 
         //タスクの登録
         _TaskList.DefineTask(TaskEnum.Idle, TaskIdleEnter, TaskIdleUpdate, TaskIdleExit);
         _TaskList.DefineTask(TaskEnum.Walk, TaskWalkEnter, TaskWalkUpdate, TaskWalkExit);
-        _TaskList.DefineTask(TaskEnum.Jump, TaskJumpEnter, TaskJumpUpdate, TaskJumpExit);
-        _TaskList.DefineTask(TaskEnum.Charge, TaskChargeEnter, TaskChargeUpdate, TaskChargeExit);
-        _TaskList.DefineTask(TaskEnum.ClawAttack, TaskClawEnter, TaskClawUpdate, TaskClawExit);
         _TaskList.DefineTask(TaskEnum.SwingUp, TaskSwingUpEnter, TaskSwingUpUpdate, TaskSwingUpExit);
         _TaskList.DefineTask(TaskEnum.SwingDown, TaskSwingDownEnter, TaskSwingDownUpdate, TaskSwingDownExit);
         _TaskList.DefineTask(TaskEnum.Kick,TaskKickEnter,TaskKickUpdate,TaskKickExit);
+        _TaskList.DefineTask(TaskEnum.Charge, TaskChargeEnter, TaskChargeUpdate, TaskChargeExit);
         _TaskList.DefineTask(TaskEnum.SuperKick, TaskSuperKickEnter, TaskSuperKickUpdate, TaskSuperKickExit);
         _TaskList.DefineTask(TaskEnum.ReturnPostion, TaskReturnEnter, TaskReturnUpdate, TaskReturnExit);
-        _TaskList.DefineTask(TaskEnum.Wait, TaskWaitEnter, TaskWaitUpdate, TaskWaitExit);
         _TaskList.DefineTask(TaskEnum.Damage, TaskDamageEnter, TaskDamageUpdate, TaskDamageExit);
         _TaskList.DefineTask(TaskEnum.Defend, TaskDefendEnter, TaskDefendUpdate, TaskDefendExit);
+        _TaskList.DefineTask(TaskEnum.Wait, TaskWaitEnter, TaskWaitUpdate, TaskWaitExit);
 
         TurnTo(_Player);
 
+        //乱数用の初期設定
         Random.InitState(System.DateTime.Now.Millisecond);
     }
 
@@ -253,7 +245,6 @@ public class PandaScript : BossBase
                     if (Distance < DISTANCE1*2)
                     {
                         Wait(0.25f);
-                       // _TaskList.AddTask(TaskEnum.Charge);
                         Attack1();
                     }
                     else Move();
@@ -425,7 +416,7 @@ public class PandaScript : BossBase
     {
         Defend(1.0f);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
-        Charge(0.75f);
+        Charge(1.25f);
         _TaskList.AddTask(TaskEnum.SuperKick);
     }
 
@@ -441,7 +432,6 @@ public class PandaScript : BossBase
         _TaskList.AddTask(TaskEnum.Damage);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         Defend(2.0f);
-        //_TaskList.AddTask(TaskEnum.Wait);
 
         // 攻撃タイプを更新
         var preBattleType = _BattleType;
@@ -453,14 +443,10 @@ public class PandaScript : BossBase
             _AttackCounter = 0;
         }
         //ダメージを受けた時の処理(アニメーション再生とか)
-        Debug.Log("ダメージ受けた！！残り残機:" + this._CurrentHP);
+        //Debug.Log("ダメージ受けた！！残り残機:" + this._CurrentHP);
 
-        //
-        //animController.SetBool("HasDamage",true);
-
-        //攻撃を受けたらレバーの位置をリセット
+        //背景色を黒以外に変更
         _LeverSwitch?.ResetBarPos();
-
 
         if(_BattleType == 1)
         {
@@ -498,8 +484,8 @@ public class PandaScript : BossBase
         _AnimController.Play("Panda_Down", 0, 0);
 
         //攻撃判定のオブジェクトを消す
-        blackBody.SetActive(false);
-        whiteBody.SetActive(false);
+        _BlackBody.SetActive(false);
+        _WhiteBody.SetActive(false);
         
         //攻撃を受けたらレバーの位置をリセット
         _LeverSwitch?.ResetBarPos();
@@ -530,15 +516,15 @@ public class PandaScript : BossBase
         //背景の色によって実体が消える
         bool isWhite = false;
         bool isBlack = false;
-        if(this.backColorScript?.colorType == ColorObjectVer3.OBJECT_COLOR3.WHITE)
+        if(this._BackColorScript?.colorType == ColorObjectVer3.OBJECT_COLOR3.WHITE)
             isWhite = true;
 
-        if(this.backColorScript?.colorType == ColorObjectVer3.OBJECT_COLOR3.BLACK)
+        if(this._BackColorScript?.colorType == ColorObjectVer3.OBJECT_COLOR3.BLACK)
             isBlack = true;
 
         //身体を有効/無効化する
-        this.whiteBody.SetActive(!isWhite);
-        this.blackBody.SetActive(!isBlack);
+        this._WhiteBody.SetActive(!isWhite);
+        this._BlackBody.SetActive(!isBlack);
     }
 
     /// <summary> 背景色を変更する </summary>
@@ -590,22 +576,6 @@ public class PandaScript : BossBase
     }
     #endregion
 
-    #region Task Jump function
-
-    void TaskJumpEnter()
-    {
-    }
-
-    bool TaskJumpUpdate()
-    {
-        return true;
-    }
-
-    void TaskJumpExit()
-    {
-
-    }
-    #endregion
 
     #region Task Kick function
     bool _HasFloat;
@@ -615,7 +585,7 @@ public class PandaScript : BossBase
         _AnimController.SetBool("IsKick", true);
         _AnimController.Play("Panda_Kick", 0, 0);
         var vel = GetComponent<Rigidbody2D>().velocity;
-        vel = kickVel;
+        vel = _kickVel;
         vel.x *= _Dir;
         GetComponent<Rigidbody2D>().velocity = vel;
 
@@ -647,9 +617,9 @@ public class PandaScript : BossBase
         _AnimController.Play("Panda_Kick", 0, 0);
 
         var vel = GetComponent<Rigidbody2D>().velocity;
-        vel = kickVel;
-        vel.x *= _Dir;
-        //GetComponent<Rigidbody2D>().velocity = vel;
+        vel = _kickVel*1.25f;
+        vel.x = 0;
+        GetComponent<Rigidbody2D>().velocity = vel;
 
         _HasFloat = false;
     }
@@ -663,9 +633,9 @@ public class PandaScript : BossBase
         }
         var des = desObj.transform.position.x;
 
-        transform.Translate(_Dir * 0.95f, 0, 0);
+        //端に着くまで移動する
+        transform.Translate(_Dir * 0.8f, 0, 0);
         
-
         var diff = Mathf.Abs(transform.position.x - des);
         return diff < 1;
     }
@@ -673,7 +643,6 @@ public class PandaScript : BossBase
     void TaskSuperKickExit()
     {
         _AnimController.SetBool("IsKick", false);
-        _Timer.ResetTimer(2.0f);
         TurnTo(_Player);
     }
     #endregion
@@ -685,6 +654,7 @@ public class PandaScript : BossBase
 
     void TaskChargeEnter()
     {
+        //現X座標と時間をセット
         _Timer.ResetTimer(_ChargeTime);
         _FrameNumber = 0;
         _Xpos = transform.position.x;
@@ -694,7 +664,9 @@ public class PandaScript : BossBase
     {
         var pos = transform.position;
         var dir = 1;
-        if((_FrameNumber/2)%2 == 0)
+
+        //フレームの数に応じて振動する
+        if((_FrameNumber/4)%2 == 0)
         {
             dir = -1;
         }
@@ -710,28 +682,6 @@ public class PandaScript : BossBase
     void TaskChargeExit()
     {
         _AnimController.SetBool("IsDefend", false);
-    }
-    #endregion
-
-    #region Task Claw function
-    void TaskClawEnter()
-    {
-        TurnTo(_Player);
-        _Timer.ResetTimer(0.4f);
-        _AnimController.SetBool("CanAttack", true);
-        _AnimController.Play("Panda_Attack",0,0);
-    }
-
-    bool TaskClawUpdate()
-    {
-        _Timer.UpdateTimer();
-        return _Timer.IsTimeUp;
-    }
-
-    void TaskClawExit()
-    {
-        _AnimController.SetBool("CanAttack", false);
-        _Timer.ResetTimer(_AttackInterval);
     }
     #endregion
 
@@ -826,15 +776,8 @@ public class PandaScript : BossBase
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         _IsUnableBeAttacked = false;
 
-        
-        var n = Random.Range(0, 4);
-        Debug.Log(n);
-        for(int i = 0;i < n;i++)
-        {
-            ChangeBackColor();
-        }
-
-        
+        //背景色を変更
+        ChangeBackColor();   
     }
     #endregion
 
@@ -899,5 +842,6 @@ public class PandaScript : BossBase
         _IsUnableBeAttacked = false;
     }
     #endregion
+
     #endregion
 }

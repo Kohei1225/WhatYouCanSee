@@ -26,8 +26,6 @@ public abstract class BossBase : MonoBehaviour
     protected int _CurrentHP;
     /// <summary> 既に死んだかの判定 </summary>
     protected bool _IsDead = false;
-    /// <summary> スピード </summary>
-    protected float _MoveSpeed;
     /// <summary> 攻撃する判定 </summary>
     protected bool _CanAttack = true;
     /// <summary> 向いてる方向(-1:左向き,1:右向き) </summary>

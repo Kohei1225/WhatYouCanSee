@@ -38,23 +38,7 @@ public class LeverScript : MonoBehaviour
         //プレイヤーが近くでCを押すと切り替わる
         if(canChangeBar && Input.GetKeyDown(KeyCode.C))
         {
-            //３段階以上で変えられる時
-            if(existMidPos)
-            {
-                barPosition++;      
-            }
-            //２段階の時
-            else
-            {
-                barPosition += 2;
-            }
-
-            //配列の最後まで来たら最初に戻る
-            if(barPosition >= barAngleList.Length)barPosition = 0;
-
-            //他のレバーが連動するなら連動させる
-            firstLever = true;
-            _SyncLever?.SyncLeverPos(this.barPosition);
+            ChangeBarPos();
         }
 
         //バーの傾きを調整
@@ -105,6 +89,27 @@ public class LeverScript : MonoBehaviour
         //
         this.barPosition = barPos;
         _SyncLever.SyncLeverPos(barPos);
+    }
+
+    public void ChangeBarPos()
+    {
+        //３段階以上で変えられる時
+        if(existMidPos)
+        {
+            barPosition++;      
+        }
+        //２段階の時
+        else
+        {
+            barPosition += 2;
+        }
+
+        //配列の最後まで来たら最初に戻る
+        if(barPosition >= barAngleList.Length)barPosition = 0;
+
+        //他のレバーが連動するなら連動させる
+        firstLever = true;
+        _SyncLever?.SyncLeverPos(this.barPosition);
     }
 
 }

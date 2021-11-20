@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PandaScript : BossBase
 {
     #region define
@@ -31,7 +32,7 @@ public class PandaScript : BossBase
     [SerializeField] private int _MaxHp = 9;       //パンダの体力
     [SerializeField] private float firstMoveSpeed;  //パンダのスピード
     [SerializeField] GameObject backGroundObject;
-    [SerializeField] private GameObject leverObject; //レバーのオブジェクト
+    [SerializeField] private LeverScript _LeverSwitch; //レバーのオブジェクト
     [SerializeField] private GameObject _Player = null;
     [SerializeField] private GameObject _RightSetPos = null;
     [SerializeField] private GameObject _LeftSetPos = null;
@@ -130,6 +131,8 @@ public class PandaScript : BossBase
         _TaskList.DefineTask(TaskEnum.Defend, TaskDefendEnter, TaskDefendUpdate, TaskDefendExit);
 
         TurnTo(_Player);
+
+        Random.InitState(System.DateTime.Now.Millisecond);
     }
 
     // Update is called once per frame
@@ -451,14 +454,12 @@ public class PandaScript : BossBase
         }
         //ダメージを受けた時の処理(アニメーション再生とか)
         Debug.Log("ダメージ受けた！！残り残機:" + this._CurrentHP);
-        
+
         //
         //animController.SetBool("HasDamage",true);
 
         //攻撃を受けたらレバーの位置をリセット
-        if(leverObject)
-            leverObject.GetComponent<LeverScript>().ResetBarPos();
-        else Debug.Log("パンダにレバーが設定されてないよ！！");
+        _LeverSwitch?.ResetBarPos();
 
 
         if(_BattleType == 1)
@@ -485,10 +486,6 @@ public class PandaScript : BossBase
             }
 
         }
-
-        
-
-
         //animController.SetBool("HasDamage", false);
     }
 
@@ -505,8 +502,7 @@ public class PandaScript : BossBase
         whiteBody.SetActive(false);
         
         //攻撃を受けたらレバーの位置をリセット
-        if(leverObject)
-            leverObject.GetComponent<LeverScript>().ResetBarPos();
+        _LeverSwitch?.ResetBarPos();
 
         this._IsDead = true;
     }
@@ -545,6 +541,11 @@ public class PandaScript : BossBase
         this.blackBody.SetActive(!isBlack);
     }
 
+    /// <summary> 背景色を変更する </summary>
+    void ChangeBackColor()
+    {
+        _LeverSwitch?.ChangeBarPos();
+    }
 
     #region Task function
 
@@ -824,6 +825,16 @@ public class PandaScript : BossBase
         _AnimController.SetBool("IsKick", false);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         _IsUnableBeAttacked = false;
+
+        
+        var n = Random.Range(0, 4);
+        Debug.Log(n);
+        for(int i = 0;i < n;i++)
+        {
+            ChangeBackColor();
+        }
+
+        
     }
     #endregion
 

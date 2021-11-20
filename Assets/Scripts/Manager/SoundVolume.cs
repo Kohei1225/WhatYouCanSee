@@ -17,20 +17,26 @@ public class SoundVolume : MonoBehaviour
     //デシベルの最小値と最大値の差
     //スライダーの最小値は-1、最大値は1
     public float deltaVolume = 20;
+    //初期のオーディオミキサーの音量
+    public float firstVolume = -10;
     //オーディオミキサーの音量からスライダーの値にこれをかけて変換する
     private float volumeToValue;
-    //トグル(チェックボックス)
-    public Toggle BGMToggle;
-    public Toggle SEToggle;
     //ミュートか覚えるためのbool
     public static bool isMute_BGM;
     public static bool isMute_SE;
 
     // Start is called before the first frame update
 
-    void Start()
+    private void Awake()
     {
         audioMixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
+
+        audioMixer.SetFloat("BGMVolume", -10);
+        audioMixer.SetFloat("SEVolume", -10);
+    }
+
+    void Start()
+    {
 
         volumeToValue = 1 / (deltaVolume / 2);
         //開始時にスライダーの値をオーディオミキサーから読み取る
@@ -78,13 +84,13 @@ public class SoundVolume : MonoBehaviour
     //以下は音量調節
     public void Set_bgmVolume(float bgmVolume)
     {
-        audioMixer.SetFloat("BGMVolume", bgmVolume / volumeToValue);
+        audioMixer.SetFloat("BGMVolume", bgmVolume / volumeToValue - firstVolume);
         //Debug.Log("BGM:" + bgmVolume);
     }
 
     public void Set_seVolume(float seVolume)
     {
-        audioMixer.SetFloat("SEVolume", seVolume / volumeToValue);
+        audioMixer.SetFloat("SEVolume", seVolume / volumeToValue - firstVolume);
         //Debug.Log("SE:" + seVolume);
     }
 
@@ -94,12 +100,20 @@ public class SoundVolume : MonoBehaviour
         //Debug.Log("Master:" + masterVolume);
     }
 
+    /// <summary>
+    /// トグルで呼び出す
+    /// </summary>
+    /// <param name="isMute"></param>
     public void MuteBGM(bool isMute)
     {
         isMute_BGM = isMute;
         SoundManager.Instance.SetMuteBGM(isMute);
     }
 
+    /// <summary>
+    /// トグルで呼び出す
+    /// </summary>
+    /// <param name="isMute"></param>
     public void MuteSE(bool isMute)
     {
         isMute_SE = isMute;

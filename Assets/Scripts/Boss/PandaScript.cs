@@ -247,7 +247,7 @@ public class PandaScript : BossBase
                         break;
                     }
                     // 攻撃範囲に入ってきたら攻撃
-                    if (Distance < DISTANCE1)
+                    if (Distance < DISTANCE1*2)
                     {
                         Wait(0.25f);
                        // _TaskList.AddTask(TaskEnum.Charge);

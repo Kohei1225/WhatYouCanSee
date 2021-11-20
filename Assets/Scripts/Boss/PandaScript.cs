@@ -310,9 +310,16 @@ public class PandaScript : BossBase
                         break;
                     }
             
+                    // 2回以上攻撃したら突撃攻撃
+                    if (_AttackCounter >= 2)
+                    {
+                        Attack3();
+                        Wait(2.0f);
+                        _AttackCounter = 0;
+                    }
 
                     //近くにいたら爪攻撃
-                    if (Distance < DISTANCE1)
+                    else if (Distance < DISTANCE1)
                     {
                         Wait(0.2f);
                         Attack1();
@@ -338,13 +345,6 @@ public class PandaScript : BossBase
                         Move();
                     }
 
-                    // 2回以上攻撃したら突撃攻撃
-                    if (_AttackCounter >= 2)
-                    {
-                        Attack3();
-                        Wait(2.0f);
-                        _AttackCounter = 0;
-                    }
                     //Debug.Log("Attack::" + _AttackCounter);
                 }
                 break;
@@ -732,8 +732,7 @@ public class PandaScript : BossBase
     void TaskReturnEnter()
     {
         TurnTo(_Player);
-        _AnimController.SetBool("IsKick", true);
-        _AnimController.Play("Panda_Kick", 0, 0);
+        
         var rb = GetComponent<Rigidbody2D>();
         var vel = rb.velocity;
         var diff = 0f;
@@ -754,8 +753,11 @@ public class PandaScript : BossBase
 
         _HasFloat = true;
 
+        //遠くにいたら飛ぶ
         if (Mathf.Abs(diff) > 2f)
         {
+            _AnimController.SetBool("IsKick", true);
+            _AnimController.Play("Panda_Kick", 0, 0);
             rb.velocity = vel;
             _HasFloat = false;
         }
@@ -772,12 +774,16 @@ public class PandaScript : BossBase
 
     void TaskReturnExit()
     {
+        //背景色を変更
+        if(_AnimController.GetBool("IsKick"))
+        {
+            ChangeBackColor();
+        }
         _AnimController.SetBool("IsKick", false);
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         _IsUnableBeAttacked = false;
 
-        //背景色を変更
-        ChangeBackColor();   
+         
     }
     #endregion
 

@@ -242,7 +242,7 @@ public class PandaScript : BossBase
                         break;
                     }
                     // 攻撃範囲に入ってきたら攻撃
-                    if (Distance < DISTANCE1*2)
+                    if (Distance < DISTANCE1*1.25f)
                     {
                         Wait(0.25f);
                         Attack1();

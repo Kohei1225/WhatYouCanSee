@@ -2,21 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//頭の部分にアタッチする踏まれたかどうかを判定するスクリプト
+/// <summary>
+/// 踏まれたかどうかを判定.
+/// 頭の部分にアタッチする
+/// </summary>
 public class HeadPointScript : MonoBehaviour
 {
-    [SerializeField] private BossBase bossScript;
-
+    [SerializeField] private BossBase _BossScript;
     // Start is called before the first frame update
     void Start()
     {
-        //名前によって取得するコンポーネントを変更...?(まぁとりあえず)
-        switch(gameObject.transform.root.gameObject.name)
+        _BossScript = gameObject.transform.root?.gameObject.GetComponent<BossBase>();
+
+        if(_BossScript == null)
         {
-            case "Panda":
-                bossScript = gameObject.transform.root.gameObject.GetComponent<PandaScript>();
-                break;
-            //default:break;
+            Debug.Log("BossBaseを継承したクラスが見つかりません.");
         }
     }
 
@@ -39,10 +39,6 @@ public class HeadPointScript : MonoBehaviour
             return;
         }
 
-        //プレイヤーに当たったら
-
-        //Debug.Log("damage:" + pc.damage + " dadmageTime:" + bossScript.dadmageTime + " interval:" + bossScript.damageTimeInterval);
-
         //踏めないタイミングだったら何もしない
         if(pc.damage)return;
 
@@ -52,9 +48,7 @@ public class HeadPointScript : MonoBehaviour
         playerObject.GetComponent<Rigidbody2D>().velocity = vel;
 
         //無敵時間だったらダメージは受けない
-        if (bossScript.IsUnableBeAttacked) return;
-        bossScript.BeAttacked();
-        //Debug.Log("プレイヤー当たった");
-        //Debug.Log(otherObject.gameObject.transform.root.gameObject.name);
+        if (_BossScript.IsUnableBeAttacked) return;
+        _BossScript.BeAttacked();
     }
 }

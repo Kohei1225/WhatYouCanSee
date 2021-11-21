@@ -256,6 +256,7 @@ public class PandaScript : BossBase
             //状態２
             case 1:
                 {
+                    //インターバルが終わってなければ攻撃しない
                     if (!CanAttack)
                     {
                         break;
@@ -281,6 +282,7 @@ public class PandaScript : BossBase
                         }
                         else
                         {
+                            //爪攻撃からの飛び蹴り
                             Attack1();
                             Charge(0.3f);
                             Attack2();
@@ -289,7 +291,7 @@ public class PandaScript : BossBase
                     }
                     else if(Distance > DISTANCE2)
                     {
-                        //
+                        //溜めてから飛び蹴り
                         Charge(1.0f);
                         Attack2();
                         Wait(1.5f);
@@ -442,12 +444,11 @@ public class PandaScript : BossBase
         {
             _AttackCounter = 0;
         }
-        //ダメージを受けた時の処理(アニメーション再生とか)
-        //Debug.Log("ダメージ受けた！！残り残機:" + this._CurrentHP);
 
         //背景色を黒以外に変更
         _LeverSwitch?.ResetBarPos();
 
+        //残り体力によって処理を変える
         if(_BattleType == 1)
         {
             Attack2();
@@ -475,13 +476,11 @@ public class PandaScript : BossBase
             _LeverSwitch?.ChangeBarPos();
             _LeverSwitch?.ChangeBarPos();
         }
-        //animController.SetBool("HasDamage", false);
     }
 
     public override void Down()
     {
         //死ぬ処理
-        //Debug.Log("ダメージ。あ！死んだ！！");
         _AnimController.SetBool("HasDown",true);
         _AnimController.SetBool("IsDefend", false);
         _AnimController.Play("Panda_Down", 0, 0);
@@ -712,7 +711,6 @@ public class PandaScript : BossBase
     
     void TaskSwingDownEnter()
     {
-         //TurnTo(_Player);
         _Timer.ResetTimer(_SwingDownTime);
         _AnimController.SetBool("IsAttack", true);
         _AnimController.Play("Panda_SwingDown", 0, 0 );
@@ -750,7 +748,6 @@ public class PandaScript : BossBase
             diff = _RightSetPos.transform.position.x - transform.position.x;
         }
         
-        //Debug.Log("diff::" + diff);
         vel.x = diff *(4f/5f);
         vel.y = 30;
 
@@ -819,16 +816,18 @@ public class PandaScript : BossBase
     void TaskDefendEnter()
     {
         _Timer.ResetTimer(_DefendTime);
-        _AnimController.SetBool("IsDefend", true);
-        //防御の間は無敵にする
-        _IsUnableBeAttacked = true;
-        
+        _AnimController.SetBool("IsDefend", true);        
     }
 
     bool TaskDefendUpdate()
     {
-        //ダメージは受けないけど踏める
-        _WhiteBody.SetActive(true);
+        //背景の色が黒じゃなければ無敵になる
+        if (_BackColorScript.colorType != ColorObjectVer3.OBJECT_COLOR3.BLACK)
+        {
+            //ダメージは受けないけど踏める
+            _WhiteBody.SetActive(true);
+            _IsUnableBeAttacked = true;
+        }
         _Timer.UpdateTimer();
         return Distance > 2 && _Timer.IsTimeUp;
     }

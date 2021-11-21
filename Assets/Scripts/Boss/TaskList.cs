@@ -6,7 +6,63 @@ using System;
 
 /// <summary>
 /// タスクという単位で処理を登録して、
-/// TaskTypeを追加することで順番に処理を実行するクラス
+/// TaskTypeを追加することで順番に処理を実行するクラス.
+///
+/// [使い方]
+///	Class className
+///	{
+///		
+///		①タスクの種類の定義
+///		enum TaskEnum
+///		{
+///			Idle,
+///			Jump,
+///			Damage,
+///		}
+///
+///		②インスタンス生成
+///		TaskList<TaskEnum> _TaskList = new TaskList<TaskEnum>();
+///
+///		void Start()
+///		{
+///			④タスクの登録
+///			_TaskList.DefineTask(TaskEnum.Idle, TaskIdleEnter, TaskIdleUpdate, TaskIdleExit);
+///			_TaskList.DefineTask(TaskEnum.Jump, TaskJumpEnter, TaskJumpUpdate, TaskJumpExit);
+///			_TaskList.DefineTask(TaskEnum.Damage, TaskDamageEnter, TaskDamageeUpdate, TaskDamageExit);
+///		}
+///
+///		void Update()
+///		{
+///			⑤タスクが全部終わったら、実行するタスクを追加する
+///			(この場合は Idleの処理 -> Jumpの処理の順番で処理を行う)
+///			if(_TaskList.IsEnd)
+///			{	
+///				_TaskList.AddTask(TaskEnum.Idle);
+///				_TaskList.AddTask(TaskEnum.Jump);
+///			}
+///			
+///			⑥タスクの処理を呼び出す
+///			_TaskList.UpdateTask();
+///		}
+///
+///		③タスクに応じた処理を書く
+///		void TaskIdleEnter()
+///		{
+///			最初だけ呼び出す処理
+///		}
+///
+///		bool TaskIdleUpdate()
+///		{
+///			trueを返すまで呼び出し続ける処理
+///		}
+///
+///		void TaskIdleExit()
+///		{
+///			最後に呼び出す処理
+///		}
+///		...
+///	}
+/// 
 /// </summary>
 /// <typeparam name="T">enumの型</typeparam>
 public class TaskList<T>

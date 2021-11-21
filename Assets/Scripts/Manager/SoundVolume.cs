@@ -20,33 +20,48 @@ public class SoundVolume : MonoBehaviour
     //初期のオーディオミキサーの音量
     public float firstVolume = -10;
     //オーディオミキサーの音量からスライダーの値にこれをかけて変換する
-    private float volumeToValue;
+    //private float volumeToValue;
     //ミュートか覚えるためのbool
     public static bool isMute_BGM;
     public static bool isMute_SE;
+
+    private static bool isFirst = true;
 
     // Start is called before the first frame update
 
     private void Awake()
     {
-        audioMixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
-
-        audioMixer.SetFloat("BGMVolume", -10);
-        audioMixer.SetFloat("SEVolume", -10);
     }
 
     void Start()
     {
+        audioMixer = Resources.Load<AudioMixer>("Audios/AudioMixer");
 
-        volumeToValue = 1 / (deltaVolume / 2);
+        if (isFirst)
+        {
+            //音量設定
+            audioMixer.SetFloat("BGMVolume", firstVolume);
+            audioMixer.SetFloat("SEVolume", firstVolume);
+            isFirst = false;
+        }
+
+        //volumeToValue = 1 / (deltaVolume / 2);
         //開始時にスライダーの値をオーディオミキサーから読み取る
         float bgmVolume;
         audioMixer.GetFloat("BGMVolume", out bgmVolume);
-        BGMVolumeSlider.value = bgmVolume * volumeToValue;
+        //Debug.Log("BGM:" + bgmVolume);
+        BGMVolumeSlider.minValue = 0;
+        BGMVolumeSlider.maxValue = 1;
+
+        BGMVolumeSlider.value = Mathf.InverseLerp(firstVolume - (deltaVolume / 2), firstVolume + (deltaVolume / 2), bgmVolume);
 
         float seVolume;
         audioMixer.GetFloat("SEVolume", out seVolume);
-        SEVolumeSlider.value = seVolume * volumeToValue;
+        //Debug.Log("SE:" + seVolume);
+        SEVolumeSlider.minValue = 0;
+        SEVolumeSlider.maxValue = 1;
+
+        SEVolumeSlider.value = Mathf.InverseLerp(firstVolume - (deltaVolume / 2), firstVolume + (deltaVolume / 2), seVolume);
 
         //float masterVolume;
         //audioMixer.GetFloat("SEVolume", out masterVolume);
@@ -68,6 +83,9 @@ public class SoundVolume : MonoBehaviour
             }
         }
 
+        float bgmVolume;
+        audioMixer.GetFloat("BGMVolume", out bgmVolume);
+
         //BGMVolume = BGMVolumeSlider.value;
         //SEVolume = SEVolumeSlider.value;
         //Debug.Log("BGMVolume:" + BGMVolume);
@@ -82,22 +100,16 @@ public class SoundVolume : MonoBehaviour
     }
 
     //以下は音量調節
-    public void Set_bgmVolume(float bgmVolume)
+    public void Set_bgmVolume(float bgmValue)
     {
-        audioMixer.SetFloat("BGMVolume", bgmVolume / volumeToValue - firstVolume);
+        audioMixer.SetFloat("BGMVolume", Mathf.Lerp(firstVolume - (deltaVolume / 2), firstVolume + (deltaVolume / 2), bgmValue));
         //Debug.Log("BGM:" + bgmVolume);
     }
 
-    public void Set_seVolume(float seVolume)
+    public void Set_seVolume(float seValue)
     {
-        audioMixer.SetFloat("SEVolume", seVolume / volumeToValue - firstVolume);
+        audioMixer.SetFloat("SEVolume", Mathf.Lerp(firstVolume - (deltaVolume / 2), firstVolume + (deltaVolume / 2), seValue));
         //Debug.Log("SE:" + seVolume);
-    }
-
-    public void Set_masterVolume(float masterVolume)
-    {
-        audioMixer.SetFloat("MasterVolume", masterVolume / volumeToValue);
-        //Debug.Log("Master:" + masterVolume);
     }
 
     /// <summary>

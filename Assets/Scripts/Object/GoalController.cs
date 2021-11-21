@@ -143,6 +143,8 @@ public class GoalController : MonoBehaviour
             canSuck = true;
             //音ならす
             SoundManager.Instance.PlaySE("Sucked");
+            //BGM止める
+            SoundManager.Instance.StopBGM();
 
             //ポーズキャンバスを見えなくする
             pauseCanvas.SetActive(false);

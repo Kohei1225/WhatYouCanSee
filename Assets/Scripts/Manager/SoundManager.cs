@@ -19,20 +19,16 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
     private Dictionary<string, int> keyValuePairs_BGM;
     private Dictionary<string, int> keyValuePairs_SE;
 
-    //protected override void Awake()
-    //{
-    //    //DontDestroyOnLoad(gameObject);
-    //    base.Awake();
-    //}
-
-
-    void Start()
+    protected override void Awake()
     {
+        base.Awake();
         audioSource_BGM = gameObject.AddComponent<AudioSource>();
         audioSource_SE = gameObject.AddComponent<AudioSource>();
 
         audioSource_BGM.playOnAwake = false;
         audioSource_SE.playOnAwake = false;
+
+        audioSource_BGM.loop = true;
 
         //オーディオソース(BGM)のoutputにBGMをセット
         audioSource_BGM.outputAudioMixerGroup = audioMixerGroup_BGM;
@@ -53,6 +49,12 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         {
             keyValuePairs_SE.Add(audioClips_SE[i].name, i);
         }
+
+    }
+
+
+    void Start()
+    {
     }
 
     // Update is called once per frame
@@ -112,5 +114,17 @@ public class SoundManager : SingletonMonoBehaviour<SoundManager>
         //流す
         AudioClip newSE = audioClips_SE[GetIndex_SE(fileName)];
         audioSource_SE.PlayOneShot(newSE);
+    }
+
+    //これはトグルようではない
+    public void SetMuteBGM(bool isMute)
+    {
+        audioSource_BGM.mute = isMute;
+    }
+
+    //これはトグルようではない
+    public void SetMuteSE(bool isMute)
+    {
+        audioSource_SE.mute = isMute;
     }
 }

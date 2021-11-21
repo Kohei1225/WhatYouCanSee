@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Ver3.unity
     guid: 476912ee5692b4f2e9e0cc683ea74d58
   - enabled: 1
-    path: Assets/Scenes/WorldSelect/WorldSelect.unity
+    path: Assets/Scenes/WorldSelect.unity
     guid: a8f6f5d409d3542ea863b5904489c482
   - enabled: 1
     path: Assets/Scenes/WorldSelect/Nature.unity

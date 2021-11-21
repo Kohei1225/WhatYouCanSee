@@ -8,18 +8,24 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField] GameObject[] colorObjectList; //ステージにあるオブジェクトのリスト。LightRayのクラスで使う。
     public bool existRay;   //そもそも光源が存在するか。falseならステージ全体が明るくなる
     public bool existShadow;//光源があっても影が存在するか。falseならオブジェクトに影ができなくなる
+
+    //ステージのBGMのファイル名
+    public static string stageBGMFileName;
     
 
     void Awake()
     {
         //そもそも光源が存在しないなら影も存在しないのでそこを調整する
         if(!existRay)existShadow = false;
+
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        //音再生
+        if (stageBGMFileName != null)
+            SoundManager.Instance.PlayBGM(stageBGMFileName);
     }
 
     // Update is called once per frame

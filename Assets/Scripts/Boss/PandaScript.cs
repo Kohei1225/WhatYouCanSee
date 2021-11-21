@@ -133,7 +133,7 @@ public class PandaScript : BossBase
         //バトルが始まってたら処理する
         if(_HasStartBattle)
         {
-            UpdateState();
+            
 
             //戦える状態だったら戦う
             if (!_IsDead && !_Player.GetComponent<PlayerController>().damage)
@@ -143,6 +143,8 @@ public class PandaScript : BossBase
                 //身体の処理
                 CheckBackColorAndControlBody();
             }
+
+            UpdateState();
         }
         //一定の距離近づいたらバトルが始まる
         else if(Distance < BATTLE_START_DISTANCE)
@@ -818,10 +820,15 @@ public class PandaScript : BossBase
     {
         _Timer.ResetTimer(_DefendTime);
         _AnimController.SetBool("IsDefend", true);
+        //防御の間は無敵にする
+        _IsUnableBeAttacked = true;
+        
     }
 
     bool TaskDefendUpdate()
     {
+        //ダメージは受けないけど踏める
+        _WhiteBody.SetActive(true);
         _Timer.UpdateTimer();
         return Distance > 2 && _Timer.IsTimeUp;
     }
@@ -829,6 +836,9 @@ public class PandaScript : BossBase
     void TaskDefendExit()
     {
         _AnimController.SetBool("IsDefend", false);
+        _IsUnableBeAttacked = false;
+        //背景色に合わせる
+        CheckBackColorAndControlBody();
     }
     #endregion
 

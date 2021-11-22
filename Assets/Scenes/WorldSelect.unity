@@ -646,10 +646,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 575087712704283994, guid: 64ca70ff30fe64c18b5dc40b25690c4d, type: 3}
-      propertyPath: isShrink
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 575087712704283994, guid: 64ca70ff30fe64c18b5dc40b25690c4d, type: 3}
       propertyPath: blackBoard
       value: 
       objectReference: {fileID: 423969964}
@@ -665,10 +661,6 @@ PrefabInstance:
       propertyPath: worldName_text
       value: 
       objectReference: {fileID: 1261958542}
-    - target: {fileID: 6780148344426483418, guid: 64ca70ff30fe64c18b5dc40b25690c4d, type: 3}
-      propertyPath: worldSignBoard
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 6780148344426483418, guid: 64ca70ff30fe64c18b5dc40b25690c4d, type: 3}
       propertyPath: cameraController_map
       value: 

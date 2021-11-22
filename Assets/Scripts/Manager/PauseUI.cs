@@ -23,13 +23,18 @@ public class PauseUI : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 pauseObject.SetActive(false);
+                //マップマネージャーの状態をNORMALに
+                MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
             }
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            //マップマネージャーの状態がNORMALだったら
+            if (Input.GetKeyDown(KeyCode.Escape) && MapManager.screenStatus == MapManager.ScreenStatuses.NORMAL)
             {
                 pauseObject.SetActive(true);
+                //マップマネージャーの状態をPAUSEに
+                MapManager.screenStatus = MapManager.ScreenStatuses.PAUSE;
             }
         }
         
@@ -38,6 +43,8 @@ public class PauseUI : MonoBehaviour
     public void RestartClick()
     {
         pauseObject.SetActive(false);
+        //マップマネージャーの状態をNORMALに
+        MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
     }
 
     public void OptionClick()

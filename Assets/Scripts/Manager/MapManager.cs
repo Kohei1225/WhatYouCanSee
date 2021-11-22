@@ -80,6 +80,7 @@ public class MapManager : MonoBehaviour
     public enum ScreenStatuses
     {
         NORMAL,
+        PAUSE,
         CLEAR,
         SELECT,
         DARK,

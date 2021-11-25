@@ -93,10 +93,19 @@ public class PlayerController : MonoBehaviour
                     Vector3 throwVec = new Vector3(vec*throwPower, throwPower*1.5f, 0);
                     objectBeingHolden.GetComponent<Rigidbody2D>().AddForce(throwVec);
 
+                    //もしこれがダメージを与えるブロックだったら
+                    DamageBlockScript damageBlockScript = objectBeingHolden.GetComponent<DamageBlockScript>();
+                    if (damageBlockScript != null)
+                    {
+                        //ダメージを与えられる状態にする
+                        damageBlockScript._CanDamage = true;
+                    }
+
                     //何も持ってない状態にする
                     isHoldingObject = false;
                     objectBeingHolden.GetComponent<ColorObjectVer3>().Set_onThePlayer(false);
                     objectBeingHolden = null;
+
                 }
             }
         }

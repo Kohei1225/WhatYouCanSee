@@ -26,26 +26,38 @@ public class HeadPointScript : MonoBehaviour
         
     }
 
-    void OnTriggerEnter2D(Collider2D otherObject)
+    private void OnTriggerEnter2D(Collider2D otherObject)
     {
         //触れた対象を一旦保存
         GameObject playerObject = otherObject.transform.root?.gameObject;
         PlayerController pc = playerObject?.GetComponent<PlayerController>();
 
-        //対象がプレイヤーの足意外なら終了
-        if (pc == null || otherObject.gameObject.name != "Foot")
+        DamageBlockScript damageBlockScript = otherObject.transform.root.GetComponent<DamageBlockScript>();
+        bool isPlayerFoot = pc != null && otherObject.gameObject.name == "Foot";
+        bool isDamageBlock = damageBlockScript != null;
+        //対象がプレイヤーの足意外かつダメージを与えるブロックではないなら終了
+        if (!isPlayerFoot && !isDamageBlock)
         {
-            //Debug.Log("Unable to Attack Panda!!");
             return;
         }
+        else if (isDamageBlock)
+        {
+            //ブロックがダメージを与えられないなら終わり
+            if (!damageBlockScript._CanDamage)
+                return;
+        }
+        //Debug.Log("Unable to Attack Panda!!");
 
-        //踏めないタイミングだったら何もしない
-        if(pc.damage)return;
-
-        //踏めるタイミングならプレイヤーを上に飛ばしてダメージ処理
-        var vel = playerObject.GetComponent<Rigidbody2D>().velocity;
-        vel.y = playerObject.GetComponent<PlayerController>().jumpSpeed;
-        playerObject.GetComponent<Rigidbody2D>().velocity = vel;
+        //プレイヤーの踏み攻撃なら
+        if (isPlayerFoot)
+        {
+            //踏めないタイミングだったら何もしない
+            if (pc.damage) return;
+            //踏めるタイミングならプレイヤーを上に飛ばしてダメージ処理
+            var vel = playerObject.GetComponent<Rigidbody2D>().velocity;
+            vel.y = playerObject.GetComponent<PlayerController>().jumpSpeed;
+            playerObject.GetComponent<Rigidbody2D>().velocity = vel;
+        }
 
         //無敵時間だったらダメージは受けない
         if (_BossScript.IsUnableBeAttacked) return;

@@ -23,7 +23,7 @@ public abstract class BossBase : MonoBehaviour
     /// <summary> ボスの状態 </summary>
     protected StateEnum _State = StateEnum.None;
     /// <summary> 体力 </summary>
-    protected int _CurrentHP;
+    [SerializeField] protected int _CurrentHP;
     /// <summary> 既に死んだかの判定 </summary>
     protected bool _IsDead = false;
     /// <summary> 攻撃する判定 </summary>
@@ -121,7 +121,7 @@ public abstract class BossBase : MonoBehaviour
         else if (myXPos < objXPos) _Dir = 1;
 
         //dirの方向によって画像の向きを変える
-        transform.localScale = new Vector3(-_Dir * _BossSize, _BossSize, 1);
+        transform.localScale = new Vector3(-_Dir * _BossSize, transform.localScale.y, 1);
 
         //Debug.Log("TurnToPlayer()");
     }

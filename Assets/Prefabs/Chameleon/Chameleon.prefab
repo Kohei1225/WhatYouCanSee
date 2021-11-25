@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8332375739166676752}
   - component: {fileID: 8332375739166676754}
   - component: {fileID: 8332375739166676753}
+  - component: {fileID: 5272299728202629180}
   m_Layer: 8
   m_Name: Chameleon
   m_TagString: Untagged
@@ -62,6 +63,7 @@ MonoBehaviour:
   _WaitBeforeAttack: 1
   _DamagedStandTime: 2
   _ScaredTime: 3
+  _AsibaParentObj: {fileID: 0}
   _LightningScript: {fileID: 0}
 --- !u!50 &8332375739166676755
 Rigidbody2D:
@@ -175,6 +177,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _TransparentSec: 1.5
   _MinAlpha: 0.2
+--- !u!95 &5272299728202629180
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8332375739166676759}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6892358eb7acc4a209c12db99d0e2223, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8332375739504048903
 GameObject:
   m_ObjectHideFlags: 0

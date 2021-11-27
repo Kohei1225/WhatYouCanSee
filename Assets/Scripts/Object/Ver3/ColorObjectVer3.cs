@@ -150,7 +150,7 @@ public class ColorObjectVer3 : MonoBehaviour
     }
 
     //オブジェクトの色を変えるメソッド
-    Color ChangeColorByType(OBJECT_COLOR3 colorType)
+    public Color ChangeColorByType(OBJECT_COLOR3 colorType)
     {
         Color color = new Color(0,0,0);
         switch(this.colorType)

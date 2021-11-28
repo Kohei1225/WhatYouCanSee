@@ -23,7 +23,7 @@ public class TransparentScript : MonoBehaviour
         }
     }
 
-    public bool IsTransparent { private get; set; } = true;
+    //public bool IsTransparent { private get; set; } = true;
     // Start is called before the first frame update
     void Start()
     {
@@ -49,9 +49,9 @@ public class TransparentScript : MonoBehaviour
     }
 
     /// <summary> 最初にこれを呼んで初期化
-    public void StartTransparent()
+    public void StartTransparent(bool isTransparent)
     {
-        if (IsTransparent)
+        if (isTransparent)
         {
             _FirstAlpha = 1;
             _EndAlpha = _MinAlpha;

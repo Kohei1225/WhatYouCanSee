@@ -30,6 +30,9 @@ public class TongueScript : MonoBehaviour
     /// <summary> 舌の伸び切った時間
     [SerializeField] private float _StretchingTime = 0.8f;
     [SerializeField] private GameObject _Player;
+    /// <summary> ターゲットマーカープレハブ </summary>
+    [SerializeField] private GameObject _TargetMarkerPrefab;
+    private GameObject _TargetMarkerObj;
     public bool isFetch { private get; set; }
     private Collider2D _Collider2D;
 
@@ -82,11 +85,16 @@ public class TongueScript : MonoBehaviour
                 if(time >= _StretchingTime)
                 {
                     _State = StateEnum.END_STRETCH;
+                    //マーカーを削除
+                    if (_TargetMarkerObj != null)
+                        Destroy(_TargetMarkerObj);
                     //時間初期化
                     time = 0;
                     //位置を変更
                     _ToPos = _FromPos;
                     _FromPos = transform.position;
+                    //当たり判定なし
+                    _Collider2D.enabled = false;
                 }
                 break;
             case StateEnum.END_STRETCH:
@@ -97,8 +105,6 @@ public class TongueScript : MonoBehaviour
                     time = 0;
                     //終わり
                     _IsFin = true;
-                    //当たり判定なし
-                    _Collider2D.enabled = false;
                     //見えなくする
                     gameObject.SetActive(false);
                 }
@@ -118,6 +124,10 @@ public class TongueScript : MonoBehaviour
         _TongueLength = Mathf.Clamp((_ToPos - _FromPos).magnitude, 0, _MaxTongueLength);
         //舌が見えるように
         gameObject.SetActive(true);
+        //マーカーを作成
+        _TargetMarkerObj = Instantiate(_TargetMarkerPrefab, _FromPos + (_ToPos - _FromPos).normalized * _TongueLength, Quaternion.identity);
+        //マーカの描画順設定
+        _TargetMarkerObj.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
     }
 
     public void StartStretch()
@@ -154,5 +164,8 @@ public class TongueScript : MonoBehaviour
         _State = StateEnum.WAIT;
         //見えなくする
         gameObject.SetActive(false);
+        //マーカーを削除
+        if (_TargetMarkerObj != null)
+            Destroy(_TargetMarkerObj);
     }
 }

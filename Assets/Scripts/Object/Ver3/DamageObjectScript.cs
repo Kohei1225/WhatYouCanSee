@@ -29,7 +29,7 @@ public class DamageObjectScript : MonoBehaviour
     void OnTriggerEnter2D(Collider2D otherObject)
     {
         //プレイヤーに当たったらダメージを与える
-        if(otherObject.gameObject.transform.root.gameObject.tag == "Player")
+        if (otherObject.gameObject.transform.root.gameObject.tag == "Player")
         {
             otherObject.gameObject.transform.root.gameObject.GetComponent<PlayerController>().Set_damage(true);
         }

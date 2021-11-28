@@ -9,20 +9,38 @@ public class ColorObjectVer3 : MonoBehaviour
     //色情報のenum
     public enum OBJECT_COLOR3
     {
-        BLACK,      //黒(影の色)
-        WHITE,      //白
-        RED,        //赤色
-        GREEN,      //緑色
-        BLUE,       //青色
-        CYAN,       //シアン
-        MAGENTA,    //マゼンタ
-        YELLOW,     //黄色
-        PURPLE,     //紫
-        ORRANGE,    //オレンジ色
-        LIME,       //黄緑色
-        GRAY,       //灰色
-        BACKGROUND, //背景の色
+        BLACK,          //黒(影の色)
+        WHITE,          //白
+        RED,            //赤色
+        GREEN,          //緑色
+        BLUE,           //青色
+        CYAN,           //シアン
+        MAGENTA,        //マゼンタ
+        YELLOW,         //黄色
+        PURPLE,         //紫
+        ORRANGE,        //オレンジ色
+        LIME,           //黄緑色
+        GRAY,           //灰色
+        DARK_YELLOW,   //明るい黄色
+        BACKGROUND,     //背景の色
     }
+    ////順番(enum)にあった色
+    //private static Color[] _Colors =
+    //{
+    //    new Color(0,0,0),
+    //    new Color(1,1,1),
+    //    new Color(1,0,0),
+    //    new Color(59f/255f,175f/255f,117f/255f),
+    //    new Color(0,0,1),
+    //    new Color(0,156f/255f,209f/255f),
+    //    new Color(225f/255f,0,255f/255f),
+    //    new Color(1,1,0),
+    //    new Color(167f/255f,87f/255f,168f/255f),
+    //    new Color(1,165f/255f,0),
+    //    new Color(0,1,0),
+    //    new Color(118f/255,118f/255f,118f/255f),
+    //    new Color(0,0,0) //背景の色？
+    //};
     public OBJECT_COLOR3 colorType; //色のタイプ
     public bool isObject;           //ステージ上にあるかどうか(背景ならfalse)
     public bool hasShadow;          //このオブジェクトに影ができるか
@@ -103,7 +121,7 @@ public class ColorObjectVer3 : MonoBehaviour
 
         GetComponent<SpriteRenderer>().color = ChangeColorByType(colorType);//colorTypeによって変色
 
-        if(isObject)ControlBody(noBody);//オブジェクトの状態によって処理する
+        if (isObject)ControlBody(noBody);//オブジェクトの状態によって処理する
     }
 
     //Bodyの処理
@@ -150,8 +168,9 @@ public class ColorObjectVer3 : MonoBehaviour
     }
 
     //オブジェクトの色を変えるメソッド
-    Color ChangeColorByType(OBJECT_COLOR3 colorType)
+    public Color ChangeColorByType(OBJECT_COLOR3 colorType)
     {
+        float originAlpha = GetComponent<SpriteRenderer>().color.a;
         Color color = new Color(0,0,0);
         switch(this.colorType)
         {
@@ -198,13 +217,18 @@ public class ColorObjectVer3 : MonoBehaviour
             case OBJECT_COLOR3.LIME:
                 color = new Color(0,1,0);
                 break;
+
             case OBJECT_COLOR3.GRAY:
                 color =  new Color(118f/255,118f/255f,118f/255f);
                 break;
 
-            default:break;
+            case OBJECT_COLOR3.DARK_YELLOW:
+                color = new Color(142f/255, 136f/255, 0, 1);
+                break;
+
+            default: break;
         }
-        return color;
+        return new Color(color.r, color.g,color.b, originAlpha);
     }
 
     public bool Get_noBody()

@@ -7,27 +7,45 @@ public class LightningScript : MonoBehaviour
     //public ChameleonScript _ChameleonScript;
     private bool _IsFin = false;
     private float _Time = 0;
-    private bool _CanMove = false;
+    //private bool _CanMove = false;
     //private TimerScript _TimerScript = new TimerScript();
     public ChameleonScript _ChameleonScript;
+    public enum StateEnum
+    {
+        NONE,
+        PREPARE,
+        CLOUD,
+        DARKER,
+        LIGHTNING
+    }
+    [SerializeField] private StateEnum _State = StateEnum.NONE;
+    //雲が出てくる時間(フェーズごと)
+    [SerializeField] private float[] _StartingIntervals = {5, 5, 30 };
+    //暗くなって落ちるまでの時間落ちるまでの時間
+    [SerializeField] private float _WaitTime = 2;
     //雷が落ち続ける時間
     [SerializeField] private float _LightningTime = 3;
     //生成するブロックの数
     [SerializeField] private int _MakeLightningBlockNum = 3;
-    //雷が落ちる時間
-    [SerializeField] private float _LightningInterval = 15;
     /// <summary> 雷用のライト
     public GameObject _LightningLight;
     /// <summary> 雷のときの背景の色
     public Color _LightingBackColor;
     /// <summary> ブロックのプレハブ
-    public GameObject _LightningBlockPrefab;
+    [SerializeField] public GameObject _LightningBlockPrefab;
+    /// <summary> ブロックを生成するか
+    private bool _CanMake;
     private GameObject[] _Blocks;
     //[SerializeField] private float _BlockPosY;
-    /// <summary>
-    /// 左と右の限界の位置
-    /// </summary>
-    public GameObject _LeftPosObj,_RightPosObj;
+    //ブロック生成可能な端posX(ボスの戻る位置も)
+    [SerializeField] private float _SidePosX = 40;
+    [SerializeField] private float _SidePosY = 17;
+    //雲のスクリプト
+    private CloudScript _CloudScript;
+    //ゲームマネージャー
+    [SerializeField] private GameManagerScript _GameManagerScript;
+    //背景のカラースクリプト
+    [SerializeField] private ColorObjectVer3 _BackGroundColorObjectVer3;
 
     public bool IsFin
     {
@@ -39,10 +57,7 @@ public class LightningScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //最初は見えない
-        _LightningLight.SetActive(false);
-        ////時間をセット
-        //_TimerScript.ResetTimer(_LightningInterval);
+        _CloudScript = GetComponent<CloudScript>();
     }
 
     // Update is called once per frame
@@ -51,58 +66,79 @@ public class LightningScript : MonoBehaviour
         if (_IsFin)
             return;
         _Time += Time.deltaTime;
-        if (!_CanMove && _Time >= _LightningInterval)
+        switch (_State)
         {
-            //光らせる
-            StartLightning();
-            //怯える
-            _ChameleonScript.Scared();
-            //ブロック生成(数の分だけ)
-            _Blocks = new GameObject[_MakeLightningBlockNum];
-            for (int i = 0; i < _MakeLightningBlockNum; i++)
-            {
-                float t = Random.Range(0f, 1f);
-                float x = Mathf.Lerp(_LeftPosObj.transform.position.x, _RightPosObj.transform.position.x, t);
-                //ブロック生成
-                _Blocks[i] = Instantiate(_LightningBlockPrefab, new Vector3(x, _LeftPosObj.transform.position.y, 0), Quaternion.identity);
-                //レイヤー強制変更
-                _Blocks[i].layer = LayerMask.NameToLayer("Real");
-            }
-        }
-        else if (_CanMove && _Time > _LightningTime)
-        {
-            _IsFin = true;
-            _CanMove = false;
-            //見えなくする
-            _LightningLight.SetActive(false);
-            //ブロック消去
-            foreach(GameObject block in _Blocks)
-            {
-                Destroy(block);
-            }
-            _Blocks = null;
+            case StateEnum.NONE:
+                break;
+            case StateEnum.PREPARE:
+                if (_Time >= _StartingIntervals[_ChameleonScript.Phase])
+                {
+                    _CloudScript.StartCloud();
+                    _State = StateEnum.CLOUD;
+                }
+                break;
+            case StateEnum.CLOUD:
+                if (_CloudScript.IsFin)
+                {
+                    _State = StateEnum.DARKER;
+                    _Time = 0;
+                }
+                break;
+            case StateEnum.DARKER:
+                //暗くさせる
+                _GameManagerScript.existRay = true;
+                if (_Time >= _WaitTime)
+                {
+                    _State = StateEnum.LIGHTNING;
+                    _Time = 0;
+                    //ゴロゴロ
+                    //背景を黄色に
+                    _BackGroundColorObjectVer3.colorType = ColorObjectVer3.OBJECT_COLOR3.DARK_YELLOW;
+                    //怯える
+                    _ChameleonScript.Scared();
+                    if (_CanMake)
+                    {
+                        //ブロック生成(数の分だけ)
+                        _Blocks = new GameObject[_MakeLightningBlockNum];
+                        for (int i = 0; i < _MakeLightningBlockNum; i++)
+                        {
+                            float t = Random.Range(0f, 1f);
+                            float x = Mathf.Lerp(-_SidePosX, _SidePosX, t);
+                            //ブロック生成
+                            _Blocks[i] = Instantiate(_LightningBlockPrefab, new Vector3(x, _SidePosY, 0), Quaternion.identity);
+                            //レイヤー強制変更
+                            _Blocks[i].layer = LayerMask.NameToLayer("Real");
+                        }
+                    }
+                }
+                break;
+            case StateEnum.LIGHTNING:
+                if(_Time >= _LightningTime)
+                {
+                    //終わる
+                    FinishLightning();
+                }
+                break;
+
         }
     }
 
-    //雷を起こす
-    public void StartLightning()
+    //雷を起こす準備をする(ブロックを生成する？)
+    public void PrepareLightning(bool canMake)
     {
+        _CanMake = canMake;
         _IsFin = false;
-        _CanMove = true;
         _Time = 0;
-        //見えるように
-        _LightningLight.SetActive(true);
+        _State = StateEnum.PREPARE;
     }
 
-    public void ResetLightning()
+    public void FinishLightning()
     {
-        _IsFin = false;
-        _CanMove = false;
-        //見えなくする
-        _LightningLight.SetActive(false);
-        _Time = 0;
+        _IsFin = true;
+        //終わり
+        _State = StateEnum.NONE;
         //ブロック消去
-        if(_Blocks != null)
+        if (_Blocks != null)
         {
             foreach (GameObject block in _Blocks)
             {
@@ -110,5 +146,9 @@ public class LightningScript : MonoBehaviour
             }
             _Blocks = null;
         }
+        //雲消去
+        _CloudScript.RemoveCloud();
+        //明るくする
+        _GameManagerScript.existRay = false;
     }
 }

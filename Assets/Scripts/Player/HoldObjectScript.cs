@@ -24,7 +24,7 @@ public class HoldObjectScript: MonoBehaviour
     {
         //Debug.Log("当たった");
         //もしも触れてるオブジェクトがカラーオブジェクトだったら
-        if (otherObject.transform.parent.gameObject.GetComponent<ColorObjectVer3>())
+        if (otherObject.transform.parent?.gameObject.GetComponent<ColorObjectVer3>())
         {
             GameObject touchingObject = otherObject.transform.parent.gameObject;
             ColorObjectVer3 colorObject = touchingObject.GetComponent<ColorObjectVer3>();
@@ -48,7 +48,7 @@ public class HoldObjectScript: MonoBehaviour
     void OnTriggerExit2D(Collider2D otherObject)
     {
         //もしも触れてるオブジェクトがカラーオブジェクトだったら
-        if(otherObject.transform.parent.gameObject.GetComponent<ColorObjectVer3>())
+        if(otherObject.transform.parent?.gameObject.GetComponent<ColorObjectVer3>())
         {
             GameObject touchingObject = otherObject.transform.parent.gameObject;
             ColorObjectVer3 colorObject = touchingObject.GetComponent<ColorObjectVer3>();

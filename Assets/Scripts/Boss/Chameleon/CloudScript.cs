@@ -41,7 +41,7 @@ public class CloudScript : MonoBehaviour
         if (_IsFin || !_CanMove)
             return;
         _Time += Time.deltaTime;
-        CanSeeCloud();
+        //CanSeeCloud();
         MoveCloud();
         if(_Time >= _CloudSpeedSec)
         {

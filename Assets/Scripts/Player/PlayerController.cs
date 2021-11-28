@@ -25,8 +25,8 @@ public class PlayerController : MonoBehaviour
     
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
-    bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
-    GameObject objectBeingHolden;   //持ってるオブジェクト
+    public bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
+    public GameObject objectBeingHolden;   //持ってるオブジェクト
     GameObject objectToHold;        //持ち上げる時に使う自身の子オブジェクト
     HoldObjectScript holdScript;    
     Animator animController;        //アニメーター

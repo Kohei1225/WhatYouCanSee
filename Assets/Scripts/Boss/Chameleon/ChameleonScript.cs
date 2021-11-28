@@ -599,7 +599,7 @@ public class ChameleonScript : BossBase
         //雷関係リセット
         _LightningScript.FinishLightning();
         //フェーズ更新
-        _Phase = (_MaxHP - _CurrentHP) / _MaxPhase;
+        _Phase = (_MaxHP - _CurrentHP) / (_MaxHP / _MaxPhase);
         //雷準備
         _LightningScript.PrepareLightning(_Phase == 2);
         //キャラアップデートリセット

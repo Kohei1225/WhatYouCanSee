@@ -46,6 +46,8 @@ public class LightningScript : MonoBehaviour
     [SerializeField] private GameManagerScript _GameManagerScript;
     //背景のカラースクリプト
     [SerializeField] private ColorObjectVer3 _BackGroundColorObjectVer3;
+    //プレイヤースクリプト
+    [SerializeField] private PlayerController _PlayerController;
 
     public bool IsFin
     {
@@ -137,6 +139,13 @@ public class LightningScript : MonoBehaviour
         _IsFin = true;
         //終わり
         _State = StateEnum.NONE;
+        //何も持ってない状態にする
+        if(_PlayerController.objectBeingHolden != null)
+        {
+            _PlayerController.isHoldingObject = false;
+            _PlayerController.objectBeingHolden.GetComponent<ColorObjectVer3>().Set_onThePlayer(false);
+            _PlayerController.objectBeingHolden = null;
+        }
         //ブロック消去
         if (_Blocks != null)
         {

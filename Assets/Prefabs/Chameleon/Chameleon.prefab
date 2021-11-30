@@ -71,6 +71,7 @@ GameObject:
   - component: {fileID: 8332375739166676752}
   - component: {fileID: 8332375739166676753}
   - component: {fileID: 874711948}
+  - component: {fileID: 6370413876721703288}
   m_Layer: 8
   m_Name: Chameleon
   m_TagString: Untagged
@@ -111,10 +112,7 @@ MonoBehaviour:
   _CurrentHP: 0
   _MaxHP: 9
   _WalkSpeed: 5
-  _AttackCount: 0
-  _MaxAttackCount: 3
   _Phase: 0
-  _MaxPhase: 3
   _PhaseColorEnums: 
   _PhaseBackColorEnums: 
   _Player: {fileID: 0}
@@ -124,6 +122,11 @@ MonoBehaviour:
   _ScaredTime: 3
   _AsibaParentObj: {fileID: 0}
   _ReturnPosObjs:
+  - {fileID: 0}
+  - {fileID: 0}
+  _BeePrefab: {fileID: 0}
+  _BeePosObj:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   _BackGroundColorObjectVer3: {fileID: 0}
@@ -230,6 +233,25 @@ MonoBehaviour:
   isObject: 1
   hasShadow: 0
   canHold: 0
+--- !u!95 &6370413876721703288
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8332375739166676759}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6892358eb7acc4a209c12db99d0e2223, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &8332375739504048903
 GameObject:
   m_ObjectHideFlags: 0
@@ -489,6 +511,7 @@ MonoBehaviour:
   _StretchSpeed: 20
   _StretchingTime: 1
   _Player: {fileID: 0}
+  _TargetMarkerPrefab: {fileID: 0}
 --- !u!58 &8332375740562071478
 CircleCollider2D:
   m_ObjectHideFlags: 0

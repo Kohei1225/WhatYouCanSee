@@ -31,7 +31,7 @@ public class ChameleonScript : BossBase
     /// <summary> 何段階目か </summary>
     [SerializeField] private int _Phase;
     /// <summary> 何段階目まであるか </summary>
-    private int _MaxPhase = 3;
+    private int _MaxPhase = 2;
     /// <summary> フェーズごとのカメレオンの色のEnum </summary>
     [SerializeField] private ColorObjectVer3.OBJECT_COLOR3[] _PhaseColorEnums;
     /// <summary> フェーズごとの背景の色のEnum </summary>
@@ -81,6 +81,9 @@ public class ChameleonScript : BossBase
     //private SpriteRenderer _SpriteRenderer;
     private ColorObjectVer3 _ColorObjectVer3;
 
+    //アニメーション
+    private Animator _Animator;
+
     #endregion
 
     public int Phase
@@ -91,6 +94,14 @@ public class ChameleonScript : BossBase
         }
     }
 
+    public int MaxPhase
+    {
+        get
+        {
+            return _MaxPhase;
+        }
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -98,12 +109,14 @@ public class ChameleonScript : BossBase
         _BossSize = transform.localScale.x;
         _TongueScript = transform.Find("Tongue").GetComponent<TongueScript>();
         _DamageTimeInterval = 3.0f;
-        _Phase = (_MaxHP - _CurrentHP) / _MaxPhase;
-        if(_TongueScript == null)
+        //フェーズ更新
+        _Phase = (_MaxHP - _CurrentHP) / (_MaxHP / (_MaxPhase + 1));
+        if (_TongueScript == null)
             Debug.LogError("_TongueScript is null");
         _TransparentScript = GetComponent<TransparentScript>();
         //_ChangeBodyColor = GetComponent<ChangeBodyColor>();
         _ColorObjectVer3 = GetComponent<ColorObjectVer3>();
+        _Animator = GetComponent<Animator>();
         _PhaseColorEnums = new ColorObjectVer3.OBJECT_COLOR3[]
         {
             ColorObjectVer3.OBJECT_COLOR3.GREEN,
@@ -231,6 +244,7 @@ public class ChameleonScript : BossBase
     private void TaskWalkEnter()
     {
         //アニメーションは歩くに
+        _Animator.SetBool("IsWalk", true);
         //Debug.Log("Walk");
     }
 
@@ -248,12 +262,14 @@ public class ChameleonScript : BossBase
     private void TaskWalkExit()
     {
         //Debug.Log("Walk End");
+        _Animator.SetBool("IsWalk", false);
     }
 
     /// <summary> 舌攻撃処理
     private void TaskTongueAttackEnter()
     {
         //アニメーション舌を出す
+        _Animator.SetBool("IsAttack", true);
         //舌を動かし始める
         _TongueScript.StartStretch();
         //Debug.Log("Attack");
@@ -267,6 +283,7 @@ public class ChameleonScript : BossBase
     private void TaskTongueAttackExit()
     {
         //アニメーションを止める
+        _Animator.SetBool("IsAttack", false);
         //Debug.Log("Attack End");
         //舌関係全てリセット
         _TongueScript.ResetTongue();
@@ -377,6 +394,7 @@ public class ChameleonScript : BossBase
     private void TaskScaredEnter()
     {
         //アニメーションは待機に
+        _Animator.SetBool("IsScared", true);
         //雷の時は以下の処理をする
         //舌をしまう
         _TongueScript.ResetTongue();
@@ -405,12 +423,14 @@ public class ChameleonScript : BossBase
         //現れる
         _TaskList.AddTask(TaskEnum.TRANSPARENT_END);
         //アニメーションを止める
+        _Animator.SetBool("IsScared", false);
     }
 
     /// <summary> ダメージ処理
     private void TaskDamageEnter()
     {
-        //アニメーションは待機に
+        //アニメーション
+        _Animator.SetBool("IsDamage", true);
         //時間設定
         _TimerScript.ResetTimer(_DamageTimeInterval);
         //ダメージを与えられない
@@ -427,6 +447,7 @@ public class ChameleonScript : BossBase
     private void TaskDamageExit()
     {
         //アニメーションを止める
+        _Animator.SetBool("IsDamage", false);
         //Debug.Log("Damage End");
     }
 
@@ -434,8 +455,14 @@ public class ChameleonScript : BossBase
     private void TaskDownEnter()
     {
         //アニメーション
+        _Animator.SetBool("IsDown", true);
         //ダメージ判定を消す
         DamageOrNot(false);
+        ////舌関係リセット
+        //_TongueScript.ResetTongue();
+        ////雷関係リセット
+        //_LightningScript.FinishLightning();
+        ResetBoss();
         //蜂削除
         foreach (GameObject bee in _BeeObjs)
         {
@@ -599,7 +626,9 @@ public class ChameleonScript : BossBase
         //雷関係リセット
         _LightningScript.FinishLightning();
         //フェーズ更新
-        _Phase = (_MaxHP - _CurrentHP) / (_MaxHP / _MaxPhase);
+        _Phase = (_MaxHP - _CurrentHP) / (_MaxHP / (_MaxPhase + 1));
+        if (_Phase > _MaxPhase)
+            _Phase = _MaxPhase;
         //雷準備
         _LightningScript.PrepareLightning(_Phase == 2);
         //キャラアップデートリセット

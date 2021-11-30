@@ -12,7 +12,7 @@ public class ClowScript : BossBase
         Move,
         FallAttack,
         Charge,
-        WinidAttack,
+        WindAttack,
         LowFlyAttack,
         ReturnPostion,
         Damage,
@@ -60,7 +60,44 @@ public class ClowScript : BossBase
     // Update is called once per frame
     void Update()
     {
-        
+        UpdateState();
+    }
+
+
+    void UpdateState()
+    {
+        if(_State == StateEnum.Move)
+        {
+            if(_CurrentHP <= 0)
+            {
+                _State = StateEnum.Dead;
+                return;
+            }
+
+
+            if(_TaskList.IsEnd)
+            {
+                PlayerController player = _Player?.GetComponent<PlayerController>();
+                if(player.damage)
+                {
+                    _State = StateEnum.None;
+                    return;
+                }
+                //タスクを追加
+                SelectTask();
+            }
+            //タスクの処理を更新
+            _TaskList.UpdateTask();
+        }
+    }
+
+    /// <summary> タスクを追加する </summary>
+    void SelectTask()
+    {
+        switch(_CurrentHP)
+        {
+
+        }
     }
 
     /// <summary> 羽攻撃 </summary>
@@ -107,6 +144,159 @@ public class ClowScript : BossBase
     }
 
     #region Task function
-    
+
+    #region Idle
+    void TaskIdleEnter()
+    {
+
+    }
+
+    bool TaskIdleUpdate()
+    {
+        return true;
+    }
+
+    void TaskIdleExi()
+    {
+
+    }
+    #endregion
+
+    #region Move
+    void TaskMoveEnter()
+    {
+
+    }
+
+    bool TaskMoveUpdate()
+    {
+        return true;
+    }
+
+    void TaskMoveExi()
+    {
+
+    }
+    #endregion
+
+    #region FallAttack
+    void TaskFallAttackEnter()
+    {
+
+    }
+
+    bool TaskFallAttackUpdate()
+    {
+        return true;
+    }
+
+    void TaskFallAttackExi()
+    {
+
+    }
+    #endregion
+
+    #region Charge
+    void TaskChargeEnter()
+    {
+
+    }
+
+    bool TaskChargeUpdate()
+    {
+        return true;
+    }
+
+    void TaskChargeExi()
+    {
+
+    }
+    #endregion
+
+    #region Idle
+    void TaskWindAttackEnter()
+    {
+
+    }
+
+    bool TaskWindAttackUpdate()
+    {
+        return true;
+    }
+
+    void TaskWindAttackExi()
+    {
+
+    }
+    #endregion
+
+    #region LowFlyAttack
+    void TaskLowFlyAttackEnter()
+    {
+
+    }
+
+    bool TaskLowFlyAttackUpdate()
+    {
+        return true;
+    }
+
+    void TaskLowFlyAttackExi()
+    {
+
+    }
+    #endregion
+
+    #region Idle
+    void TaskReturnPosEnter()
+    {
+
+    }
+
+    bool TaskReturnPosUpdate()
+    {
+        return true;
+    }
+
+    void TaskReturnPosExi()
+    {
+
+    }
+    #endregion
+
+    #region Idle
+    void TaskDamageEnter()
+    {
+
+    }
+
+    bool TaskDamageUpdate()
+    {
+        return true;
+    }
+
+    void TaskDamageExi()
+    {
+
+    }
+    #endregion
+
+    #region Idle
+    void TaskWaitEnter()
+    {
+
+    }
+
+    bool TaskWaitUpdate()
+    {
+        return true;
+    }
+
+    void TaskWaitExi()
+    {
+
+    }
+    #endregion
+
     #endregion
 }

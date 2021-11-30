@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 //オブジェクトの外枠に沿ってRayを飛ばして当たった判定をするクラス
 public class FrameRayOfObject : MonoBehaviour
@@ -45,7 +46,8 @@ public class FrameRayOfObject : MonoBehaviour
             {
                 if(hit.collider)
                 {
-                    int nowOrderInLayer = hit.collider.gameObject.GetComponent<SpriteRenderer>().sortingOrder;
+                    var obj = hit.collider.gameObject;
+                    int nowOrderInLayer = obj.GetComponent<SpriteRenderer>() != null ? obj.GetComponent<SpriteRenderer>().sortingOrder :obj.GetComponent<SpriteShapeRenderer>().sortingOrder;
                     if(nowOrderInLayer > maxLayer)maxLayer = nowOrderInLayer;
                 }
             }
@@ -59,8 +61,11 @@ public class FrameRayOfObject : MonoBehaviour
                     //Debug.DrawRay((Vector2)vartexList[i].transform.position,hit.point - (Vector2)vartexList[i].transform.position, Color.blue, 0.01f, false);
                     GameObject hitObject = hit.collider.gameObject;
 
+                    var currentSortingOrder = hitObject.GetComponent<SpriteRenderer>() != null ?
+                        hitObject.GetComponent<SpriteRenderer>().sortingOrder : hitObject.GetComponent<SpriteShapeRenderer>().sortingOrder;
+
                     //レイヤーの優先度が一番高いやつだったら
-                    if(hitObject.GetComponent<SpriteRenderer>().sortingOrder == maxLayer)
+                    if(currentSortingOrder == maxLayer)
                     {
                         //同色の背景とRayがぶつかった(触れている)
                         if(hitObject.GetComponent<ColorObjectVer3>()) if(hitObject.GetComponent<ColorObjectVer3>().colorType == colorObject.colorType)

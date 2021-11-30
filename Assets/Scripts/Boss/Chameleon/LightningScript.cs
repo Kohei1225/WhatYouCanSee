@@ -112,6 +112,7 @@ public class LightningScript : MonoBehaviour
                             _Blocks[i].layer = LayerMask.NameToLayer("Real");
                         }
                     }
+                    //蜂を攻撃できないようにする
                 }
                 break;
             case StateEnum.LIGHTNING:

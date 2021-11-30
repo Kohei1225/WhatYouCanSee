@@ -30,6 +30,8 @@ public class BeeScript : MonoBehaviour
     [SerializeField] private GameObject _Player;
     //コライダー
     private Collider2D _Collider2D;
+    //攻撃できるか
+    private bool _CanAttack = true;
     public enum StateEnum
     {
         FLY,
@@ -45,6 +47,14 @@ public class BeeScript : MonoBehaviour
         set
         {
             _Player = value;
+        }
+    }
+
+    public bool CanAttack
+    {
+        set
+        {
+            _CanAttack = value;
         }
     }
     // Start is called before the first frame update
@@ -115,6 +125,8 @@ public class BeeScript : MonoBehaviour
         //もし攻撃するなら
         if (_Time >= _AttackInterval)
         {
+            if (!_CanAttack)
+                return;
             _Time = 0;
             //位置をセット
             _FromToPoses[0] = transform.position;
@@ -174,5 +186,15 @@ public class BeeScript : MonoBehaviour
             Destroy(_TargetMarkerObj);
             _TargetMarkerObj = null;
         }
+        //攻撃できるように
+        _CanAttack = true;
+    }
+
+    //怯える
+    public void Scared()
+    {
+        ResetBee();
+        //攻撃できなくなる
+        _CanAttack = false;
     }
 }

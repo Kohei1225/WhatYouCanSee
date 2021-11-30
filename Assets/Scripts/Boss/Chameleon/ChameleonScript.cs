@@ -380,6 +380,11 @@ public class ChameleonScript : BossBase
         //雷の時は以下の処理をする
         //舌をしまう
         _TongueScript.ResetTongue();
+        //怖がらせる
+        foreach (GameObject bee in _BeeObjs)
+        {
+            bee.GetComponent<BeeScript>().Scared();
+        }
         //判定あり
         DamageOrNot(true);
     }
@@ -507,11 +512,6 @@ public class ChameleonScript : BossBase
             Wait(0.5f);
             //色を変える
             _TaskList.AddTask(TaskEnum.CHANGE_COLOR);
-            //蜂リセット
-            foreach(GameObject bee in _BeeObjs)
-            {
-                bee.GetComponent<BeeScript>().ResetBee();
-            }
             //もし新しいフェーズになっていたら
             if(_Phase != beforePhase)
             {
@@ -606,5 +606,10 @@ public class ChameleonScript : BossBase
         _CharaUpdateCount = 0;
         //背景色の設定
         _BackGroundColorObjectVer3.colorType = _PhaseBackColorEnums[_Phase];
+        //蜂リセット
+        foreach (GameObject bee in _BeeObjs)
+        {
+            bee.GetComponent<BeeScript>().ResetBee();
+        }
     }
 }

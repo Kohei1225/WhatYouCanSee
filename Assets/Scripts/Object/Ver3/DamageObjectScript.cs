@@ -22,7 +22,7 @@ public class DamageObjectScript : MonoBehaviour
         //プレイヤーに当たったらダメージを与える
         if(otherObject.gameObject.tag == "Player")
         {
-            otherObject.gameObject.GetComponent<PlayerController>().Set_damage(true);
+            otherObject.gameObject.GetComponent<PlayerController>().Damage();
         }
     }
 
@@ -31,7 +31,7 @@ public class DamageObjectScript : MonoBehaviour
         //プレイヤーに当たったらダメージを与える
         if (otherObject.gameObject.transform.root.gameObject.tag == "Player")
         {
-            otherObject.gameObject.transform.root.gameObject.GetComponent<PlayerController>().Set_damage(true);
+            otherObject.gameObject.transform.root.gameObject.GetComponent<PlayerController>().Damage();
         }
     }
 }

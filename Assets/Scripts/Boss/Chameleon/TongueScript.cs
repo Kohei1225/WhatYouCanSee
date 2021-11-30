@@ -152,6 +152,8 @@ public class TongueScript : MonoBehaviour
         if(t >= 1)
         {
             //終わり
+            //当たり判定なしに
+            gameObject.GetComponent<Collider2D>().enabled = false;
             return true;
         }
         return false;

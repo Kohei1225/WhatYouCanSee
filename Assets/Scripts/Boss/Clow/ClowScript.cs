@@ -125,12 +125,12 @@ public class ClowScript : BossBase
 
     public override void Down()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void Idle()
     {
-        throw new System.NotImplementedException();
+        
     }
 
     public override void Move()

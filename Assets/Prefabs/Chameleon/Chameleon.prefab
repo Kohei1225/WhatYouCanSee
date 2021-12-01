@@ -117,14 +117,14 @@ MonoBehaviour:
   _PhaseBackColorEnums: 
   _Player: {fileID: 0}
   _AttackDistance: 20
-  _WaitBeforeAttack: 1
+  _WaitBeforeAttack: 1.5
   _DamagedStandTime: 2
   _ScaredTime: 3
   _AsibaParentObj: {fileID: 0}
   _ReturnPosObjs:
   - {fileID: 0}
   - {fileID: 0}
-  _BeePrefab: {fileID: 0}
+  _BeePrefab: {fileID: 5048876312868876317, guid: 1be365c3d9c8f40ebbe9b438bf081651, type: 3}
   _BeePosObj:
   - {fileID: 0}
   - {fileID: 0}
@@ -146,7 +146,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 1.5
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
@@ -263,7 +263,7 @@ GameObject:
   - component: {fileID: 8332375739504048900}
   - component: {fileID: 8332375739504048901}
   - component: {fileID: 8332375739504048898}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -334,7 +334,7 @@ GameObject:
   - component: {fileID: 8332375740130950077}
   - component: {fileID: 8332375740130950074}
   - component: {fileID: 8332375740130950075}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 8332375740562071480}
   - component: {fileID: 8332375740562071481}
   - component: {fileID: 8332375740562071478}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: Tongue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -508,10 +508,10 @@ MonoBehaviour:
   _FirstPos: {x: 0, y: 0, z: 0}
   _FromPos: {x: 0, y: 0, z: 0}
   _ToPos: {x: 0, y: 0, z: 0}
-  _StretchSpeed: 20
+  _StretchSpeed: 30
   _StretchingTime: 1
   _Player: {fileID: 0}
-  _TargetMarkerPrefab: {fileID: 0}
+  _TargetMarkerPrefab: {fileID: 8616532643089361166, guid: e25118f8c712b41d5a377413d87968db, type: 3}
 --- !u!58 &8332375740562071478
 CircleCollider2D:
   m_ObjectHideFlags: 0

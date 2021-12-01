@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//レバーにアタッチするクラス
+/// <summary> レバーにアタッチするクラス </summary>
 public class LeverScript : MonoBehaviour
 {
     /// <summary> 状態を同期させたい他のレバー </summary>
@@ -21,13 +21,13 @@ public class LeverScript : MonoBehaviour
     /// <summary> バーの傾きのリスト </summary>
     public float[] barAngleList = { 160, 90, 20, 90 };
     /// <summary> レバーが動くスピード </summary>
-    [SerializeField] private float roteteSpeed = 300;
+    [SerializeField]private float roteteSpeed = 300;
 
     public float timeSum { private set; get; } = 0;
 
-
-
+    /// <summary> 回転前の角度 </summary>
     float startAngle;
+    /// <summary> 回転後の角度 </summary>
     float endAngle;
 
     // Start is called before the first frame update
@@ -58,7 +58,6 @@ public class LeverScript : MonoBehaviour
 
         //バーの傾きを調整
         Vector3 barAngle = barObject.transform.localEulerAngles;
-        float angleDifference = barAngleList[barPosition] - barAngle.z;
 
         timeSum += Time.deltaTime;
         barAngle.z = Mathf.Lerp(startAngle,endAngle, (roteteSpeed * timeSum) / Mathf.Abs(endAngle - startAngle));
@@ -81,7 +80,7 @@ public class LeverScript : MonoBehaviour
         }
     }
 
-    //バーの位置をリセットするメソッド
+    /// <summary> バーの位置をリセット </summary>
     public void ResetBarPos()
     {
         this.barPosition = firstBarPos;
@@ -107,9 +106,7 @@ public class LeverScript : MonoBehaviour
     /// <summary> バーの角度を変更 </summary>
     public void ChangeBarPos()
     {
-        Debug.Log("LeverScript");
         timeSum = 0;
-
         
         startAngle = barObject.transform.localEulerAngles.z;
         barPosition++;
@@ -121,7 +118,5 @@ public class LeverScript : MonoBehaviour
         //他のレバーが連動するなら連動させる
         firstLever = true;
         _SyncLever?.SyncLeverPos(this.barPosition);
-
     }
-
 }

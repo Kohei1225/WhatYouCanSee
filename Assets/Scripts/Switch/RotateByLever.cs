@@ -10,10 +10,17 @@ public class RotateByLever : MonoBehaviour
     LeverScript leverScript;
     public float rotateSpeed;               //傾くスピード
 
+    private float startAngle;
+    private float endAngle;
+
+
     // Start is called before the first frame update
     void Start()
     {
         leverScript = LeverObject.GetComponent<LeverScript>();
+
+        startAngle = angleList[leverScript.firstBarPos];
+        endAngle = startAngle;
     }
 
     // Update is called once per frame
@@ -21,14 +28,24 @@ public class RotateByLever : MonoBehaviour
     {
         //傾きを調整
         Vector3 barAngle = gameObject.transform.localEulerAngles;
-        float angleDifference = angleList[leverScript.barPosition] - barAngle.z;
 
-        //十分傾いてたら傾ける操作をしない
-        if(Mathf.Abs(angleDifference) > 0.1f)
+        if(leverScript.canChangeBar && Input.GetKeyDown(KeyCode.C))
         {
-            if(angleDifference > 0)barAngle.z += rotateSpeed;
-            if(angleDifference < 0)barAngle.z -= rotateSpeed;
-            gameObject.transform.localEulerAngles = barAngle;
+            ChangeAngle();
         }
+
+        barAngle.z = Mathf.Lerp(startAngle,endAngle,(leverScript.timeSum * rotateSpeed)/Mathf.Abs(endAngle - startAngle));
+
+        Debug.Log((leverScript.timeSum * rotateSpeed) / Mathf.Abs(endAngle - startAngle));
+        gameObject.transform.localEulerAngles = barAngle;
+    }
+
+    /// <summary> バーの角度を変更 </summary>
+    public void ChangeAngle()
+    {
+        Debug.Log("RotateScript");
+        startAngle = gameObject.transform.localEulerAngles.z;
+
+        endAngle = angleList[leverScript.barPosition];
     }
 }

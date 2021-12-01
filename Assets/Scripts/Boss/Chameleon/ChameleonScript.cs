@@ -8,7 +8,6 @@ public class ChameleonScript : BossBase
     /// <summary> タスクの定義 </summary>
     public enum TaskEnum
     {
-        IDLE,
         WALK,
         TONGUE_ATTACK,
         TRANSLATE,
@@ -136,13 +135,8 @@ public class ChameleonScript : BossBase
         DamageOrNot(true);
         //背景色の設定
         _BackGroundColorObjectVer3.colorType = _PhaseBackColorEnums[_Phase];
-        //蜂1体追加
-        GameObject bee = Instantiate(_BeePrefab, _BeePosObj[_Phase].transform.position, Quaternion.identity);
-        bee.GetComponent<BeeScript>().Player = _Player;
-        _BeeObjs.Add(bee);
 
         //タスクの登録
-        _TaskList.DefineTask(TaskEnum.IDLE, TaskIdleEnter, TaskIdleUpdate, TaskIdleExit);
         _TaskList.DefineTask(TaskEnum.WALK, TaskWalkEnter, TaskWalkUpdate, TaskWalkExit);
         _TaskList.DefineTask(TaskEnum.TONGUE_ATTACK, TaskTongueAttackEnter, TaskTongueAttackUpdate, TaskTongueAttackExit);
         _TaskList.DefineTask(TaskEnum.TRANSPARENT, TaskTransparentEnter, TaskTransparentUpdate, TaskTransparentExit);
@@ -155,7 +149,7 @@ public class ChameleonScript : BossBase
         _TaskList.DefineTask(TaskEnum.DOWN, TaskDownEnter, TaskDownUpdate, TaskDownExit);
         _TaskList.DefineTask(TaskEnum.WAIT, TaskWaitEnter, TaskWaitUpdate, TaskWaitExit);
 
-        _State = StateEnum.Move;
+        //_State = StateEnum.Move;
 
         //プレイヤーを向く
         TurnTo(_Player);
@@ -164,9 +158,27 @@ public class ChameleonScript : BossBase
     // Update is called once per frame
     void Update()
     {
-        if (_TaskList.IsEnd)
-            CharaUpdate();
-        _TaskList.UpdateTask();
+        switch (_State)
+        {
+            case StateEnum.None:
+                float distance = (_Player.transform.position - transform.position).magnitude;
+                if(distance <= BATTLE_START_DISTANCE)
+                {
+                    _State = StateEnum.Move;
+                    //蜂1体追加
+                    GameObject bee = Instantiate(_BeePrefab, _BeePosObj[_Phase].transform.position, Quaternion.identity);
+                    bee.GetComponent<BeeScript>().Player = _Player;
+                    _BeeObjs.Add(bee);
+                }
+                break;
+            case StateEnum.Move:
+                if (_TaskList.IsEnd)
+                    CharaUpdate();
+                _TaskList.UpdateTask();
+                break;
+            case StateEnum.Dead:
+                break;
+        }
     }
 
     private void CharaUpdate()
@@ -224,22 +236,6 @@ public class ChameleonScript : BossBase
     }
 
     #region タスク関数
-    /// <summary> 待機処理
-    private void TaskIdleEnter()
-    {
-        //アニメーションは待機に
-    }
-
-    private bool TaskIdleUpdate()
-    {
-        return true;
-    }
-
-    private void TaskIdleExit()
-    {
-        //アニメーションを止める
-    }
-
     /// <summary> 歩き処理
     private void TaskWalkEnter()
     {
@@ -273,6 +269,8 @@ public class ChameleonScript : BossBase
         //舌を動かし始める
         _TongueScript.StartStretch();
         //Debug.Log("Attack");
+        //音ならす
+        SoundManager.Instance.PlaySE("Strength");
     }
 
     private bool TaskTongueAttackUpdate()
@@ -320,6 +318,8 @@ public class ChameleonScript : BossBase
         _TransparentScript.StartTransparent(true);
         //判定が消える
         DamageOrNot(false);
+        //音ならす
+        SoundManager.Instance.PlaySE("FadeOut");
     }
 
     private bool TaskTransparentUpdate()
@@ -358,6 +358,8 @@ public class ChameleonScript : BossBase
         //待機に
         //見えるようにする
         _TransparentScript.StartTransparent(false);
+        //音ならす
+        SoundManager.Instance.PlaySE("FadeIn");
     }
 
     private bool TaskTransparentEndUpdate()
@@ -436,6 +438,8 @@ public class ChameleonScript : BossBase
         //ダメージを与えられない
         DamageOrNot(false);
         //Debug.Log("Damage");
+        //音
+        SoundManager.Instance.PlaySE("Damage_2");
     }
 
     private bool TaskDamageUpdate()
@@ -458,17 +462,19 @@ public class ChameleonScript : BossBase
         _Animator.SetBool("IsDown", true);
         //ダメージ判定を消す
         DamageOrNot(false);
-        ////舌関係リセット
-        //_TongueScript.ResetTongue();
-        ////雷関係リセット
-        //_LightningScript.FinishLightning();
         ResetBoss();
+        //雷関係リセット
+        _LightningScript.FinishLightning();
         //蜂削除
         foreach (GameObject bee in _BeeObjs)
         {
             Destroy(bee);
         }
         _BeeObjs.Clear();
+        //音
+        SoundManager.Instance.PlaySE("Damage_1");
+        //状態を死んだにする
+        _State = StateEnum.Dead;
     }
 
     private bool TaskDownUpdate()
@@ -533,6 +539,8 @@ public class ChameleonScript : BossBase
             //ダメージにする
             _TaskList.AddTask(TaskEnum.DAMAGE);
             int beforePhase = _Phase;
+            //フェーズ更新
+            _Phase = (_MaxHP - _CurrentHP) / (_MaxHP / (_MaxPhase + 1));
             ResetBoss();
             //透明になって
             _TaskList.AddTask(TaskEnum.TRANSPARENT);
@@ -625,8 +633,6 @@ public class ChameleonScript : BossBase
         _TongueScript.ResetTongue();
         //雷関係リセット
         _LightningScript.FinishLightning();
-        //フェーズ更新
-        _Phase = (_MaxHP - _CurrentHP) / (_MaxHP / (_MaxPhase + 1));
         if (_Phase > _MaxPhase)
             _Phase = _MaxPhase;
         //雷準備

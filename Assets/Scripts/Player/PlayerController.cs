@@ -25,13 +25,38 @@ public class PlayerController : MonoBehaviour
     
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
-    public bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
-    public GameObject objectBeingHolden;   //持ってるオブジェクト
+    [HideInInspector] public bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
+    [HideInInspector] public GameObject objectBeingHolden;   //持ってるオブジェクト
     GameObject objectToHold;        //持ち上げる時に使う自身の子オブジェクト
     HoldObjectScript holdScript;    
     Animator animController;        //アニメーター
     GameObject topOfHead;           //頭のてっぺんに置いてあるオブジェクト
     Rigidbody2D rigidBody;
+
+    //体力
+    [SerializeField] private int _Life = 3;
+    //ダメージを受けるか
+    private bool _CanDamage = true;
+    //ダメージ後の無敵時間
+    [SerializeField] private float _MutekiTime = 3;
+    //ダメージ時間測定用
+    private float _DamageTime = 0;
+    //スプライトレンダラー
+    private SpriteRenderer _SpriteRenderer;
+    //点滅の回数
+    [SerializeField] private int _ChangeAlphaNum = 15;
+    //一回のアルファ値を変えるのにどのくらいの時間を使うのか
+    private float _TimePerChangeAlpha;
+    //何回点滅したか
+    private int _NowChangeCount = 0;
+
+    public int Life
+    {
+        get
+        {
+            return _Life;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +73,8 @@ public class PlayerController : MonoBehaviour
         holdScript = objectToHold.GetComponent<HoldObjectScript>();
         topOfHead = transform.Find("TopOfHead").gameObject;
         rigidBody = GetComponent<Rigidbody2D>();
+        _SpriteRenderer = GetComponent<SpriteRenderer>();
+        _TimePerChangeAlpha = _MutekiTime / _ChangeAlphaNum;
     }
 
     // Update is called once per frame
@@ -85,6 +112,8 @@ public class PlayerController : MonoBehaviour
                     isHoldingObject = true;
                     objectBeingHolden = holdScript.Get_objectFrontMe();
                     objectBeingHolden.GetComponent<ColorObjectVer3>().Set_onThePlayer(true);
+                    //音ならす
+                    SoundManager.Instance.PlaySE("Bring");
                 }
                 //ブロックを持ち上げてる時
                 else if(isHoldingObject)
@@ -106,6 +135,8 @@ public class PlayerController : MonoBehaviour
                     objectBeingHolden.GetComponent<ColorObjectVer3>().Set_onThePlayer(false);
                     objectBeingHolden = null;
 
+                    //音ならす
+                    SoundManager.Instance.PlaySE("Throw");
                 }
             }
         }
@@ -136,7 +167,31 @@ public class PlayerController : MonoBehaviour
 
             rigidBody.velocity = vel;
             jump = false;
+            //音ならす
+            SoundManager.Instance.PlaySE("Player_Jump");
         }
+
+        //無敵時間中の処理
+        if (!_CanDamage && !damage)
+        {
+            _DamageTime += Time.deltaTime;
+            Color color = _SpriteRenderer.color;
+            //点滅する時間なら
+            if (_DamageTime / (_TimePerChangeAlpha * (_NowChangeCount + 1)) >= 1)
+            {
+                //アルファ値を反転
+                int newAlpha = (int)color.a ^ 1;
+                _SpriteRenderer.color = new Color(color.r, color.g, color.b, newAlpha);
+                _NowChangeCount++;
+            }
+            if (_DamageTime >= _MutekiTime)
+            {
+                _CanDamage = true;
+                //透明度を1に
+                _SpriteRenderer.color = new Color(color.r, color.g, color.b, 1);
+            }
+        }
+
     }
 
     void FixedUpdate()
@@ -179,14 +234,27 @@ public class PlayerController : MonoBehaviour
         animController.SetBool("OnStage",onStage);
     }
 
+    public void Damage()
+    {
+        //死んでいたら無視
+        if (damage)
+            return;
+        if (!_CanDamage)
+            return;
+        _DamageTime = 0;
+        _NowChangeCount = 0;
+        _Life--;
+        _CanDamage = false;
+        if(_Life == 0)
+        {
+            //死んだ判定にする
+            damage = true;
+        }
+    }
+
     public void Set_onStage(bool value)
     {
         this.onStage = value;
-    }
-
-    public void Set_damage(bool value)
-    {
-        this.damage = value;
     }
 
     public bool Get_isHoldingObject()

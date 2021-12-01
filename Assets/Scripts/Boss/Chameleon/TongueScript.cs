@@ -58,8 +58,6 @@ public class TongueScript : MonoBehaviour
         _State = StateEnum.WAIT;
         _FirstPos = transform.localPosition;
         _Collider2D = GetComponent<Collider2D>();
-        //当たり判定なし
-        _Collider2D.enabled = false;
         //見えなくする
         gameObject.SetActive(false);
     }
@@ -93,8 +91,8 @@ public class TongueScript : MonoBehaviour
                     //位置を変更
                     _ToPos = _FromPos;
                     _FromPos = transform.position;
-                    //当たり判定なし
-                    _Collider2D.enabled = false;
+                    ////当たり判定なし
+                    //_Collider2D.enabled = false;
                 }
                 break;
             case StateEnum.END_STRETCH:
@@ -124,6 +122,8 @@ public class TongueScript : MonoBehaviour
         _TongueLength = Mathf.Clamp((_ToPos - _FromPos).magnitude, 0, _MaxTongueLength);
         //舌が見えるように
         gameObject.SetActive(true);
+        //当たり判定なし
+        _Collider2D.enabled = false;
         //マーカーを作成
         _TargetMarkerObj = Instantiate(_TargetMarkerPrefab, _FromPos + (_ToPos - _FromPos).normalized * _TongueLength, Quaternion.identity);
         //マーカの描画順設定
@@ -152,6 +152,8 @@ public class TongueScript : MonoBehaviour
         if(t >= 1)
         {
             //終わり
+            ////当たり判定なしに
+            //gameObject.GetComponent<Collider2D>().enabled = false;
             return true;
         }
         return false;

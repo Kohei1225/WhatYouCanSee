@@ -32,7 +32,9 @@ public abstract class BossBase : MonoBehaviour
     protected int _Dir = 1;
     /// <summary> 体のサイズ </summary>
     protected float _BossSize;
-    
+    /// <summary> バトルを開始する距離 </summary>
+    protected const float BATTLE_START_DISTANCE = 50f;
+
     protected bool _HasStartBattle = false;
     /// <summary> アニメーターを格納する変数 </summary>
     protected Animator _AnimController;

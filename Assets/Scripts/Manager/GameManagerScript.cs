@@ -10,7 +10,7 @@ public class GameManagerScript : MonoBehaviour
     public bool existShadow;//光源があっても影が存在するか。falseならオブジェクトに影ができなくなる
 
     //ステージのBGMのファイル名
-    public static string stageBGMFileName;
+    [SerializeField] private string stageBGMFileName = "Labo_BGM03";
     
 
     void Awake()

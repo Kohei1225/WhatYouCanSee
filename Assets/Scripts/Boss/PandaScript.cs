@@ -43,8 +43,6 @@ public class PandaScript : BossBase
     #endregion
 
     #region field
-    /// <summary> バトルを開始する距離 </summary>
-    private const float BATTLE_START_DISTANCE = 50f; 
     /// <summary> 攻撃１をする距離 </summary>
     private const float DISTANCE1 = 7.5f;             
     /// <summary> 攻撃２をする距離 </summary>

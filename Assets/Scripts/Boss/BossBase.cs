@@ -125,5 +125,22 @@ public abstract class BossBase : MonoBehaviour
 
         //Debug.Log("TurnToPlayer()");
     }
+
+    /// <summary> ２つのオブジェクトの距離を計算する </summary>
+    /// <param name="obj1"> オブジェクト１ </param>
+    /// <param name="obj2"> オブジェクト２ </param>
+    /// <returns> ２点の距離 </returns>
+    public float CalcDistance(GameObject obj1,GameObject obj2)
+    {
+        float distance = 0f;
+
+        var xElement = obj1.transform.position.x - obj1.transform.position.x;
+        xElement *= xElement;
+        var yElement = obj1.transform.position.y - obj1.transform.position.y;
+        yElement *= yElement;
+
+        distance = Mathf.Abs(xElement + yElement);
+        return distance;
+    }
     #endregion
 }

@@ -14,4 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Title.unity
     guid: d15c36dce1cd1fa45a31717d2aca2a16
+  - enabled: 1
+    path: Assets/Scenes/Boss/Chameleon.unity
+    guid: 7aa35dfee525040e0b276b2a017b447f
+  - enabled: 1
+    path: Assets/Scenes/Boss/Panda.unity
+    guid: 165e289f42b3541a8a29ef058ed76b48
   m_configObjects: {}

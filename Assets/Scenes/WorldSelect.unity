@@ -1101,6 +1101,10 @@ PrefabInstance:
       propertyPath: worldNo
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1023218243035688327, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
+      propertyPath: sceneName
+      value: Chameleon
+      objectReference: {fileID: 0}
     - target: {fileID: 1023218243773845956, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
       propertyPath: worldNo
       value: 1

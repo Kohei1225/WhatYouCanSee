@@ -89,6 +89,8 @@ public class BeeScript : MonoBehaviour
                     _State = StateEnum.ATTACK;
                     //コライダーをつける
                     _Collider2D.enabled = true;
+                    //音ならす
+                    SoundManager.Instance.PlaySE("FlyAttack");
                 }
                 break;
             case StateEnum.ATTACK:
@@ -150,8 +152,6 @@ public class BeeScript : MonoBehaviour
         if (_Time * _AttackSpeed / length >= 1)
         {
             _Time = 0;
-            //コライダーをなくす
-            _Collider2D.enabled = false;
             //位置をセット
             _FromToPoses[0] = transform.position;
             _FromToPoses[1] = new Vector3(_CenterX, _CenterY, 0);
@@ -170,6 +170,8 @@ public class BeeScript : MonoBehaviour
         if (_Time * _BackSpeed / length >= 1)
         {
             _Time = 0;
+            //コライダーをなくす
+            _Collider2D.enabled = false;
             _State = StateEnum.FLY;
         }
     }

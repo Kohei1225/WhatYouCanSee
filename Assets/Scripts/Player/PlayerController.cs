@@ -25,8 +25,8 @@ public class PlayerController : MonoBehaviour
     
     float scale;           
     float throwPower = 1500;        //投げるときに加える力 
-    public bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
-    public GameObject objectBeingHolden;   //持ってるオブジェクト
+    [HideInInspector] public bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
+    [HideInInspector] public GameObject objectBeingHolden;   //持ってるオブジェクト
     GameObject objectToHold;        //持ち上げる時に使う自身の子オブジェクト
     HoldObjectScript holdScript;    
     Animator animController;        //アニメーター
@@ -112,6 +112,8 @@ public class PlayerController : MonoBehaviour
                     isHoldingObject = true;
                     objectBeingHolden = holdScript.Get_objectFrontMe();
                     objectBeingHolden.GetComponent<ColorObjectVer3>().Set_onThePlayer(true);
+                    //音ならす
+                    SoundManager.Instance.PlaySE("Bring");
                 }
                 //ブロックを持ち上げてる時
                 else if(isHoldingObject)
@@ -133,6 +135,8 @@ public class PlayerController : MonoBehaviour
                     objectBeingHolden.GetComponent<ColorObjectVer3>().Set_onThePlayer(false);
                     objectBeingHolden = null;
 
+                    //音ならす
+                    SoundManager.Instance.PlaySE("Throw");
                 }
             }
         }
@@ -163,6 +167,8 @@ public class PlayerController : MonoBehaviour
 
             rigidBody.velocity = vel;
             jump = false;
+            //音ならす
+            SoundManager.Instance.PlaySE("Player_Jump");
         }
 
         //無敵時間中の処理

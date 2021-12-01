@@ -94,6 +94,7 @@ public class LightningScript : MonoBehaviour
                     _State = StateEnum.LIGHTNING;
                     _Time = 0;
                     //ゴロゴロ
+                    SoundManager.Instance.PlaySE("Thunder");
                     //背景を黄色に
                     _BackGroundColorObjectVer3.colorType = ColorObjectVer3.OBJECT_COLOR3.DARK_YELLOW;
                     //怯える

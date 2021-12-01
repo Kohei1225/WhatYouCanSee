@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1932767597080834635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1932767597080834633}
+  - component: {fileID: 1932767597080834630}
+  - component: {fileID: 1932767597080834632}
+  m_Layer: 0
+  m_Name: LightningArea
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1932767597080834633
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932767597080834635}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.77999973, y: 4.2, z: 0}
+  m_LocalScale: {x: 100, y: 50, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1932767597080834630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932767597080834635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4420d8c4fcdca4a56a1a069518ea6796, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _ChameleonScript: {fileID: 0}
+  _State: 0
+  _StartingIntervals:
+  - 15
+  - 15
+  - 20
+  _WaitTime: 2
+  _LightningTime: 10
+  _MakeLightningBlockNum: 2
+  _LightningLight: {fileID: 0}
+  _LightingBackColor: {r: 0.49056602, g: 0.43037176, b: 0, a: 0}
+  _LightningBlockPrefab: {fileID: 3605535754663340467, guid: 8f1a4797b87d04109879a9f7706282b2, type: 3}
+  _SidePosX: 40
+  _SidePosY: -17
+  _GameManagerScript: {fileID: 0}
+  _BackGroundColorObjectVer3: {fileID: 0}
+  _PlayerController: {fileID: 0}
+--- !u!114 &1932767597080834632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932767597080834635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9fe213da86614b4db7365c5a1a99b80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _CloudPrefab: {fileID: 7500819275411711260, guid: bf80c99aa6a004eca8efe5fac6784d04, type: 3}
+  _CanSeeSec: 1
+  _CloudSpeedSec: 2
+  _PosX: 50
+  _PosY: 20
+  _AnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

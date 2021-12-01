@@ -12,7 +12,7 @@ public class LeverScript : MonoBehaviour
     bool canChangeBar;//プレイヤーが近くにいる時(バーを操作できる状態)
     GameObject barObject;//実際に動くバーのオブジェクト
     public float[] barAngleList = {160,90,20,90};//バーの傾きのリスト
-    private int firstBarPos = 0;
+    [SerializeField]private int firstBarPos = 0;
 
 
     // Start is called before the first frame update

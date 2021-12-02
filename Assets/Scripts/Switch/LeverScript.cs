@@ -106,6 +106,8 @@ public class LeverScript : MonoBehaviour
     /// <summary> バーの角度を変更 </summary>
     public void ChangeBarPos()
     {
+        //Debug.Log("Lever");
+
         timeSum = 0;
         
         startAngle = barObject.transform.localEulerAngles.z;

@@ -58,7 +58,8 @@ public class ClowScript : BossBase
     /// <summary> タスクリストのインスタンス </summary>
     private TaskList<TaskEnum> _TaskList = new TaskList<TaskEnum>();
 
-    private TaskEnum[] array;
+    /// <summary> 中心からクチバシまでの長さ </summary>
+    private const float _BeakPoint = 5.5f;
     #endregion
 
     #region property
@@ -89,6 +90,10 @@ public class ClowScript : BossBase
         _State = StateEnum.Move;
         _CurrentHP = _MaxHp;
         _BossSize = transform.localScale.x;
+
+        _AnimController = GetComponent<Animator>();
+
+        _AttackIntervalTimer.ResetTimer(_AttackInterval);
     }
 
     // Update is called once per frame
@@ -130,6 +135,7 @@ public class ClowScript : BossBase
     {
         Debug.Log("SelectTask");
         _AttackIntervalTimer.UpdateTimer();
+        Idle();
         if(!CanAttack)
         {
             Debug.Log("Cant Attack!");
@@ -137,9 +143,9 @@ public class ClowScript : BossBase
         }
         Attack1();
         _TaskList.AddTask(TaskEnum.Wait);
-        Attack2();
-        _TaskList.AddTask(TaskEnum.Wait);
-        Attack3();
+        //Attack2();
+        //_TaskList.AddTask(TaskEnum.Wait);
+        //Attack3();
     }
 
     /// <summary> 上から落ちてくる攻撃 </summary>
@@ -172,6 +178,7 @@ public class ClowScript : BossBase
         _TaskList.CancelAllTask();
         _TaskList.AddTask(TaskEnum.Damage);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
+        _TaskList.AddTask(TaskEnum.Wait);
     }
 
     public override void Down()
@@ -181,7 +188,7 @@ public class ClowScript : BossBase
 
     public override void Idle()
     {
-        
+        _TaskList.AddTask(TaskEnum.Idle);
     }
 
     public override void Move()
@@ -250,27 +257,50 @@ public class ClowScript : BossBase
     #endregion
 
     #region FallAttack
+    float _StageYPos = 0;
     void TaskFallAttackEnter()
     {
         var pos = transform.position;
         pos.x = _Player.transform.position.x;
         transform.position = pos;
+
+        _AnimController.Play("Clow_FallAttack01",0,0);
+        _AnimController.SetBool("IsFall", true);
+
+        var dir = transform.position;
+        dir.x = 0;
+        dir.y = -1;
+        
+        foreach(RaycastHit2D hit in Physics2D.RaycastAll(transform.position,dir))
+        {
+            if (hit.collider.gameObject.tag == "Stage")
+            {
+                _StageYPos = hit.point.y + (transform.localScale.y * _BeakPoint);
+                break;
+            }
+        }
     }
 
     bool TaskFallAttackUpdate()
     {
-        var speed = -1;
-        transform.Translate(0, -1, 0);
-        return OnGround;
+        var fallSpeed = 1f;
+        if(transform.position.y - fallSpeed < _StageYPos)
+        {
+            fallSpeed = transform.position.y - _StageYPos;
+        }
+        transform.Translate(0, -fallSpeed, 0);
+        return _StageYPos >= transform.position.y ;
     }
 
     void TaskFallAttackExit()
     {
+        _AnimController.SetBool("IsFallShock",true);
         Debug.Log("落下攻撃完了!!");
     }
     #endregion
 
     #region FallAttack
+
     void TaskAfterFallEnter()
     {
         _WaitTimer.ResetTimer(_AfterFallTime);
@@ -284,6 +314,8 @@ public class ClowScript : BossBase
 
     void TaskAfterFallExit()
     {
+        _AnimController.SetBool("IsFall", false);
+        _AnimController.SetBool("IsFallShock", false);
     }
     #endregion
 
@@ -345,8 +377,8 @@ public class ClowScript : BossBase
         pos.x += _Dir;
         pos.y = _LowRoute.Evaluate(pos.x) * 30;
         transform.position = pos;
-        return CalcDistance(_TargetObject, gameObject) < 0.1f;
-        //return Mathf.Abs(transform.position.x - _TargetObject.transform.position.x) < 0.1f;
+        //return _TargetObject.transform.position.y <= transform.position.y;
+        return Mathf.Abs(transform.position.x - _TargetObject.transform.position.x) < 0.1f;
     }
 
     void TaskLowFlyAttackExit()
@@ -384,7 +416,8 @@ public class ClowScript : BossBase
         //対象まで一定のスピードで移動
         transform.position += vec * _MoveSpeed;
 
-        return CalcDistance(_TargetObject,gameObject) < 0.5f;
+        return _TargetObject.transform.position.y <= gameObject.transform.position.y;
+        //return CalcDistance(_TargetObject,gameObject) < 0.5f;
     }
 
     void TaskReturnPosExit()
@@ -396,7 +429,8 @@ public class ClowScript : BossBase
     #region Damage
     void TaskDamageEnter()
     {
-        _AnimController.Play("Damage");
+        _AnimController.Play("Clow_Damage01",0,0);
+        _AnimController.SetBool("IsDamage", true);
         _Head.SetActive(false);
         _WaitTimer.ResetTimer(1.0f);
     }

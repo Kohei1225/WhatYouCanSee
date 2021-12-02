@@ -39,6 +39,7 @@ public class ClowScript : BossBase
     [SerializeField] private AnimationCurve _LowRoute;
     /// <summary> 頭の当たり判定を含んだオブジェクト </summary>
     [SerializeField] private GameObject _Head = null;
+    [SerializeField] private GameObject _Beak = null;
     #endregion
 
     #region field
@@ -58,8 +59,8 @@ public class ClowScript : BossBase
     /// <summary> タスクリストのインスタンス </summary>
     private TaskList<TaskEnum> _TaskList = new TaskList<TaskEnum>();
 
-    /// <summary> 中心からクチバシまでの長さ </summary>
-    private const float _BeakPoint = 5.5f;
+    /// <summary> 中心からクチバシまでの長さ(比率的な長さ) </summary>
+    private const float _BeakPoint = 5.4f;
     #endregion
 
     #region property
@@ -295,7 +296,7 @@ public class ClowScript : BossBase
     void TaskFallAttackExit()
     {
         _AnimController.SetBool("IsFallShock",true);
-        Debug.Log("落下攻撃完了!!");
+        //Debug.Log("落下攻撃完了!!");
     }
     #endregion
 
@@ -303,6 +304,7 @@ public class ClowScript : BossBase
 
     void TaskAfterFallEnter()
     {
+        _Beak.SetActive(false);
         _WaitTimer.ResetTimer(_AfterFallTime);
     }
 
@@ -322,7 +324,7 @@ public class ClowScript : BossBase
     #region Charge
     void TaskChargeEnter()
     {
-        Debug.Log("Charge");
+        //Debug.Log("Charge");
         _WaitTimer.ResetTimer(_ChargeTime);
     }
 
@@ -351,7 +353,7 @@ public class ClowScript : BossBase
 
     void TaskWindAttackExit()
     {
-        Debug.Log("羽攻撃完了!!");
+        //Debug.Log("羽攻撃完了!!");
     }
     #endregion
 
@@ -388,6 +390,7 @@ public class ClowScript : BossBase
     #endregion
 
     #region Return
+    public Vector3 _Vec;
     void TaskReturnPosEnter()
     {
         //ステージの右側にいるか左側にいるかで対象を変える
@@ -397,24 +400,21 @@ public class ClowScript : BossBase
         }
         else _TargetObject = _RightSetPos;
 
-        Debug.Log("I will return position");
+        //Debug.Log("I will return position");
+        _Beak.SetActive(false);
+
+        //対象へ向かう単位ベクトルを取得
+        _Vec = _TargetObject.transform.position - gameObject.transform.position;
+        _Vec.z = 0;
+        _Vec /= CalcDistance(_TargetObject, gameObject);
     }
 
     bool TaskReturnPosUpdate()
     {
         TurnTo(_Player);
 
-        //対象に向かうベクトルを取得
-        var vec = transform.position;
-        vec.x = _TargetObject.transform.position.x - transform.position.x;
-        vec.y = _TargetObject.transform.position.y - transform.position.y;
-        vec.z = 0;
-
-        //ベクトルを単位ベクトル化
-        vec /= CalcDistance(_TargetObject, gameObject);
-
         //対象まで一定のスピードで移動
-        transform.position += vec * _MoveSpeed;
+        transform.position += _Vec * _MoveSpeed;
 
         return _TargetObject.transform.position.y <= gameObject.transform.position.y;
         //return CalcDistance(_TargetObject,gameObject) < 0.5f;
@@ -422,7 +422,11 @@ public class ClowScript : BossBase
 
     void TaskReturnPosExit()
     {
+        TurnTo(_Player);
+
+        //Debug.Log("移動終わり");
         _Head.SetActive(true);
+        _Beak.SetActive(true);
     }
     #endregion
 

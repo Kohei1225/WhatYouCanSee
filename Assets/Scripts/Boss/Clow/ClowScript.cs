@@ -36,7 +36,7 @@ public class ClowScript : BossBase
     /// <summary> 飛ばす羽のプレハブ </summary>
     [SerializeField] private GameObject _WindPrefab = null;
     /// <summary> 低空飛行の際の軌道 </summary>
-    [SerializeField] private AnimationCurve _LowRoute;
+    [SerializeField] private AnimationCurve[] _LowRoutes;
     /// <summary> 頭の当たり判定を含んだオブジェクト </summary>
     [SerializeField] private GameObject _Head = null;
     [SerializeField] private GameObject _Beak = null;
@@ -145,9 +145,9 @@ public class ClowScript : BossBase
             Debug.Log("Can't Attack!");
             return;
         }
-        Attack1();
+        //Attack1();
         Attack2();
-        Attack3();
+        //Attack3();
         //_TaskList.AddTask(TaskEnum.Wait);
         //Attack2();
         //_TaskList.AddTask(TaskEnum.Wait);
@@ -168,8 +168,8 @@ public class ClowScript : BossBase
     public override void Attack2()
     {
         _TaskList.AddTask(TaskEnum.ReturnPostion);
-        _TaskList.AddTask(TaskEnum.LowFlyAttack);
         _TaskList.AddTask(TaskEnum.Wait);
+        _TaskList.AddTask(TaskEnum.LowFlyAttack);
     }
 
     /// <summary> 羽攻撃 </summary>
@@ -393,6 +393,7 @@ public class ClowScript : BossBase
 
     #region LowFlyAttack
     GameObject _TargetObject = null;
+    int _CurrentLowRoute;
     void TaskLowFlyAttackEnter()
     {
         _AnimController.Play("Clow_LowFlying01", 0, 0);
@@ -408,6 +409,8 @@ public class ClowScript : BossBase
             _TargetObject = _RightSetPos;
         }
         TurnTo(_TargetObject);
+
+        _CurrentLowRoute = Random.Range(0,_LowRoutes.Length-1);
     }
 
     bool TaskLowFlyAttackUpdate()
@@ -416,10 +419,20 @@ public class ClowScript : BossBase
         pos.x += _Dir;
 
         //var tmpY = Mathf.Lerp(0,1, _RightSetPos.transform.position.x - pos.x);
+        //現在地の割合を計算
         var tmpX = (transform.position.x - _LeftSetPos.transform.position.x)/(_RightSetPos.transform.position.x - _LeftSetPos.transform.position.x);
         Debug.Log("tmp:" + tmpX);
-        pos.y = _LowRoute.Evaluate(tmpX);
+        pos.y = _LowRoutes[_CurrentLowRoute].Evaluate(tmpX);
+
         pos.y *= _TargetObject.transform.position.y;
+
+
+        var unit = 2f;
+        var targetYPos = _TargetObject.transform.position.y;
+        pos.y *= unit;
+        targetYPos *= unit;
+        targetYPos -= targetYPos * ((unit - 1)/unit);
+        pos.y -= targetYPos;
         
         transform.position = pos;
         return Mathf.Abs(_TargetObject.transform.position.x - transform.position.x) <= 1f;
@@ -459,7 +472,8 @@ public class ClowScript : BossBase
     {
         TurnTo(_Player);
 
-        if(_TargetObject.transform.position.y <= gameObject.transform.position.y)
+        if(_TargetObject.transform.position.y <= gameObject.transform.position.y
+            &&  gameObject.transform.position.y <= _TargetObject.transform.position.y + 2)
         {
             return true;
         }

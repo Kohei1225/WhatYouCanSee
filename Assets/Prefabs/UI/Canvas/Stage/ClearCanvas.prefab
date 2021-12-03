@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _PlayerController: {fileID: 0}
   _HeartPrefab: {fileID: 1402487090876374790, guid: cbb1d17fbaaa749b5837557e66fecb18, type: 3}
-  _Blank: 5
+  _Blank: 10
 --- !u!1 &5129980233005255300
 GameObject:
   m_ObjectHideFlags: 0

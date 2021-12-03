@@ -1097,6 +1097,10 @@ PrefabInstance:
       propertyPath: worldNo
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1023218242983307788, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
+      propertyPath: sceneName
+      value: Stage2_3
+      objectReference: {fileID: 0}
     - target: {fileID: 1023218243035688327, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
       propertyPath: worldNo
       value: 1
@@ -1109,9 +1113,17 @@ PrefabInstance:
       propertyPath: worldNo
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1023218243773845956, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
+      propertyPath: sceneName
+      value: Stage2_2
+      objectReference: {fileID: 0}
     - target: {fileID: 1169095398323135785, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
       propertyPath: worldNo
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1169095398323135785, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
+      propertyPath: sceneName
+      value: Stage2_1
       objectReference: {fileID: 0}
     - target: {fileID: 1169095398653401287, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
       propertyPath: m_Sprite

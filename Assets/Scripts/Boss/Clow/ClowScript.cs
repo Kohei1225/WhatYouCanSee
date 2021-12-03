@@ -184,7 +184,11 @@ public class ClowScript : BossBase
 
     public override void Down()
     {
-        
+        _State = StateEnum.Dead;
+        _TaskList.CancelAllTask();
+        _AnimController.Play("Clow_Down", 0, 0);
+        _Head.SetActive(false);
+        _Beak.SetActive(false);
     }
 
     public override void Idle()

@@ -145,7 +145,9 @@ public class ClowScript : BossBase
             Debug.Log("Can't Attack!");
             return;
         }
+        Attack1();
         Attack2();
+        Attack3();
         //_TaskList.AddTask(TaskEnum.Wait);
         //Attack2();
         //_TaskList.AddTask(TaskEnum.Wait);
@@ -395,6 +397,7 @@ public class ClowScript : BossBase
     {
         _AnimController.Play("Clow_LowFlying01", 0, 0);
         _AnimController.SetBool("IsLowFly", true);
+
         //右にいたら左へ、左にいたら右へ移動する
         if (CalcDistance(_RightSetPos,gameObject) < 1)
         {

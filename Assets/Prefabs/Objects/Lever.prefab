@@ -337,12 +337,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _SyncLever: {fileID: 0}
-  existMidPos: 1
+  firstBarPos: 0
   barAngleList:
   - 160
   - 90
   - 20
   - 90
+  roteteSpeed: 300
 --- !u!1 &5709249740614365143
 GameObject:
   m_ObjectHideFlags: 0

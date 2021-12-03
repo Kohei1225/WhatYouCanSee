@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
+using UnityEngine.U2D;
 
 //色を持ってるオブジェクトにアタッチするクラス。消え得るオブジェクトを覆っていたら印を付けてあげる。
 public class ColorObjectVer3 : MonoBehaviour
@@ -56,7 +57,8 @@ public class ColorObjectVer3 : MonoBehaviour
 
     GameManagerScript gameManagerScript;
     GameObject BodyObject;  //SetActiveで切り替える対象(実体に当たる部分)
-
+    SpriteRenderer _SpriteRenderer = null;
+    SpriteShapeRenderer _SpriteShapeRenderer = null;
 
     // Start is called before the first frame update
     void Start()
@@ -74,8 +76,13 @@ public class ColorObjectVer3 : MonoBehaviour
 
             //if(!gameManagerScript.existShadow)hasShadow = false;
             if(BodyObject.transform.Find("ShadowCaster"))
+            {
                 BodyObject.transform.Find("ShadowCaster").gameObject.SetActive(this.hasShadow);
+            }
         }
+
+        _SpriteShapeRenderer = GetComponent<SpriteShapeRenderer>() ?? null;
+        _SpriteRenderer = GetComponent<SpriteRenderer>() ?? null;
 
         //ゴールの場合
         if(gameObject.name == "Goal")
@@ -93,7 +100,7 @@ public class ColorObjectVer3 : MonoBehaviour
     }
 
     
-    void FixedUpdate()
+    void FixedUpdate()    
     {
         //if(gameObject.tag != "BackGround" && gameObject.tag != "Player")gameObject.layer = LayerMask.NameToLayer("Color");
 
@@ -119,7 +126,17 @@ public class ColorObjectVer3 : MonoBehaviour
         }
         else noBody = false;
 
-        GetComponent<SpriteRenderer>().color = ChangeColorByType(colorType);//colorTypeによって変色
+
+
+        if (_SpriteRenderer != null)
+        {
+            _SpriteRenderer.color = ChangeColorByType(colorType);//colorTypeによって変色
+        }
+        else
+        {
+            _SpriteShapeRenderer.color = ChangeColorByType(colorType);//colorTypeによって変色
+        }
+        
 
         if (isObject)ControlBody(noBody);//オブジェクトの状態によって処理する
     }
@@ -138,7 +155,7 @@ public class ColorObjectVer3 : MonoBehaviour
         else
         {
             //GetComponent<Rigidbody2D>().gravityScale = gravity;
-            Color nowColor = GetComponent<SpriteRenderer>().color;
+            Color nowColor = _SpriteRenderer != null ? _SpriteRenderer.color : _SpriteShapeRenderer.color;
             nowColor.a = 1;
             //GetComponent<SpriteRenderer>().color = nowColor;
             pos.z = 0;
@@ -170,7 +187,7 @@ public class ColorObjectVer3 : MonoBehaviour
     //オブジェクトの色を変えるメソッド
     public Color ChangeColorByType(OBJECT_COLOR3 colorType)
     {
-        float originAlpha = GetComponent<SpriteRenderer>().color.a;
+        float originAlpha = _SpriteRenderer != null ?_SpriteRenderer.color.a : _SpriteShapeRenderer.color.a;
         Color color = new Color(0,0,0);
         switch(this.colorType)
         {

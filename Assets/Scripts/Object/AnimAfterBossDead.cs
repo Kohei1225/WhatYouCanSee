@@ -6,7 +6,7 @@ using UnityEngine;
 public class AnimAfterBossDead : MonoBehaviour
 {
     /// <summary> 対象のボス </summary>
-    [SerializeField] private PandaScript _Boss = null;
+    [SerializeField] private BossBase _Boss = null;
     /// <summary> 再生するアニメーションの名前 </summary>
     [SerializeField] private string _AnimStateName;
     /// <summary> 死んでから再生するまでの時間 </summary>

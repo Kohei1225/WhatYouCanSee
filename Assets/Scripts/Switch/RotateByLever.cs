@@ -2,33 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//レバーの傾きに応じて自身の傾きを調整するクラス
+/// <summary> レバーの傾きに応じて自身の傾きを調整するクラス </summary>
 public class RotateByLever : MonoBehaviour
 {
-    public float[] angleList = new float[4];//傾きリスト
-    public GameObject LeverObject;          //参照するレバー
+    /// <summary> 傾きリスト </summary>
+    public float[] angleList;
+    /// <summary> 参照するレバー </summary>
+    public GameObject LeverObject;
     LeverScript leverScript;
-    public float rotateSpeed;               //傾くスピード
+    /// <summary> 傾くスピード </summary>
+    public float rotateSpeed;               
+    /// <summary> 回転前の角度 </summary>
+    private float startAngle;
+    /// <summary> 回転後の角度 </summary>
+    private float endAngle;
 
     // Start is called before the first frame update
     void Start()
     {
         leverScript = LeverObject.GetComponent<LeverScript>();
+
+        endAngle = angleList[leverScript.firstBarPos];
+        //endAngle - startAngleが0にならないように調整
+        startAngle = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
         //傾きを調整
-        Vector3 barAngle = gameObject.transform.localEulerAngles;
-        float angleDifference = angleList[leverScript.barPosition] - barAngle.z;
+        Vector3 objAngle = gameObject.transform.localEulerAngles;
 
-        //十分傾いてたら傾ける操作をしない
-        if(Mathf.Abs(angleDifference) > 0.1f)
+        if(leverScript.canChangeBar && Input.GetKeyDown(KeyCode.C))
         {
-            if(angleDifference > 0)barAngle.z += rotateSpeed;
-            if(angleDifference < 0)barAngle.z -= rotateSpeed;
-            gameObject.transform.localEulerAngles = barAngle;
+            ChangeAngle();
         }
+
+        objAngle.z = Mathf.Lerp(startAngle,endAngle,(leverScript.timeSum * rotateSpeed)/Mathf.Abs(endAngle - startAngle));
+
+        //Debug.Log((leverScript.timeSum * rotateSpeed) / Mathf.Abs(endAngle - startAngle));
+        gameObject.transform.localEulerAngles = objAngle;
+    }
+
+    /// <summary> 自身の角度を変更 </summary>
+    public void ChangeAngle()
+    {
+        //Debug.Log("Light");
+        startAngle = gameObject.transform.localEulerAngles.z;
+
+        endAngle = angleList[leverScript.barPosition];
     }
 }

@@ -2,33 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//レバーにアタッチするクラス
+/// <summary> レバーにアタッチするクラス </summary>
 public class LeverScript : MonoBehaviour
 {
+    /// <summary> 状態を同期させたい他のレバー </summary>
     [SerializeField] LeverScript _SyncLever = null;
-    private bool firstLever = false;
-    public int barPosition{get;private set;}//バーの状態
-    public bool existMidPos;//バーが真ん中で止まるかどうか
-    bool canChangeBar;//プレイヤーが近くにいる時(バーを操作できる状態)
-    GameObject barObject;//実際に動くバーのオブジェクト
-    public float[] barAngleList = {160,90,20,90};//バーの傾きのリスト
-    private int firstBarPos = 0;
+    /// <summary>  </summary>
+    public int firstBarPos = 0;
 
+    /// <summary> 同期する際の最初のレバーか </summary>
+    private bool firstLever = false;
+    /// <summary> バーの状態 </summary>
+    public int barPosition { get; private set; }
+    /// <summary> プレイヤーが近くにいる時(バーを操作できる状態) </summary>
+    public bool canChangeBar { get; private set; }
+    /// <summary> 実際に動くバーのオブジェクト </summary>
+    GameObject barObject;
+    /// <summary> バーの傾きのリスト </summary>
+    public float[] barAngleList = { 160, 90, 20, 90 };
+    /// <summary> レバーが動くスピード </summary>
+    [SerializeField]private float roteteSpeed = 300;
+
+    public float timeSum { private set; get; } = 0;
+
+    /// <summary> 回転前の角度 </summary>
+    float startAngle;
+    /// <summary> 回転後の角度 </summary>
+    float endAngle;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         //バーのオブジェクトを取得
         barObject = transform.Find("BarObjects").gameObject.transform.Find("Lever1_bar").gameObject;
 
-        //バーの初期位置を設定
-        if(existMidPos)firstBarPos = 1;
-        else firstBarPos = 0;
+        //バーの傾きを初期化
         barPosition = firstBarPos;
 
         //バーの傾きを初期化
-        barObject.transform.localEulerAngles = new Vector3(0,0,barAngleList[barPosition]);
+        //barObject.transform.localEulerAngles = new Vector3(0,0,barAngleList[barPosition]);
 
+        startAngle = barAngleList[barPosition];
+        endAngle = startAngle;
         canChangeBar = false;
     }
 
@@ -43,15 +58,10 @@ public class LeverScript : MonoBehaviour
 
         //バーの傾きを調整
         Vector3 barAngle = barObject.transform.localEulerAngles;
-        float angleDifference = barAngleList[barPosition] - barAngle.z;
 
-        //十分傾いてたら傾ける操作をしない
-        if(Mathf.Abs(angleDifference) > 0.1f)
-        {
-            if(angleDifference > 0)barAngle.z += 10;
-            if(angleDifference < 0)barAngle.z -= 10;
-            barObject.transform.localEulerAngles = barAngle;
-        }
+        timeSum += Time.deltaTime;
+        barAngle.z = Mathf.Lerp(startAngle,endAngle, (roteteSpeed * timeSum) / Mathf.Abs(endAngle - startAngle));
+        barObject.transform.localEulerAngles = barAngle;
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -70,7 +80,7 @@ public class LeverScript : MonoBehaviour
         }
     }
 
-    //バーの位置をリセットするメソッド
+    /// <summary> バーの位置をリセット </summary>
     public void ResetBarPos()
     {
         this.barPosition = firstBarPos;
@@ -78,38 +88,37 @@ public class LeverScript : MonoBehaviour
         _SyncLever?.SyncLeverPos(this.barPosition);
     }
 
+    /// <summary> 他のレバーの位置と同期する </summary>
+    /// <param name="barPos">同期元のレバーの状態</param>
     public void SyncLeverPos(int barPos)
     {
+        //同期元のレバーだったら何もしない
         if(firstLever)
         {
             this.firstLever = false;
             return;
         }
 
-        //
         this.barPosition = barPos;
         _SyncLever.SyncLeverPos(barPos);
     }
 
+    /// <summary> バーの角度を変更 </summary>
     public void ChangeBarPos()
     {
-        //３段階以上で変えられる時
-        if(existMidPos)
-        {
-            barPosition++;      
-        }
-        //２段階の時
-        else
-        {
-            barPosition += 2;
-        }
+        //Debug.Log("Lever");
 
+        timeSum = 0;
+        
+        startAngle = barObject.transform.localEulerAngles.z;
+        barPosition++;
+        
         //配列の最後まで来たら最初に戻る
         if(barPosition >= barAngleList.Length)barPosition = 0;
+        endAngle = barAngleList[barPosition];
 
         //他のレバーが連動するなら連動させる
         firstLever = true;
         _SyncLever?.SyncLeverPos(this.barPosition);
     }
-
 }

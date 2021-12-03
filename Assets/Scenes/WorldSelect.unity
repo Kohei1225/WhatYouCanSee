@@ -1097,6 +1097,10 @@ PrefabInstance:
       propertyPath: worldNo
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1023218242983307788, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
+      propertyPath: sceneName
+      value: Stage2_3
+      objectReference: {fileID: 0}
     - target: {fileID: 1023218243035688327, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
       propertyPath: worldNo
       value: 1
@@ -1109,9 +1113,17 @@ PrefabInstance:
       propertyPath: worldNo
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1023218243773845956, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
+      propertyPath: sceneName
+      value: Stage2_2
+      objectReference: {fileID: 0}
     - target: {fileID: 1169095398323135785, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
       propertyPath: worldNo
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1169095398323135785, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
+      propertyPath: sceneName
+      value: Stage2_1
       objectReference: {fileID: 0}
     - target: {fileID: 1169095398653401287, guid: 4f4dfe825f7c34e858581032933b3691, type: 3}
       propertyPath: m_Sprite
@@ -1231,6 +1243,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 0fe1bac2dbfa14939901ee13a2435039, type: 3}
+    - target: {fileID: 4466467280930442100, guid: d05ca50f70cfa43e1872edbac45cc003, type: 3}
+      propertyPath: sceneName
+      value: Stage1_1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d05ca50f70cfa43e1872edbac45cc003, type: 3}
 --- !u!1 &4466467280476622438 stripped

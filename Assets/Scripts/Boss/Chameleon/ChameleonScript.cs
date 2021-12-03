@@ -548,7 +548,7 @@ public class ChameleonScript : BossBase
             //色を変える
             _TaskList.AddTask(TaskEnum.CHANGE_COLOR);
             //もし新しいフェーズになっていたら
-            if(_Phase != beforePhase)
+            if (_Phase != beforePhase)
             {
                 //蜂1体追加
                 GameObject bee = Instantiate(_BeePrefab, _BeePosObj[_Phase].transform.position, Quaternion.identity);

@@ -226,6 +226,8 @@ public class MapManager : MonoBehaviour
         {
             if (changeAlpha.Get_isFin())
             {
+                //状態をノーマルにする
+                screenStatus = ScreenStatuses.NORMAL;
                 //テキストUIにステージ名を表示(更新)
                 string sceneName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetSceneName();
                 SceneManager.LoadScene(sceneName);

@@ -192,6 +192,15 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        //Zキーが押された時はタグをカラーオブジェクトにする
+        if (GetComponent<ColorObjectVer3>().Get_active())
+        {
+            gameObject.tag = "ColorObject";
+        }
+        else
+        {
+            gameObject.tag = "Player";
+        }
     }
 
     void FixedUpdate()

@@ -34,12 +34,16 @@ public class ClowScript : BossBase
     /// <summary> 左側の固定位置 </summary>
     [SerializeField] private GameObject _LeftSetPos = null;
     /// <summary> 飛ばす羽のプレハブ </summary>
-    [SerializeField] private GameObject _WindPrefab = null;
+    [SerializeField] private GameObject _WingPrefab = null;
     /// <summary> 低空飛行の際の軌道 </summary>
     [SerializeField] private AnimationCurve[] _LowRoutes;
     /// <summary> 頭の当たり判定を含んだオブジェクト </summary>
     [SerializeField] private GameObject _Head = null;
+    /// <summary> クチバシの当たり判定を含んだオブジェクト </summary>
     [SerializeField] private GameObject _Beak = null;
+    /// <summary> 低空飛行をする際のスピード </summary>
+    [SerializeField] private float[] _LowSpeeds;
+    [SerializeField] private WingGenerator _WingGenerator = null;
     #endregion
 
     #region field
@@ -63,6 +67,34 @@ public class ClowScript : BossBase
     private const float _BeakPoint = 5.4f;
 
     private float _WingAttackTime = 5.0f;
+
+    private int _VisualState = 1;
+
+    private ColorObjectVer3.OBJECT_COLOR3[,] _WingColors = new ColorObjectVer3.OBJECT_COLOR3[,]
+    {
+
+        {
+            ColorObjectVer3.OBJECT_COLOR3.RED,ColorObjectVer3.OBJECT_COLOR3.RED,ColorObjectVer3.OBJECT_COLOR3.RED,
+            ColorObjectVer3.OBJECT_COLOR3.ORRANGE,ColorObjectVer3.OBJECT_COLOR3.ORRANGE,ColorObjectVer3.OBJECT_COLOR3.ORRANGE,
+        },
+        {
+            ColorObjectVer3.OBJECT_COLOR3.YELLOW,ColorObjectVer3.OBJECT_COLOR3.YELLOW,ColorObjectVer3.OBJECT_COLOR3.YELLOW,
+            ColorObjectVer3.OBJECT_COLOR3.LIME,ColorObjectVer3.OBJECT_COLOR3.LIME,ColorObjectVer3.OBJECT_COLOR3.LIME,
+        },
+        {
+            ColorObjectVer3.OBJECT_COLOR3.BLUE,ColorObjectVer3.OBJECT_COLOR3.PURPLE,ColorObjectVer3.OBJECT_COLOR3.MAGENTA,
+            ColorObjectVer3.OBJECT_COLOR3.BLUE,ColorObjectVer3.OBJECT_COLOR3.PURPLE,ColorObjectVer3.OBJECT_COLOR3.MAGENTA,
+        },
+        {
+            ColorObjectVer3.OBJECT_COLOR3.GRAY,ColorObjectVer3.OBJECT_COLOR3.GRAY,ColorObjectVer3.OBJECT_COLOR3.GRAY,
+            ColorObjectVer3.OBJECT_COLOR3.WHITE,ColorObjectVer3.OBJECT_COLOR3.WHITE,ColorObjectVer3.OBJECT_COLOR3.WHITE,
+        },
+        {
+            ColorObjectVer3.OBJECT_COLOR3.BLACK,ColorObjectVer3.OBJECT_COLOR3.BLACK,ColorObjectVer3.OBJECT_COLOR3.BLACK,
+            ColorObjectVer3.OBJECT_COLOR3.BLACK,ColorObjectVer3.OBJECT_COLOR3.BLACK,ColorObjectVer3.OBJECT_COLOR3.BLACK,
+        },
+    };
+
     #endregion
 
     #region property
@@ -146,7 +178,7 @@ public class ClowScript : BossBase
             return;
         }
         //Attack1();
-        Attack2();
+        Attack3();
         //Attack3();
         //_TaskList.AddTask(TaskEnum.Wait);
         //Attack2();
@@ -187,6 +219,24 @@ public class ClowScript : BossBase
         _TaskList.AddTask(TaskEnum.Damage);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Wait);
+
+        if (_CurrentHP == 1)
+        {
+            _VisualState = 5;
+        }
+        else if (_CurrentHP <= 3)
+        {
+            _VisualState = 4;
+        }
+        else if (_CurrentHP <= 5)
+        {
+            _VisualState = 3;
+        }
+        else if (_CurrentHP <= 7)
+        {
+            _VisualState = 2;
+        }
+        else _VisualState = 1;
     }
 
     public override void Down()
@@ -372,15 +422,21 @@ public class ClowScript : BossBase
     #endregion
 
     #region WingAttack
+
+    private int _WingColorNum;
     void TaskWingAttackEnter()
     {
         _AnimController.SetBool("IsWing", true);
         _WaitTimer.ResetTimer(_WingAttackTime);
+
+        _WingColorNum = Random.Range(0, 5);
     }
 
     bool TaskWingAttackUpdate()
     {
         _WaitTimer.UpdateTimer();
+        _WingGenerator.ShotWing(_WingPrefab,_Dir,_WingColors[_VisualState - 1,_WingColorNum]);
+
         return _WaitTimer.IsTimeUp;
     }
 
@@ -393,7 +449,7 @@ public class ClowScript : BossBase
 
     #region LowFlyAttack
     GameObject _TargetObject = null;
-    int _CurrentLowRoute;
+    int _CurrentLowNumber;
     void TaskLowFlyAttackEnter()
     {
         _AnimController.Play("Clow_LowFlying01", 0, 0);
@@ -410,19 +466,19 @@ public class ClowScript : BossBase
         }
         TurnTo(_TargetObject);
 
-        _CurrentLowRoute = Random.Range(0,_LowRoutes.Length-1);
+        _CurrentLowNumber = Random.Range(0,_LowRoutes.Length-1);
     }
 
     bool TaskLowFlyAttackUpdate()
     {
         var pos = transform.position;
-        pos.x += _Dir;
+        pos.x += _LowSpeeds[_CurrentLowNumber] * _Dir * Time.deltaTime;
 
         //var tmpY = Mathf.Lerp(0,1, _RightSetPos.transform.position.x - pos.x);
         //現在地の割合を計算
         var tmpX = (transform.position.x - _LeftSetPos.transform.position.x)/(_RightSetPos.transform.position.x - _LeftSetPos.transform.position.x);
         Debug.Log("tmp:" + tmpX);
-        pos.y = _LowRoutes[_CurrentLowRoute].Evaluate(tmpX);
+        pos.y = _LowRoutes[_CurrentLowNumber].Evaluate(tmpX);
 
         pos.y *= _TargetObject.transform.position.y;
 
@@ -501,6 +557,7 @@ public class ClowScript : BossBase
         _AnimController.Play("Clow_Damage01",0,0);
         _AnimController.SetBool("IsDamage", true);
         _Head.SetActive(false);
+        _Beak.SetActive(false);
         _WaitTimer.ResetTimer(1.0f);
     }
 

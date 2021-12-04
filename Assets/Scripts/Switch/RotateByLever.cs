@@ -36,7 +36,7 @@ public class RotateByLever : MonoBehaviour
 
         barAngle.z = Mathf.Lerp(startAngle,endAngle,(leverScript.timeSum * rotateSpeed)/Mathf.Abs(endAngle - startAngle));
 
-        Debug.Log((leverScript.timeSum * rotateSpeed) / Mathf.Abs(endAngle - startAngle));
+        /*Debug.Log((leverScript.timeSum * rotateSpeed) / Mathf.Abs(endAngle - startAngle));*/
         gameObject.transform.localEulerAngles = barAngle;
     }
 

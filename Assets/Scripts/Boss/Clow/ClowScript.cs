@@ -177,8 +177,11 @@ public class ClowScript : BossBase
             Debug.Log("Can't Attack!");
             return;
         }
-        //Attack1();
+
+        Attack2();
         Attack3();
+        Attack1();
+
         //Attack3();
         //_TaskList.AddTask(TaskEnum.Wait);
         //Attack2();

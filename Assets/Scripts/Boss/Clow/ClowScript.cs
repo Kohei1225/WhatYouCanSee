@@ -447,6 +447,7 @@ public class ClowScript : BossBase
     {
         _AnimController.SetBool("IsWing",false);
         Debug.Log("Finish Wing");
+        _WingGenerator.ResetPeriodCounter();
     }
     #endregion
 

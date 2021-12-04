@@ -21,6 +21,11 @@ public class FootAreaScript : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D other)
     {
+        if(other.GetComponent<HeadPointScript>())
+        {
+            return;
+        }
+
         if(other.gameObject.tag == "Stage"
         || (other.gameObject.tag == "ColorObject"
         && other.gameObject.transform.parent.gameObject.GetComponent<ColorObjectVer3>() 

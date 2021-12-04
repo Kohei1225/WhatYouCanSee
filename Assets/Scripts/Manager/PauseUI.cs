@@ -8,6 +8,7 @@ public class PauseUI : MonoBehaviour
     public GameObject pauseObject;
     public GameObject optionObject;
     public string sceneName;
+    [SerializeField] private MapManager.ScreenStatuses _Status;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,7 @@ public class PauseUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _Status = MapManager.screenStatus;
         if (pauseObject.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -30,7 +32,7 @@ public class PauseUI : MonoBehaviour
         else
         {
             //マップマネージャーの状態がNORMALだったら
-            if (Input.GetKeyDown(KeyCode.Escape) && MapManager.screenStatus == MapManager.ScreenStatuses.NORMAL)
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
                 pauseObject.SetActive(true);
                 //マップマネージャーの状態をPAUSEに

@@ -243,7 +243,7 @@ MonoBehaviour:
   - {x: -0.5, y: 0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: 165328
+  m_InstanceId: -17248
 --- !u!1 &7674285460488513119
 GameObject:
   m_ObjectHideFlags: 0
@@ -298,12 +298,12 @@ MonoBehaviour:
   m_ApplyToSortingLayers: 00000000
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
-  m_LightOrder: 0
+  m_LightOrder: 1
   m_AlphaBlendOnOverlap: 0
   m_ShadowIntensity: 1
   m_ShadowVolumeIntensity: 0
-  m_PointLightInnerAngle: 32.61
-  m_PointLightOuterAngle: 32.61
+  m_PointLightInnerAngle: 34
+  m_PointLightOuterAngle: 34
   m_PointLightInnerRadius: 172.69696
   m_PointLightOuterRadius: 173.516
   m_PointLightDistance: 3
@@ -398,7 +398,7 @@ MonoBehaviour:
   - 240
   - 180
   LeverObject: {fileID: 0}
-  rotateSpeed: 0.5
+  rotateSpeed: 150
 --- !u!114 &6585570202205762377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,7 +406,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7674285460578040809}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e5c339dc15e4a4451a73cae8eedd93d7, type: 3}
   m_Name: 
@@ -500,7 +500,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8697835916838385531, guid: 3a73c0a38e160409787de8ca8a526f57, type: 3}
       propertyPath: m_InstanceId
-      value: -228340
+      value: -69040
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a73c0a38e160409787de8ca8a526f57, type: 3}
@@ -582,7 +582,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8697835916838385531, guid: 3a73c0a38e160409787de8ca8a526f57, type: 3}
       propertyPath: m_InstanceId
-      value: -228496
+      value: -68882
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3a73c0a38e160409787de8ca8a526f57, type: 3}

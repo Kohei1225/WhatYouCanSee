@@ -5,11 +5,11 @@ using UnityEngine;
 public class WingGenerator : MonoBehaviour
 {
     /// <summary> 羽を飛ばす周期(この回数回る度に羽を飛ばす) </summary>
-    [SerializeField] private int _RotatePeriod = 120;
+    [SerializeField] private int _RotatePeriod = 1;
     /// <summary> 回転スピード </summary>
-    private int _RotateSpeed = 35;
+    private float _RotateSpeed = 33.75f;
     /// <summary> 一周した回数 </summary>
-    private int _RotatePeriodCounter = 0;
+    public int _RotatePeriodCounter = 0;
     /// <summary> 羽を飛ばす角度の範囲の最小値 </summary>
     private int _MinAngle = 10;// + 180;
     /// <summary> 羽を飛ばす角度の範囲の最大値 </summary>
@@ -42,9 +42,13 @@ public class WingGenerator : MonoBehaviour
         }
 
         //一周するたびにカウントする
-        if(gameObject.transform.localEulerAngles.z == 0)
+        if(Mathf.Abs( gameObject.transform.localEulerAngles.z) < 0.1f)
         {
             _RotatePeriodCounter++;
+            if(_RotatePeriodCounter % _RotatePeriod == 0)
+            {
+                Debug.Log("RotatePeriodCounter::" + _RotatePeriodCounter);
+            }
         }
 
         //一定のカウント数で羽を飛ばす

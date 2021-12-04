@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WingScript : MonoBehaviour
 {
-    private float _WingSpeed = 10;
+    private float _WingSpeed = 12.5f;
     // Start is called before the first frame update
     void Start()
     {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AreaInObj : MonoBehaviour
 {
-    private bool isIn = false;
+    public bool isIn = false;
 
     private bool isEnter = false;
     private bool isStay = false;

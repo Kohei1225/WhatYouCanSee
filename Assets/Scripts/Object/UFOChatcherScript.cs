@@ -6,6 +6,7 @@ public class UFOChatcherScript : MonoBehaviour
 {
     private bool _InChatchArea = false;
     [SerializeField] private GameObject _ChatchArea;
+    [SerializeField] private GameObject _CatchObj = null;
     [SerializeField] private float _MoveX = 50;
     private float[] _RangeX;
     private int _Dir = 1;
@@ -13,9 +14,12 @@ public class UFOChatcherScript : MonoBehaviour
     private Vector3 _FromPos, _ToPos;
     [SerializeField] private float _MoveSpeed = 2;
     private float _Time = 0;
-    [SerializeField] private GameObject _CatchedObj = null;
+    [SerializeField] private GameObject _AreaObj = null;
+    //private bool isCatch = false;
     private float _ObjGravityScale;
     [SerializeField] private float _WaitTime = 2;
+    private LineRenderer _LineRenderer;
+    [SerializeField] private float _DeltaCatchY = -5;
 
     public enum StateEnum
     {
@@ -30,6 +34,10 @@ public class UFOChatcherScript : MonoBehaviour
     void Start()
     {
         _RangeX = new float[] {transform.position.x - _MoveX, transform.position.x + _MoveX };
+        _LineRenderer = GetComponent<LineRenderer>();
+        Vector3[] poses = new Vector3[] { transform.position - Vector3.right * _MoveX, transform.position + Vector3.right * _MoveX};
+        _LineRenderer.positionCount = poses.Length;
+        _LineRenderer.SetPositions(poses);
         _State = StateEnum.MOVE;
         SetToFromPosX(_RangeX[_Dir]);
     }
@@ -37,8 +45,9 @@ public class UFOChatcherScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ChatchAreaScript chatchAreaScript = _ChatchArea?.GetComponent<ChatchAreaScript>();
-        GameObject objInArea = chatchAreaScript?.ObjInArea;
+        InAreaScript inAreaScript = _ChatchArea?.GetComponent<InAreaScript>();
+        GameObject beforeAreaObj = _AreaObj;
+        _AreaObj = inAreaScript?.ObjInArea;
 
         switch (_State)
         {
@@ -49,22 +58,20 @@ public class UFOChatcherScript : MonoBehaviour
                     _Dir ^= 1;
                     SetToFromPosX(_RangeX[_Dir]);
                 }
-                if(objInArea != null)
+                else
                 {
-                    _State = StateEnum.FIND_MOVE;
-                    SetToFromPosX(objInArea.transform.position.x);
+                    if (_AreaObj != null && _CatchObj == null)
+                    {
+                        _State = StateEnum.FIND_MOVE;
+                        SetToFromPosX(_AreaObj.transform.position.x);
+                    }
                 }
                 break;
             case StateEnum.FIND_MOVE:
                 if (Move())
                 {
                     _State = StateEnum.DOWN;
-                    SetToFromPosY(chatchAreaScript.ObjInArea.transform.position.y);
-                }
-                if(objInArea == null)
-                {
-                    _State = StateEnum.MOVE;
-                    SetToFromPosX(_RangeX[_Dir]);
+                    SetToFromPosY(inAreaScript.ObjInArea.transform.position.y - _DeltaCatchY);
                 }
                 break;
             case StateEnum.DOWN:
@@ -73,29 +80,21 @@ public class UFOChatcherScript : MonoBehaviour
                     _State = StateEnum.CATCH;
                     _Time = 0;
                 }
-                if (objInArea == null)
-                {
-                    _State = StateEnum.UP;
-                    SetToFromPosY(_FirstPosY);
-                }
                 break;
             case StateEnum.CATCH:
                 _Time += Time.deltaTime;
-                if(_Time <= _WaitTime)
+                if(_Time >= _WaitTime)
                 {
                     _State = StateEnum.UP;
                     SetToFromPosY(_FirstPosY);
-                    //捕まえたオブジェクトを記憶
-                    _CatchedObj = objInArea;
                     //objを子オブジェクトにする
-                    _CatchedObj.transform.parent = transform;
-                    //重力の影響を受けないようにする
-                    _CatchedObj.GetComponent<Rigidbody2D>().gravityScale = 0;
-                }
-                if (objInArea == null)
-                {
-                    _State = StateEnum.UP;
-                    SetToFromPosY(_FirstPosY);
+                    _AreaObj.transform.parent = transform;
+                    //重力をなしに
+                    _AreaObj.GetComponent<Rigidbody2D>().isKinematic = true;
+                    ////位置をずらす
+                    //_AreaObj.transform.Translate(Vector3.up * _DeltaCatchY);
+                    //捕まえたobj記憶
+                    _CatchObj = _AreaObj;
                 }
                 break;
             case StateEnum.UP:
@@ -104,18 +103,48 @@ public class UFOChatcherScript : MonoBehaviour
                     _State = StateEnum.MOVE;
                     SetToFromPosX(_RangeX[_Dir]);
                 }
-                if (_CatchedObj != null)
-                {
-                    if (!_CatchedObj.CompareTag("ColorObject"))
-                    {
-                        //重力の影響を受けるようにする
-                        _CatchedObj.GetComponent<Rigidbody2D>().isKinematic = false;
-                        //オブジェクトとUFOキャッチャーの親子関係解除
-                        _CatchedObj.transform.parent = null;
-                        _CatchedObj = null;
-                    }
-                }
                 break;
+        }
+        if (_CatchObj != null)
+        {
+            if (!_CatchObj.CompareTag("ColorObject") || !_CatchObj.transform.Find("Body").gameObject.activeSelf)
+            {
+                //重力の影響を受けるようにする
+                //_TargetObj.GetComponent<Rigidbody2D>().gravityScale = _ObjGravityScale;
+                _CatchObj.GetComponent<Rigidbody2D>().isKinematic = false;
+                //オブジェクトとUFOキャッチャーの親子関係解除
+                _CatchObj.transform.parent = null;
+                _CatchObj = null;
+            }
+        }
+        else
+        {
+            if(beforeAreaObj != null && _AreaObj == null)
+            {
+                switch (_State)
+                {
+                    case StateEnum.FIND_MOVE:
+                        _State = StateEnum.MOVE;
+                        SetToFromPosX(_RangeX[_Dir]);
+                        break;
+                    case StateEnum.DOWN:
+                        _State = StateEnum.UP;
+                        SetToFromPosY(_FirstPosY);
+                        break;
+                    case StateEnum.CATCH:
+                        _State = StateEnum.UP;
+                        SetToFromPosY(_FirstPosY);
+                        break;
+                }
+            }
+            else if (beforeAreaObj == null && _AreaObj != null)
+            {
+                if (_State == StateEnum.UP)
+                {
+                    _State = StateEnum.DOWN;
+                    SetToFromPosY(_AreaObj.transform.position.y - _DeltaCatchY);
+                }
+            }
         }
     }
 

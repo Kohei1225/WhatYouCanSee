@@ -25,16 +25,34 @@ public class ChatchAreaScript : MonoBehaviour
         
     }
 
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        GameObject hitObj = collision.gameObject;
+        CheckHitColorObj(collision.gameObject, true);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        CheckHitColorObj(collision.gameObject, true);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        CheckHitColorObj(collision.gameObject, false);
+    }
+
+    private void CheckHitColorObj(GameObject hitObj, bool isEnter)
+    {
         if (hitObj.name != "Body")
             return;
         //当たったオブジェクト(おそらくBody)の親のタグがColorObjctだったら
         if (hitObj.transform.root.gameObject.CompareTag("ColorObject"))
         {
-            //登録
-            _ObjInArea = hitObj.transform.root.gameObject;
+            if (isEnter)
+                //登録
+                _ObjInArea = hitObj.transform.root.gameObject;
+            else
+                _ObjInArea = null;
         }
         else
         {

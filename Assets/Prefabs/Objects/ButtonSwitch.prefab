@@ -93,7 +93,6 @@ GameObject:
   - component: {fileID: 2197704299950343291}
   - component: {fileID: 6807364373385276138}
   - component: {fileID: 5880586868003734235}
-  - component: {fileID: 481515882}
   m_Layer: 11
   m_Name: ButtonSwitch
   m_TagString: Stage
@@ -155,19 +154,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b78da06d2fe4295b5a5070e4347bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &481515882
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3428607679401315000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17a252c39e2ba4d2eba839cf715f08bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isIn: 0
 --- !u!1 &5114589262183639741
 GameObject:
   m_ObjectHideFlags: 0

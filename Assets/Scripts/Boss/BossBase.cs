@@ -136,12 +136,12 @@ public abstract class BossBase : MonoBehaviour
     {
         float distance = 0f;
 
-        var xElement = obj1.transform.position.x - obj1.transform.position.x;
+        var xElement = obj1.transform.position.x - obj2.transform.position.x;
         xElement *= xElement;
-        var yElement = obj1.transform.position.y - obj1.transform.position.y;
+        var yElement = obj1.transform.position.y - obj2.transform.position.y;
         yElement *= yElement;
 
-        distance = Mathf.Abs(xElement + yElement);
+        distance = Mathf.Sqrt(xElement + yElement);
         return distance;
     }
     #endregion

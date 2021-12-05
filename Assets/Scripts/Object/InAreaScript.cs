@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChatchAreaScript : MonoBehaviour
+public class InAreaScript : MonoBehaviour
 {
     [SerializeField] private GameObject _ObjInArea = null;
 

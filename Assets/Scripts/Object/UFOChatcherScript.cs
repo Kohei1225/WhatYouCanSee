@@ -45,9 +45,9 @@ public class UFOChatcherScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        ChatchAreaScript chatchAreaScript = _ChatchArea?.GetComponent<ChatchAreaScript>();
+        InAreaScript inAreaScript = _ChatchArea?.GetComponent<InAreaScript>();
         GameObject beforeAreaObj = _AreaObj;
-        _AreaObj = chatchAreaScript?.ObjInArea;
+        _AreaObj = inAreaScript?.ObjInArea;
 
         switch (_State)
         {
@@ -71,7 +71,7 @@ public class UFOChatcherScript : MonoBehaviour
                 if (Move())
                 {
                     _State = StateEnum.DOWN;
-                    SetToFromPosY(chatchAreaScript.ObjInArea.transform.position.y - _DeltaCatchY);
+                    SetToFromPosY(inAreaScript.ObjInArea.transform.position.y - _DeltaCatchY);
                 }
                 break;
             case StateEnum.DOWN:

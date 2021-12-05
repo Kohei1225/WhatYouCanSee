@@ -68,8 +68,13 @@ public class ClowScript : BossBase
 
     private float _WingAttackTime = 5.0f;
 
+    /// <summary> 見た目の状態 </summary>
     private int _VisualState = 1;
 
+    /// <summary> 見た目の状態の文字列 </summary>
+    private string _VisualStateString = "01";
+
+    /// <summary> 羽の色の候補 </summary>
     private ColorObjectVer3.OBJECT_COLOR3[,] _WingColors = new ColorObjectVer3.OBJECT_COLOR3[,]
     {
 
@@ -240,6 +245,8 @@ public class ClowScript : BossBase
             _VisualState = 2;
         }
         else _VisualState = 1;
+
+        _VisualStateString = "0" + _VisualState.ToString();
     }
 
     public override void Down()
@@ -329,7 +336,7 @@ public class ClowScript : BossBase
         pos.x = _Player.transform.position.x;
         transform.position = pos;
 
-        _AnimController.Play("Clow_FallAttack01",0,0);
+        _AnimController.Play("Clow_FallAttack" + _VisualStateString,0,0);
         _AnimController.SetBool("IsFall", true);
 
         var dir = transform.position;
@@ -397,7 +404,7 @@ public class ClowScript : BossBase
 
         _FrameNumber = 0;
         _Xpos = transform.position.x;
-        _AnimController.Play("Clow_Charge01",0,0);
+        _AnimController.Play("Clow_Charge" + _VisualStateString,0,0);
     }
 
     bool TaskChargeUpdate()
@@ -456,7 +463,7 @@ public class ClowScript : BossBase
     int _CurrentLowNumber;
     void TaskLowFlyAttackEnter()
     {
-        _AnimController.Play("Clow_LowFlying01", 0, 0);
+        _AnimController.Play("Clow_LowFlying" + _VisualStateString, 0, 0);
         _AnimController.SetBool("IsLowFly", true);
 
         //右にいたら左へ、左にいたら右へ移動する
@@ -558,7 +565,7 @@ public class ClowScript : BossBase
     #region Damage
     void TaskDamageEnter()
     {
-        _AnimController.Play("Clow_Damage01",0,0);
+        _AnimController.Play("Clow_Damage" + _VisualStateString,0,0);
         _AnimController.SetBool("IsDamage", true);
         _Head.SetActive(false);
         _Beak.SetActive(false);

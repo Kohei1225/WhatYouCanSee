@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AreaInObj : MonoBehaviour
 {
-    public bool isIn = false;
+    [SerializeField] private bool isIn = false;
 
     private bool isEnter = false;
     private bool isStay = false;

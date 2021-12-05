@@ -9,10 +9,16 @@ public class ButtonSwitchScript : MonoBehaviour
     float changeSizeSpeed = 0.04f;
     const float HEIGHT_NOT_PUSH = 0.2f;
     const float HEIGHT_ON_PUSH = 0;
+    private AreaInObj _AreaInObj;
 
     GameObject pushButtonObject;    //踏む部分にあるオブジェクト
 
     // Start is called before the first frame update
+    private void Awake()
+    {
+        _AreaInObj = GetComponent<AreaInObj>();
+    }
+
     void Start()
     {
         //オブジェクトを名前で取得
@@ -26,7 +32,7 @@ public class ButtonSwitchScript : MonoBehaviour
         //ボタンのサイズを取得
         Vector3 buttonSize = pushButtonObject.transform.localScale;
         float heightDifference = HEIGHT_NOT_PUSH - buttonSize.y;
-        if(isPushed)heightDifference = HEIGHT_ON_PUSH - buttonSize.y;
+        if(_AreaInObj.IsIn) heightDifference = HEIGHT_ON_PUSH - buttonSize.y;
 
         //ボタンの大きさを調整(踏んでる間はオブジェクトの大きさ自体が縮小する感じ)
         if(Mathf.Abs(heightDifference) > 0.001f)
@@ -51,6 +57,7 @@ public class ButtonSwitchScript : MonoBehaviour
     //押されてるかを返すメソッド
     public bool Get_isPushed()
     {
-        return this.isPushed;
+        //return this.isPushed;
+        return _AreaInObj.IsIn;
     }
 }

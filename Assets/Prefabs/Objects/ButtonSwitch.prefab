@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 2197704299950343291}
   - component: {fileID: 6807364373385276138}
   - component: {fileID: 5880586868003734235}
+  - component: {fileID: 481515882}
   m_Layer: 11
   m_Name: ButtonSwitch
   m_TagString: Stage
@@ -154,6 +155,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5b78da06d2fe4295b5a5070e4347bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &481515882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3428607679401315000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17a252c39e2ba4d2eba839cf715f08bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isIn: 0
 --- !u!1 &5114589262183639741
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,7 +194,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5114589262183639741}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: 10}
+  m_LocalPosition: {x: 0.033000182, y: 0.10800019, z: 10}
   m_LocalScale: {x: 1, y: 0.2, z: 1}
   m_Children:
   - {fileID: 811625373}
@@ -290,7 +304,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7115947877341160568}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.033, y: 0.058, z: 0}
   m_LocalScale: {x: 1.2, y: 0.1, z: 1}
   m_Children: []
   m_Father: {fileID: 2197704299950343291}

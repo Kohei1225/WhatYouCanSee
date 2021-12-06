@@ -33,7 +33,7 @@ public class HoldObjectScript: MonoBehaviour
             if(colorObject.isObject && colorObject.canHold && touchingObject.tag == "ColorObject")
             {
                 //プレイヤーが何ももってない時は記録しておく
-                if(!transform.root.gameObject.GetComponent<PlayerController>().Get_isHoldingObject())
+                if(!transform.parent.gameObject.transform.parent.gameObject.GetComponent<PlayerController>().Get_isHoldingObject())
                 {
                     //Debug.Log("前にオブジェクトある");
                     objectFrontMe = touchingObject;

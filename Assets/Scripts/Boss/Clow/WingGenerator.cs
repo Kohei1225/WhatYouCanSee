@@ -27,7 +27,10 @@ public class WingGenerator : MonoBehaviour
 
     }
 
-
+    /// <summary> 羽を飛ばす </summary>
+    /// <param name="wing">飛ばす羽のオブジェクト</param>
+    /// <param name="dir">飛ばす方向</param>
+    /// <param name="color">羽の色</param>
     public void ShotWing(GameObject wing,int dir ,ColorObjectVer3.OBJECT_COLOR3 color)
     {
         transform.Rotate(0,0,_RotateSpeed);
@@ -63,6 +66,7 @@ public class WingGenerator : MonoBehaviour
         }
     }
 
+    /// <summary> 周期をリセット </summary>
     public void ResetPeriodCounter()
     {
         _RotatePeriodCounter = 0;

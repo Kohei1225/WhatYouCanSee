@@ -5,6 +5,10 @@ using UnityEngine;
 public class WingScript : MonoBehaviour
 {
     private float _WingSpeed = 18f;
+    public static float _WingAngle = 225f;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,7 +18,7 @@ public class WingScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //一定の範囲外に出たら消える
+        //一定の範囲外に出たら消える 
         if(transform.position.x < -50 || 50 < transform.position.x
             || transform.position.y < -30 || 32 < transform.position.y)
         {

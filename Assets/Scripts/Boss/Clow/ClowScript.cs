@@ -16,6 +16,7 @@ public class ClowScript : BossBase
         AfterFall,
         Charge,
         WingAttack,
+        AfterWing,
         LowFlyAttack,
         ReturnPostion,
         Damage,
@@ -136,12 +137,13 @@ public class ClowScript : BossBase
         _TaskList.DefineTask(TaskEnum.AfterFall, TaskAfterFallEnter, TaskAfterFallUpdate, TaskAfterFallExit);
         _TaskList.DefineTask(TaskEnum.Charge, TaskChargeEnter, TaskChargeUpdate, TaskChargeExit);
         _TaskList.DefineTask(TaskEnum.WingAttack, TaskWingAttackEnter, TaskWingAttackUpdate, TaskWingAttackExit);
+        _TaskList.DefineTask(TaskEnum.AfterWing, TaskAfterWingEnter, TaskAfterWingUpdate, TaskAfterWingExit);
         _TaskList.DefineTask(TaskEnum.LowFlyAttack, TaskLowFlyAttackEnter, TaskLowFlyAttackUpdate, TaskLowFlyAttackExit);
         _TaskList.DefineTask(TaskEnum.ReturnPostion, TaskReturnPosEnter, TaskReturnPosUpdate, TaskReturnPosExit);
         _TaskList.DefineTask(TaskEnum.Damage, TaskDamageEnter, TaskDamageUpdate, TaskDamageExit);
         _TaskList.DefineTask(TaskEnum.Wait, TaskWaitEnter, TaskWaitUpdate, TaskWaitExit);
 
-        _WaitTime = 3.5f;
+        _WaitTime = 2.0f;
         _AttackInterval = 5.0f;
         _ChargeTime = 3.0f;
 
@@ -239,7 +241,7 @@ public class ClowScript : BossBase
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Charge);
         _TaskList.AddTask(TaskEnum.WingAttack);
-        _TaskList.AddTask(TaskEnum.Wait);
+        _TaskList.AddTask(TaskEnum.AfterWing);
     }
 
     public override void Damage()
@@ -449,6 +451,7 @@ public class ClowScript : BossBase
 
     }
     #endregion
+
     #region FallAttack
 
     void TaskFallAttackEnter()
@@ -545,6 +548,8 @@ public class ClowScript : BossBase
     private int _WingColorNum;
     void TaskWingAttackEnter()
     {
+        ChangeLight(true);
+        ChangeLightColors(_VisualState);
         _AnimController.SetBool("IsWing", true);
         _WaitTimer.ResetTimer(_WingAttackTime);
 
@@ -564,6 +569,24 @@ public class ClowScript : BossBase
         _AnimController.SetBool("IsWing",false);
         Debug.Log("Finish Wing");
         _WingGenerator.ResetPeriodCounter();
+    }
+    #endregion
+
+    #region WingAttack
+    void TaskAfterWingEnter()
+    {
+        _WaitTimer.ResetTimer(3.0f);
+    }
+
+    bool TaskAfterWingUpdate()
+    {
+        _WaitTimer.UpdateTimer();
+        return _WaitTimer.IsTimeUp;
+    }
+
+    void TaskAfterWingExit()
+    {
+
     }
     #endregion
 
@@ -650,14 +673,15 @@ public class ClowScript : BossBase
         _Vec = _TargetObject.transform.position - gameObject.transform.position;
         _Vec.z = 0;
         _Vec /= CalcDistance(_TargetObject, gameObject);
+
+        TurnTo(_TargetObject);
     }
 
     bool TaskReturnPosUpdate()
     {
-        TurnTo(_Player);
-
         if((_TargetObject.transform.position.x <= gameObject.transform.position.x && 0 < _Dir)
-            ||(gameObject.transform.position.y <= _TargetObject.transform.position.x && _Dir < 0))
+            ||(gameObject.transform.position.y <= _TargetObject.transform.position.x && _Dir < 0 )
+            || _TargetObject.transform.position.y <= gameObject.transform.position.y)
         {
             return true;
         }

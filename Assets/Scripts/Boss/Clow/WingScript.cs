@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WingScript : MonoBehaviour
 {
-    private float _WingSpeed = 12.5f;
+    private float _WingSpeed = 18f;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,7 +16,7 @@ public class WingScript : MonoBehaviour
     {
         //一定の範囲外に出たら消える
         if(transform.position.x < -50 || 50 < transform.position.x
-            || transform.position.y < -50 && 50 < transform.position.y)
+            || transform.position.y < -30 || 32 < transform.position.y)
         {
             Destroy(gameObject);
         }

@@ -6,11 +6,12 @@ public class ClowScript : BossBase
 {
     #region define
     /// <summary> タスクの定義 </summary>
-    enum TaskEnum
+    public enum TaskEnum
     {
         Idle,
         Move,
         FlyUp,
+        BeforeFall,
         FallAttack,
         AfterFall,
         Charge,
@@ -26,7 +27,7 @@ public class ClowScript : BossBase
     /// <summary> カラスの体力 </summary>
     [SerializeField] private int _MaxHp = 9;
     /// <summary> カラスの移動スピード </summary>
-    [SerializeField] private float _MoveSpeed = 0.075f;
+    [SerializeField] private float _MoveSpeed = 60f;
     /// <summary> プレイヤーのオブジェクト </summary>
     [SerializeField] private GameObject _Player = null;
     /// <summary> 右側の固定位置 </summary>
@@ -44,6 +45,21 @@ public class ClowScript : BossBase
     /// <summary> 低空飛行をする際のスピード </summary>
     [SerializeField] private float[] _LowSpeeds;
     [SerializeField] private WingGenerator _WingGenerator = null;
+
+    /// <summary> 真ん中で回転してるミラーボールの子オブジェクト </summary>
+    [SerializeField] private GameObject _MirrorBallChild = null;
+
+    /// <summary> ゲームマネージャー </summary>
+    [SerializeField] private GameManagerScript _GameManager = null;
+
+    /// <summary> ライトの色の配列 </summary>
+    [SerializeField] private ColorObjectVer3[] _MirrorLightColors = null;
+
+    /// <summary> 光源のオブジェクト </summary>
+    [SerializeField] private GameObject _SingleLightObject = null;
+
+    /// <summary> 背景の色 </summary>
+    [SerializeField] private ColorObjectVer3 _BackGround = null;
     #endregion
 
     #region field
@@ -115,6 +131,7 @@ public class ClowScript : BossBase
         _TaskList.DefineTask(TaskEnum.Idle, TaskIdleEnter, TaskIdleUpdate, TaskIdleExit);
         _TaskList.DefineTask(TaskEnum.Move, TaskMoveEnter, TaskMoveUpdate, TaskMoveExit);
         _TaskList.DefineTask(TaskEnum.FlyUp, TaskFlyUpEnter, TaskFlyUpUpdate, TaskFlyUpExit);
+        _TaskList.DefineTask(TaskEnum.BeforeFall, TaskBeforeFallEnter, TaskBeforeFallUpdate, TaskBeforeFallExit);
         _TaskList.DefineTask(TaskEnum.FallAttack, TaskFallAttackEnter, TaskFallAttackUpdate, TaskFallAttackExit);
         _TaskList.DefineTask(TaskEnum.AfterFall, TaskAfterFallEnter, TaskAfterFallUpdate, TaskAfterFallExit);
         _TaskList.DefineTask(TaskEnum.Charge, TaskChargeEnter, TaskChargeUpdate, TaskChargeExit);
@@ -124,7 +141,7 @@ public class ClowScript : BossBase
         _TaskList.DefineTask(TaskEnum.Damage, TaskDamageEnter, TaskDamageUpdate, TaskDamageExit);
         _TaskList.DefineTask(TaskEnum.Wait, TaskWaitEnter, TaskWaitUpdate, TaskWaitExit);
 
-        _WaitTime = 2.0f;
+        _WaitTime = 3.5f;
         _AttackInterval = 5.0f;
         _ChargeTime = 3.0f;
 
@@ -135,6 +152,9 @@ public class ClowScript : BossBase
         _AnimController = GetComponent<Animator>();
 
         _AttackIntervalTimer.ResetTimer(_AttackInterval);
+
+        ChangeLightColors(_VisualState);
+        ChangeLight(true);
     }
 
     // Update is called once per frame
@@ -199,6 +219,7 @@ public class ClowScript : BossBase
     {
         _TaskList.AddTask(TaskEnum.FlyUp);
         _TaskList.AddTask(TaskEnum.Wait);
+        _TaskList.AddTask(TaskEnum.BeforeFall);
         _TaskList.AddTask(TaskEnum.FallAttack);
         _TaskList.AddTask(TaskEnum.AfterFall);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
@@ -227,6 +248,7 @@ public class ClowScript : BossBase
         _TaskList.AddTask(TaskEnum.Damage);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Wait);
+        //_GameManager.existRay = false;
 
         if (_CurrentHP == 1)
         {
@@ -247,6 +269,9 @@ public class ClowScript : BossBase
         else _VisualState = 1;
 
         _VisualStateString = "0" + _VisualState.ToString();
+
+        ChangeLightColors(_VisualState);
+        ChangeLight(true);
     }
 
     public override void Down()
@@ -256,6 +281,9 @@ public class ClowScript : BossBase
         _AnimController.Play("Clow_Down", 0, 0);
         _Head.SetActive(false);
         _Beak.SetActive(false);
+
+        //ライトを切り替える
+        ChangeLight(true);
     }
 
     public override void Idle()
@@ -273,6 +301,54 @@ public class ClowScript : BossBase
         throw new System.NotImplementedException();
     }
 
+
+    /// <summary> ライトを切り替える </summary>
+    /// <param name="isSingleLight">ミラーボールのライトがONかどうか</param>
+    private void ChangeLight(bool isMirrorLight)
+    {
+        //それぞれのライトのSetActiveを切り替える
+        _SingleLightObject.SetActive(!isMirrorLight);
+
+        _MirrorBallChild.SetActive(isMirrorLight);
+
+    }
+
+    /// <summary> ミラーボールの光の色を変更する </summary>
+    /// <param name="visualState"></param>
+    private void ChangeLightColors(int visualState)
+    {
+        visualState--;
+        var mainColor1 = _WingColors[visualState,0];
+        var mainColor2 = _WingColors[visualState,1];
+        var mainColor3 = _WingColors[visualState,5];
+        var white = ColorObjectVer3.OBJECT_COLOR3.WHITE;
+
+        
+        for(int i = 0; i < _MirrorLightColors.Length; i++)
+        {
+            var objColor = white;
+
+            if(visualState != 5)
+            {
+                if(i == 0 || i == 4)
+                {
+                    objColor = mainColor1;
+                }
+
+                else if(i == 1 || i == 5)
+                {
+                    objColor = mainColor3;
+                }
+
+                else if(i == 2 || i == 6)
+                {
+                    objColor = mainColor2;
+                }
+            }
+
+            _MirrorLightColors[i].colorType = objColor;
+        }
+    }
     #region Task function
 
     #region Idle
@@ -312,7 +388,8 @@ public class ClowScript : BossBase
     #region FlyUp
     void TaskFlyUpEnter()
     {
-
+        //ライトを消して部屋を暗くする
+        _MirrorBallChild.SetActive(false);
     }
 
     bool TaskFlyUpUpdate()
@@ -324,26 +401,32 @@ public class ClowScript : BossBase
 
     void TaskFlyUpExit()
     {
-
+        
     }
     #endregion
 
-    #region FallAttack
+    #region BeforeFallAttack
     float _StageYPos = 0;
-    void TaskFallAttackEnter()
+    void TaskBeforeFallEnter()
     {
+        // スポットライトをONにする(落ちる場所を予測)
+        ChangeLight(false);
+
+        //プレイヤーの位置に合わせて移動
         var pos = transform.position;
         pos.x = _Player.transform.position.x;
         transform.position = pos;
 
-        _AnimController.Play("Clow_FallAttack" + _VisualStateString,0,0);
-        _AnimController.SetBool("IsFall", true);
+        //スポットライトの位置を調整
+        pos.y = _SingleLightObject.transform.position.y;
+        _SingleLightObject.transform.position = pos;
 
+        //下方向にRayを飛ばして距離を計算する
         var dir = transform.position;
         dir.x = 0;
         dir.y = -1;
-        
-        foreach(RaycastHit2D hit in Physics2D.RaycastAll(transform.position,dir))
+
+        foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, dir))
         {
             if (hit.collider.gameObject.tag == "Stage")
             {
@@ -351,6 +434,28 @@ public class ClowScript : BossBase
                 break;
             }
         }
+
+        _WaitTimer.ResetTimer(2.0f);
+    }
+
+    bool TaskBeforeFallUpdate()
+    {
+        _WaitTimer.UpdateTimer();
+        return _WaitTimer.IsTimeUp;
+    }
+
+    void TaskBeforeFallExit()
+    {
+
+    }
+    #endregion
+    #region FallAttack
+
+    void TaskFallAttackEnter()
+    {
+        //
+        _AnimController.Play("Clow_FallAttack" + _VisualStateString,0,0);
+        _AnimController.SetBool("IsFall", true);
     }
 
     bool TaskFallAttackUpdate()
@@ -389,6 +494,10 @@ public class ClowScript : BossBase
     {
         _AnimController.SetBool("IsFall", false);
         _AnimController.SetBool("IsFallShock", false);
+
+        //スポットライトをOFFにする
+        //_GameManager.existRay = false;
+        _SingleLightObject.SetActive(false);
     }
     #endregion
 
@@ -502,7 +611,15 @@ public class ClowScript : BossBase
         pos.y -= targetYPos;
         
         transform.position = pos;
-        return Mathf.Abs(_TargetObject.transform.position.x - transform.position.x) <= 1f;
+
+        //対象を超えたかどうかを返す
+        if(_Dir < 0)
+        {
+            return transform.position.x <= _TargetObject.transform.position.x;
+        }
+
+
+        return _TargetObject.transform.position.x <= transform.position.x;
     }
 
     void TaskLowFlyAttackExit()
@@ -539,14 +656,14 @@ public class ClowScript : BossBase
     {
         TurnTo(_Player);
 
-        if(_TargetObject.transform.position.y <= gameObject.transform.position.y
-            &&  gameObject.transform.position.y <= _TargetObject.transform.position.y + 2)
+        if((_TargetObject.transform.position.x <= gameObject.transform.position.x && 0 < _Dir)
+            ||(gameObject.transform.position.y <= _TargetObject.transform.position.x && _Dir < 0))
         {
             return true;
         }
 
         //対象まで一定のスピードで移動
-        transform.position += _Vec * _MoveSpeed;
+        transform.position += _Vec * _MoveSpeed * Time.deltaTime;
         return false;
     }
 

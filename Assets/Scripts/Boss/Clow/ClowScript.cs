@@ -320,17 +320,19 @@ public class ClowScript : BossBase
     private void ChangeLightColors(int visualState)
     {
         visualState--;
+        //カラスが出す色の候補とハズレ色を用意
         var mainColor1 = _WingColors[visualState,0];
         var mainColor2 = _WingColors[visualState,1];
         var mainColor3 = _WingColors[visualState,5];
+        var badColor = ColorObjectVer3.OBJECT_COLOR3.CYAN;
         var white = ColorObjectVer3.OBJECT_COLOR3.WHITE;
 
         
         for(int i = 0; i < _MirrorLightColors.Length; i++)
         {
-            var objColor = white;
+            var objColor = badColor;
 
-            if(visualState != 5)
+            if(visualState != 4)
             {
                 if(i == 0 || i == 4)
                 {
@@ -346,6 +348,11 @@ public class ClowScript : BossBase
                 {
                     objColor = mainColor2;
                 }
+            }
+
+            else
+            {
+                objColor = white;
             }
 
             _MirrorLightColors[i].colorType = objColor;

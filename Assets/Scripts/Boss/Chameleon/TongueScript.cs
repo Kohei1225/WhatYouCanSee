@@ -38,6 +38,9 @@ public class TongueScript : MonoBehaviour
 
     private float time = 0;
 
+    private LineRenderer _LineRenderer;
+    private Vector3 _StartPos, _EndPos;
+
     //[SerializeField] private bool _IsReset = false;
 
     #endregion
@@ -58,6 +61,9 @@ public class TongueScript : MonoBehaviour
         _State = StateEnum.WAIT;
         _FirstPos = transform.localPosition;
         _Collider2D = GetComponent<Collider2D>();
+        _LineRenderer = GetComponent<LineRenderer>();
+        _LineRenderer.startColor = Color.red;
+        _LineRenderer.endColor = Color.red;
         //見えなくする
         gameObject.SetActive(false);
     }
@@ -112,6 +118,13 @@ public class TongueScript : MonoBehaviour
         }
     }
 
+    private void SetLineRenderer()
+    {
+        _LineRenderer.positionCount = 2;
+        _EndPos = transform.position;
+        _LineRenderer.SetPositions(new Vector3[] { _StartPos, _EndPos });
+    }
+
     public void SetStretch()
     {
         //終わったかのをリセット
@@ -120,14 +133,14 @@ public class TongueScript : MonoBehaviour
         _FromPos = transform.position;
         _ToPos = _Player.transform.position;
         _TongueLength = Mathf.Clamp((_ToPos - _FromPos).magnitude, 0, _MaxTongueLength);
-        //舌が見えるように
-        gameObject.SetActive(true);
         //当たり判定なし
         _Collider2D.enabled = false;
         //マーカーを作成
         _TargetMarkerObj = Instantiate(_TargetMarkerPrefab, _FromPos + (_ToPos - _FromPos).normalized * _TongueLength, Quaternion.identity);
         //マーカの描画順設定
         _TargetMarkerObj.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
+        //スタート位置記憶
+        _StartPos = transform.position;
     }
 
     public void StartStretch()
@@ -140,6 +153,8 @@ public class TongueScript : MonoBehaviour
             gameObject.GetComponent<Collider2D>().enabled = true;
             //状態変更
             _State = StateEnum.START_STRETCH;
+            //舌が見えるように
+            gameObject.SetActive(true);
         }
     }
 
@@ -149,6 +164,8 @@ public class TongueScript : MonoBehaviour
         //Debug.Log("t:" + t);
         transform.position = Vector3.Lerp(_FromPos, _FromPos + (_ToPos - _FromPos).normalized * _TongueLength, t);
         //Debug.DrawRay(_FirstPos, (_ToPos - _FromPos).normalized * _TongueLength);
+        //ラインレンダラー更新
+        SetLineRenderer();
         if(t >= 1)
         {
             //終わり
@@ -169,5 +186,8 @@ public class TongueScript : MonoBehaviour
         //マーカーを削除
         if (_TargetMarkerObj != null)
             Destroy(_TargetMarkerObj);
+        //ラインレンダラー
+        _LineRenderer.positionCount = 2;
+        _LineRenderer.SetPositions(new Vector3[] {transform.position, transform.position});
     }
 }

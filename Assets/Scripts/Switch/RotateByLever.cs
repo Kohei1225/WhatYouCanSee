@@ -22,8 +22,9 @@ public class RotateByLever : MonoBehaviour
     {
         leverScript = LeverObject.GetComponent<LeverScript>();
 
-        startAngle = angleList[leverScript.firstBarPos];
-        endAngle = startAngle;
+        endAngle = angleList[leverScript.firstBarPos];
+        //endAngle - startAngleが0にならないように調整
+        startAngle = 0;
     }
 
     // Update is called once per frame
@@ -39,13 +40,14 @@ public class RotateByLever : MonoBehaviour
 
         objAngle.z = Mathf.Lerp(startAngle,endAngle,(leverScript.timeSum * rotateSpeed)/Mathf.Abs(endAngle - startAngle));
 
-        Debug.Log((leverScript.timeSum * rotateSpeed) / Mathf.Abs(endAngle - startAngle));
+        //Debug.Log((leverScript.timeSum * rotateSpeed) / Mathf.Abs(endAngle - startAngle));
         gameObject.transform.localEulerAngles = objAngle;
     }
 
     /// <summary> 自身の角度を変更 </summary>
     public void ChangeAngle()
     {
+        //Debug.Log("Light");
         startAngle = gameObject.transform.localEulerAngles.z;
 
         endAngle = angleList[leverScript.barPosition];

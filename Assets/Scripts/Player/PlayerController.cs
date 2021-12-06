@@ -239,7 +239,7 @@ public class PlayerController : MonoBehaviour
         GameObject obj = transform.Find("Body").gameObject?.transform.Find("Foot")?.gameObject.GetComponent<AreaInObj>().Obj;
         if (obj != null)
         {
-            if(obj.transform.parent?.tag == "ColorObject" && transform.parent == null)
+            if(obj.transform.parent?.GetComponent<ColorObjectVer3>() && transform.parent == null)
             {
                 transform.SetParent(obj.transform.parent);
                 scaleX = Mathf.Abs(transform.localScale.x);

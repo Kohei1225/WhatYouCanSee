@@ -232,7 +232,7 @@ MonoBehaviour:
   - {x: -1.0002711, y: 0.098400794, z: 0}
   m_ShapePathHash: -1504377493
   m_Mesh: {fileID: 0}
-  m_InstanceId: -601182
+  m_InstanceId: -501862
 --- !u!1 &3383618478643745263
 GameObject:
   m_ObjectHideFlags: 0
@@ -397,7 +397,7 @@ MonoBehaviour:
   - {x: -0.56600624, y: 0.06609519, z: 0}
   m_ShapePathHash: -1431389970
   m_Mesh: {fileID: 0}
-  m_InstanceId: -601176
+  m_InstanceId: -501856
 --- !u!1 &4802607589037441308
 GameObject:
   m_ObjectHideFlags: 0
@@ -618,6 +618,7 @@ GameObject:
   - component: {fileID: 6503079039896943307}
   - component: {fileID: 6503079039896943309}
   - component: {fileID: 6503079039896943308}
+  - component: {fileID: 1273514271}
   m_Layer: 6
   m_Name: Foot
   m_TagString: Untagged
@@ -677,6 +678,20 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.1655588, y: 0.1967206}
   m_EdgeRadius: 0
+--- !u!114 &1273514271
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6503079039896943306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17a252c39e2ba4d2eba839cf715f08bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  obj: {fileID: 0}
+  isIn: 0
 --- !u!1 &6503079039949840865
 GameObject:
   m_ObjectHideFlags: 0
@@ -1125,7 +1140,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 155139223
-  m_SortingLayer: 4
+  m_SortingLayer: 6
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 64323f6733f9c457ab3cbbeed8001663, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -1174,6 +1189,12 @@ MonoBehaviour:
   jumpSpeed: 35
   jump: 0
   onStage: 0
+  isHoldingObject: 0
+  objectBeingHolden: {fileID: 0}
+  _ParentEnptyPrefab: {fileID: 5305509177318614779, guid: f14810db3fa294e099a497c3bdde9833, type: 3}
+  _Life: 3
+  _MutekiTime: 3
+  _ChangeAlphaNum: 15
 --- !u!114 &8370745429702656212
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1211,7 +1232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0aca1afaef6ff424e90aa289be93893d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colorType: 6
+  colorType: 10
   isObject: 1
   hasShadow: 0
   canHold: 0

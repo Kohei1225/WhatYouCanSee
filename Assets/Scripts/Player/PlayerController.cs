@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     public bool onStage;               //何かの上に乗ってるかを判定する用
     private bool canCtrl = true;
     
-    float scale;           
+    float scaleX;
     float throwPower = 1500;        //投げるときに加える力 
     [HideInInspector] public bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
     [HideInInspector] public GameObject objectBeingHolden;   //持ってるオブジェクト
@@ -32,6 +32,7 @@ public class PlayerController : MonoBehaviour
     Animator animController;        //アニメーター
     GameObject topOfHead;           //頭のてっぺんに置いてあるオブジェクト
     Rigidbody2D rigidBody;
+    [SerializeField] GameObject _ParentEnptyPrefab;
 
     //体力
     [SerializeField] private int _Life = 3;
@@ -67,7 +68,7 @@ public class PlayerController : MonoBehaviour
         active = false;
         isHoldingObject = false;
         onStage = false;
-        scale = transform.localScale.y;
+        scaleX = Mathf.Abs(transform.localScale.x);
         animController = GetComponent<Animator>();
         objectToHold = transform.Find("Body").transform.Find("CatchArea").gameObject;
         holdScript = objectToHold.GetComponent<HoldObjectScript>();
@@ -235,7 +236,26 @@ public class PlayerController : MonoBehaviour
             }       
         }
 
-        transform.localScale = new Vector3(vec * scale,scale,1);
+        GameObject obj = transform.Find("Body").gameObject?.transform.Find("Foot")?.gameObject.GetComponent<AreaInObj>().Obj;
+        if (obj != null)
+        {
+            if(obj.transform.parent?.tag == "ColorObject" && transform.parent == null)
+            {
+                transform.SetParent(obj.transform.parent);
+                scaleX = Mathf.Abs(transform.localScale.x);
+            }
+        }
+        else
+        {
+            if (!GetComponent<ColorObjectVer3>().Get_active())
+            {
+                transform.SetParent(null);
+                scaleX = Mathf.Abs(transform.localScale.x);
+            }
+        }
+
+        Vector3 scale = transform.localScale;
+        transform.localScale = new Vector3(vec * scaleX,scale.y,scale.z);
         animController.SetBool("Nothing",GetComponent<ColorObjectVer3>().Get_active());
         animController.SetBool("Damage",damage);
         animController.SetFloat("Abs_V_Vel",Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x));

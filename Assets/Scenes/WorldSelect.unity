@@ -1330,6 +1330,10 @@ PrefabInstance:
       propertyPath: worldNo
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7323313795582883921, guid: 1e5754c5a95bb45d3b6554d6d60470b5, type: 3}
+      propertyPath: sceneName
+      value: Stage3_3
+      objectReference: {fileID: 0}
     - target: {fileID: 7323313796321035282, guid: 1e5754c5a95bb45d3b6554d6d60470b5, type: 3}
       propertyPath: worldNo
       value: 3
@@ -1393,6 +1397,10 @@ PrefabInstance:
     - target: {fileID: 8911469832120143036, guid: 1e5754c5a95bb45d3b6554d6d60470b5, type: 3}
       propertyPath: worldNo
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911469832120143036, guid: 1e5754c5a95bb45d3b6554d6d60470b5, type: 3}
+      propertyPath: sceneName
+      value: Stage3_1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1e5754c5a95bb45d3b6554d6d60470b5, type: 3}

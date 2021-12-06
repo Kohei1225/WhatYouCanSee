@@ -42,8 +42,9 @@ public class LeverScript : MonoBehaviour
         //バーの傾きを初期化
         //barObject.transform.localEulerAngles = new Vector3(0,0,barAngleList[barPosition]);
 
-        startAngle = barAngleList[barPosition];
-        endAngle = startAngle;
+        //endAngle - startAngleが0にならないように調整
+        startAngle = 0;
+        endAngle = barAngleList[barPosition];
         canChangeBar = false;
     }
 

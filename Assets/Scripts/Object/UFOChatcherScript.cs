@@ -23,6 +23,7 @@ public class UFOChatcherScript : MonoBehaviour
 
     public enum StateEnum
     {
+        NONE,
         MOVE,
         FIND_MOVE,
         DOWN,
@@ -48,6 +49,7 @@ public class UFOChatcherScript : MonoBehaviour
         InAreaScript inAreaScript = _ChatchArea?.GetComponent<InAreaScript>();
         GameObject beforeAreaObj = _AreaObj;
         _AreaObj = inAreaScript?.ObjInArea;
+
 
         switch (_State)
         {
@@ -91,8 +93,8 @@ public class UFOChatcherScript : MonoBehaviour
                     _AreaObj.transform.parent = transform;
                     //重力をなしに
                     _AreaObj.GetComponent<Rigidbody2D>().isKinematic = true;
-                    ////位置をずらす
-                    //_AreaObj.transform.Translate(Vector3.up * _DeltaCatchY);
+                    //canHoldをfalseに
+                    _AreaObj.GetComponent<ColorObjectVer3>().canHold = false;
                     //捕まえたobj記憶
                     _CatchObj = _AreaObj;
                 }

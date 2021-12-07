@@ -91,6 +91,9 @@ public class ClowScript : BossBase
     /// <summary> 見た目の状態の文字列 </summary>
     private string _VisualStateString = "01";
 
+    /// <summary> 一定の間隔でミラーボールの光を回すクラス </summary>
+    private IntervalRotate _IntervalRotate = null;
+
     /// <summary> 羽の色の候補 </summary>
     private ColorObjectVer3.OBJECT_COLOR3[,] _WingColors = new ColorObjectVer3.OBJECT_COLOR3[,]
     {
@@ -157,6 +160,8 @@ public class ClowScript : BossBase
 
         ChangeLightColors(_VisualState);
         ChangeLight(true);
+
+        _IntervalRotate = _MirrorBallChild?.GetComponent<IntervalRotate>();
     }
 
     // Update is called once per frame
@@ -561,18 +566,27 @@ public class ClowScript : BossBase
         _WaitTimer.ResetTimer(_WingAttackTime);
 
         _WingColorNum = Random.Range(0, 5);
+
+        if(_IntervalRotate != null)
+        {
+            _IntervalRotate._CanRotate = false;
+        }
+        
     }
 
     bool TaskWingAttackUpdate()
     {
+        TurnTo(_Player);
         _WaitTimer.UpdateTimer();
         _WingGenerator.ShotWing(_WingPrefab,_Dir,_WingColors[_VisualState - 1,_WingColorNum]);
-
+        _IntervalRotate._CanRotate = false;
         return _WaitTimer.IsTimeUp;
     }
 
     void TaskWingAttackExit()
     {
+        _IntervalRotate._CanRotate = true;
+
         _AnimController.SetBool("IsWing",false);
         //Debug.Log("Finish Wing");
         _WingGenerator.ResetPeriodCounter();
@@ -587,6 +601,7 @@ public class ClowScript : BossBase
 
     bool TaskAfterWingUpdate()
     {
+        _IntervalRotate._CanRotate = false;
         _WaitTimer.UpdateTimer();
         return _WaitTimer.IsTimeUp;
     }
@@ -718,6 +733,7 @@ public class ClowScript : BossBase
         _Head.SetActive(false);
         _Beak.SetActive(false);
         _WaitTimer.ResetTimer(1.0f);
+        _IntervalRotate._CanRotate = true;
     }
 
     bool TaskDamageUpdate()

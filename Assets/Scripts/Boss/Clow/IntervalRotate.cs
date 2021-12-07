@@ -55,10 +55,7 @@ public class IntervalRotate : MonoBehaviour
             {
                 _CanRotate = true;
             }
-            else
-            {
-                return;
-            }
+            return;   
         }
 
         //回れる状態なら
@@ -98,6 +95,7 @@ public class IntervalRotate : MonoBehaviour
                     angle.z = 0;
                     transform.localEulerAngles = angle;
                 }
+
             }
         }
     }

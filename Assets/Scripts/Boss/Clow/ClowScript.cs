@@ -201,7 +201,7 @@ public class ClowScript : BossBase
         //Idle();
         if(!CanAttack)
         {
-            Debug.Log("Can't Attack!");
+            //Debug.Log("Can't Attack!");
             return;
         }
 
@@ -518,7 +518,7 @@ public class ClowScript : BossBase
 
     void TaskChargeEnter()
     {
-        Debug.Log("start charge");
+        //Debug.Log("start charge");
         _WaitTimer.ResetTimer(_ChargeTime);
 
         _FrameNumber = 0;
@@ -546,7 +546,7 @@ public class ClowScript : BossBase
 
     void TaskChargeExit()
     {
-        Debug.Log("Finish Charge");
+        //Debug.Log("Finish Charge");
     }
     #endregion
 
@@ -574,7 +574,7 @@ public class ClowScript : BossBase
     void TaskWingAttackExit()
     {
         _AnimController.SetBool("IsWing",false);
-        Debug.Log("Finish Wing");
+        //Debug.Log("Finish Wing");
         _WingGenerator.ResetPeriodCounter();
     }
     #endregion
@@ -627,7 +627,7 @@ public class ClowScript : BossBase
         //var tmpY = Mathf.Lerp(0,1, _RightSetPos.transform.position.x - pos.x);
         //現在地の割合を計算
         var tmpX = (transform.position.x - _LeftSetPos.transform.position.x)/(_RightSetPos.transform.position.x - _LeftSetPos.transform.position.x);
-        Debug.Log("tmp:" + tmpX);
+        //Debug.Log("tmp:" + tmpX);
         pos.y = _LowRoutes[_CurrentLowNumber].Evaluate(tmpX);
 
         pos.y *= _TargetObject.transform.position.y;
@@ -672,7 +672,7 @@ public class ClowScript : BossBase
         }
         else _TargetObject = _RightSetPos;
 
-        Debug.Log("I will return " + _TargetObject.name);
+        //Debug.Log("I will return " + _TargetObject.name);
         //Debug.Log("I will return position");
         _Beak.SetActive(false);
 
@@ -706,7 +706,7 @@ public class ClowScript : BossBase
         _Head.SetActive(true);
         _Beak.SetActive(true);
 
-        Debug.Log("Finish Return");
+        //Debug.Log("Finish Return");
     }
     #endregion
 

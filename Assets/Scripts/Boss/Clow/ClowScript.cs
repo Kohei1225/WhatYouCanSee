@@ -54,7 +54,7 @@ public class ClowScript : BossBase
     [SerializeField] private GameManagerScript _GameManager = null;
 
     /// <summary> ライトの色の配列 </summary>
-    [SerializeField] private ColorObjectVer3[] _MirrorLightColors = null;
+    [SerializeField] private ColorObjectVer3[] _MirrorLightColorObjects = null;
 
     /// <summary> 光源のオブジェクト </summary>
     [SerializeField] private GameObject _SingleLightObject = null;
@@ -119,6 +119,7 @@ public class ClowScript : BossBase
             ColorObjectVer3.OBJECT_COLOR3.BLACK,ColorObjectVer3.OBJECT_COLOR3.BLACK,ColorObjectVer3.OBJECT_COLOR3.BLACK,
         },
     };
+
 
     #endregion
 
@@ -201,7 +202,7 @@ public class ClowScript : BossBase
     /// <summary> タスクを追加する </summary>
     void SelectTask()
     {
-        Debug.Log("SelectTask");
+        //Debug.Log("SelectTask");
         _AttackIntervalTimer.UpdateTimer();
         //Idle();
         if(!CanAttack)
@@ -260,6 +261,15 @@ public class ClowScript : BossBase
         if (_CurrentHP == 1)
         {
             _VisualState = 5;
+
+            //最後はずっと色が変わり続ける
+            for (int i = 0; i < _MirrorLightColorObjects.Length; i++)
+            {
+                var changeColorByTime = _MirrorLightColorObjects[i].gameObject.GetComponent<ChangeColorByTime>();
+
+                changeColorByTime._CanChangeColor = true;
+            }
+
         }
         else if (_CurrentHP <= 3)
         {
@@ -273,7 +283,10 @@ public class ClowScript : BossBase
         {
             _VisualState = 2;
         }
-        else _VisualState = 1;
+        else
+        {
+            _VisualState = 1;
+        }
 
         _VisualStateString = "0" + _VisualState.ToString();
 
@@ -324,44 +337,40 @@ public class ClowScript : BossBase
     /// <param name="visualState"></param>
     private void ChangeLightColors(int visualState)
     {
+        if(visualState == 5)
+        {
+            return;
+        }
+
         visualState--;
         //カラスが出す色の候補とハズレ色を用意
         var mainColor1 = _WingColors[visualState,0];
         var mainColor2 = _WingColors[visualState,1];
         var mainColor3 = _WingColors[visualState,5];
         var badColor = ColorObjectVer3.OBJECT_COLOR3.CYAN;
-        var white = ColorObjectVer3.OBJECT_COLOR3.WHITE;
 
-        
-        for(int i = 0; i < _MirrorLightColors.Length; i++)
+        for(int i = 0; i < _MirrorLightColorObjects.Length; i++)
         {
             var objColor = badColor;
 
-            if(visualState != 4)
+            if(i == 0 || i == 4)
             {
-                if(i == 0 || i == 4)
-                {
-                    objColor = mainColor1;
-                }
-
-                else if(i == 1 || i == 5)
-                {
-                    objColor = mainColor3;
-                }
-
-                else if(i == 2 || i == 6)
-                {
-                    objColor = mainColor2;
-                }
+                objColor = mainColor1;
             }
 
-            else
+            else if(i == 1 || i == 5)
             {
-                objColor = white;
+                objColor = mainColor3;
             }
 
-            _MirrorLightColors[i].colorType = objColor;
+            else if(i == 2 || i == 6)
+            {
+                objColor = mainColor2;
+            }
+           
+            _MirrorLightColorObjects[i].colorType = objColor;
         }
+
     }
     #region Task function
 

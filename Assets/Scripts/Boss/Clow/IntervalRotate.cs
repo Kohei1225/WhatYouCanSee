@@ -48,7 +48,7 @@ public class IntervalRotate : MonoBehaviour
         //回れる状態じゃなければ飛ばす
         if (!_CanRotate)
         {
-            Debug.Log("_CanRotate = False");
+            //Debug.Log("_CanRotate = False");
             _Timer.UpdateTimer();
 
             if (_Timer.IsTimeUp)

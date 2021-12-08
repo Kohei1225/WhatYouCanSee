@@ -29,11 +29,11 @@ public class TitleManager : MonoBehaviour
     {
         MapManager.lastGoNo = 0;
         SceneManager.LoadScene(sceneName);
-        Debug.Log("????");
     }
 
     public void ContinueClick()
     {
         MapManager.lastGoNo = PlayerPrefs.GetInt("LastGoNo");
+        SceneManager.LoadScene(sceneName);
     }
 }

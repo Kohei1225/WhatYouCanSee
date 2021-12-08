@@ -155,8 +155,8 @@ public class GoalController : MonoBehaviour
         this.canSuck = canSuck;
     }
 
-    public bool Get_canSuck()
+    public bool Get_canDark()
     {
-        return this.canSuck;
+        return this.canDark;
     }
 }

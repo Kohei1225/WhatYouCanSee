@@ -47,7 +47,7 @@ public class IntervalRotate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_GoalController.Get_canSuck())
+        if(_GoalController.Get_canDark())
         {
             return;
         }

@@ -36,6 +36,12 @@ public class PauseUI : MonoBehaviour
             //マップマネージャーの状態がNORMALだったら
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                PlayerController playerController = GameObject.Find("Player")?.GetComponent<PlayerController>();
+                if (playerController != null)
+                {
+                    if (playerController.damage)
+                        return;
+                }
                 pauseObject.SetActive(true);
                 //マップマネージャーの状態をPAUSEに
                 MapManager.screenStatus = MapManager.ScreenStatuses.PAUSE;

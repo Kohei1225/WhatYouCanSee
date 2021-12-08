@@ -68,9 +68,9 @@ TagManager:
   - name: UI
     uniqueID: 1979760093
     locked: 0
-  - name: BlackPanel
-    uniqueID: 2854444149
-    locked: 0
   - name: BoardUI
     uniqueID: 1908432107
+    locked: 0
+  - name: BlackPanel
+    uniqueID: 2854444149
     locked: 0

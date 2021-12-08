@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WingScript : MonoBehaviour
 {
-    private float _WingSpeed = 18f;
+    private float _WingSpeed = 20f;
     public static float _WingAngle = 225f;
 
 

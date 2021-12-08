@@ -11,6 +11,8 @@ public class IntervalRotate : MonoBehaviour
     [SerializeField] private float[] _Angles;
     /// <summary> 回転速度 </summary>
     [SerializeField] private float _RotateSpeed = 100;
+    /// <summary>  </summary>
+    [SerializeField] private GoalController _GoalController = null;
 
     /// <summary> 回転前の角度 </summary>
     private float _StartAngle = 0;
@@ -45,6 +47,11 @@ public class IntervalRotate : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(_GoalController.Get_canSuck())
+        {
+            return;
+        }
+
         //回れる状態じゃなければ飛ばす
         if (!_CanRotate)
         {

@@ -84,7 +84,7 @@ public class GoalController : MonoBehaviour
             //playerをワープ位置まで移動
             player.transform.position = transform.position;
             canDark = true;
-            canSuck = false;
+            //canSuck = false;
             //見えなくする
             player.GetComponent<SpriteRenderer>().enabled = false;
             //円マスクが小さくなる
@@ -153,5 +153,10 @@ public class GoalController : MonoBehaviour
     public void Set_canSuck(bool canSuck)
     {
         this.canSuck = canSuck;
+    }
+
+    public bool Get_canSuck()
+    {
+        return this.canSuck;
     }
 }

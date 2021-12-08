@@ -631,7 +631,7 @@ public class ClowScript : BossBase
     #region WingAttack
     void TaskAfterWingEnter()
     {
-        _WaitTimer.ResetTimer(3.0f);
+        _WaitTimer.ResetTimer(4.5f);
     }
 
     bool TaskAfterWingUpdate()

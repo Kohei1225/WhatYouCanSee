@@ -93,6 +93,7 @@ public class PauseUI : MonoBehaviour
     public void SaveClick()
     {
         PlayerPrefs.SetInt("LastGoNo", MapManager.lastGoNo);
+        Debug.Log("セーブしたよ");
         PlayerPrefs.Save();
     }
 }

@@ -12,11 +12,9 @@ public class TitleManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _ContinueButton = transform.GetChild(0).Find("ResetButton").gameObject;
-        //??????????????
+        _ContinueButton = transform.Find("ContinueButton").gameObject;
         if (!PlayerPrefs.HasKey("LastGoNo"))
         {
-            //?????????
             _ContinueButton.GetComponent<Button>().interactable = false;
         }
     }

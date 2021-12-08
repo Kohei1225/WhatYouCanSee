@@ -500,6 +500,8 @@ public class ClowScript : BossBase
         //
         _AnimController.Play("Clow_FallAttack" + _VisualStateString,0,0);
         _AnimController.SetBool("IsFall", true);
+        //音
+        SoundManager.Instance.PlaySE("ClowFall");
     }
 
     bool TaskFallAttackUpdate()
@@ -517,6 +519,8 @@ public class ClowScript : BossBase
     {
         _AnimController.SetBool("IsFallShock",true);
         //Debug.Log("落下攻撃完了!!");
+        //音
+        SoundManager.Instance.PlaySE("Defend");
     }
     #endregion
 
@@ -599,7 +603,10 @@ public class ClowScript : BossBase
         {
             _IntervalRotate._CanRotate = false;
         }
-        
+
+        //音
+        SoundManager.Instance.PlaySE("WingAttack");
+
     }
 
     bool TaskWingAttackUpdate()
@@ -660,6 +667,9 @@ public class ClowScript : BossBase
         TurnTo(_TargetObject);
 
         _CurrentLowNumber = Random.Range(0,_LowRoutes.Length-1);
+
+        //音
+        SoundManager.Instance.PlaySE("SuperKick");
     }
 
     bool TaskLowFlyAttackUpdate()

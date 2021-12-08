@@ -195,6 +195,8 @@ public class ClowScript : BossBase
             if(_CurrentHP <= 0)
             {
                 _State = StateEnum.Dead;
+                //音
+                SoundManager.Instance.PlaySE("Damage_1");
                 return;
             }
 
@@ -759,6 +761,8 @@ public class ClowScript : BossBase
         _Beak.SetActive(false);
         _WaitTimer.ResetTimer(1.0f);
         _IntervalRotate._CanRotate = true;
+        //音
+        SoundManager.Instance.PlaySE("Damage_2");
     }
 
     bool TaskDamageUpdate()

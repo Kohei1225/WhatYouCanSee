@@ -33,20 +33,23 @@ public class PauseUI : MonoBehaviour
         }
         else
         {
-            //マップマネージャーの状態がNORMALだったら
-            if (Input.GetKeyDown(KeyCode.Escape))
+            //マップマネージャーの状態がNORMALかPauseだったら
+            if (MapManager.screenStatus == MapManager.ScreenStatuses.NORMAL || MapManager.screenStatus == MapManager.ScreenStatuses.PAUSE)
             {
-                PlayerController playerController = GameObject.Find("Player")?.GetComponent<PlayerController>();
-                if (playerController != null)
+                if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    if (playerController.damage)
-                        return;
+                    PlayerController playerController = GameObject.Find("Player")?.GetComponent<PlayerController>();
+                    if (playerController != null)
+                    {
+                        if (playerController.damage)
+                            return;
+                    }
+                    pauseObject.SetActive(true);
+                    //マップマネージャーの状態をPAUSEに
+                    MapManager.screenStatus = MapManager.ScreenStatuses.PAUSE;
+                    //時間を止める
+                    Time.timeScale = 0;
                 }
-                pauseObject.SetActive(true);
-                //マップマネージャーの状態をPAUSEに
-                MapManager.screenStatus = MapManager.ScreenStatuses.PAUSE;
-                //時間を止める
-                Time.timeScale = 0;
             }
         }
         

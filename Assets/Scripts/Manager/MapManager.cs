@@ -10,27 +10,24 @@ public class MapManager : MonoBehaviour
     public enum WorldNo {
         LABORATORY,
         NATURE,
-        ABANDONED_FACTORY,
         CITY
     }
     public string[] worldName =
     {
         "Laboratory",
         "Nature",
-        "Abandoned Factory",
         "City"
     };
     public string[] worldBGMFileName =
     {
         "Labo_BGM03",
         "Labo_BGM01",
-        "Labo_BGM02",
         "Labo_BGM04",
     };
 
     private GameObject[] stageIcons;
     //アイコンの数
-    public int stageIconNum = 16;
+    public int stageIconNum = 12;
     private LineRenderer lr;
     //
     //始点の色(線)
@@ -58,7 +55,7 @@ public class MapManager : MonoBehaviour
     public float appearSpeed = 0.1f;
 
     //移動可能アイコン番号
-    public static int lastGoNo = 15;
+    public static int lastGoNo = 11;
 
     //挑戦中のステージのアイコン番号
     public static int tryNo = 0;

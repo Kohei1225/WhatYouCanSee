@@ -491,6 +491,9 @@ public class PandaScript : BossBase
         _LeverSwitch?.ResetBarPos();
 
         this._IsDead = true;
+
+        //音
+        SoundManager.Instance.PlaySE("Damage_1");
     }
 
     /// <summary> 防御 </summary>

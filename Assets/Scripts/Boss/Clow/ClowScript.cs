@@ -195,8 +195,6 @@ public class ClowScript : BossBase
             if(_CurrentHP <= 0)
             {
                 _State = StateEnum.Dead;
-                //音
-                SoundManager.Instance.PlaySE("Damage_1");
                 return;
             }
 
@@ -323,6 +321,9 @@ public class ClowScript : BossBase
 
         //ライトを切り替える
         ChangeLight(true);
+
+        //音
+        SoundManager.Instance.PlaySE("Damage_1");
     }
 
     public override void Idle()

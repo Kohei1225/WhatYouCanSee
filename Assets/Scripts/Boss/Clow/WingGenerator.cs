@@ -11,7 +11,7 @@ public class WingGenerator : MonoBehaviour
     /// <summary> 一周した回数 </summary>
     public int _RotatePeriodCounter = 0;
     /// <summary> 羽を飛ばす角度の範囲の最小値 </summary>
-    private int _MinAngle = 10;// + 180;
+    private int _MinAngle = 0;// + 180;
     /// <summary> 羽を飛ばす角度の範囲の最大値 </summary>
     private int _MaxAngle = 90;// + 180;
 
@@ -50,7 +50,7 @@ public class WingGenerator : MonoBehaviour
             _RotatePeriodCounter++;
             if(_RotatePeriodCounter % _RotatePeriod == 0)
             {
-                Debug.Log("RotatePeriodCounter::" + _RotatePeriodCounter);
+                //Debug.Log("RotatePeriodCounter::" + _RotatePeriodCounter);
             }
         }
 

@@ -58,9 +58,6 @@ public class ClowScript : BossBase
 
     /// <summary> 光源のオブジェクト </summary>
     [SerializeField] private GameObject _SingleLightObject = null;
-
-    /// <summary> 背景の色 </summary>
-    [SerializeField] private ColorObjectVer3 _BackGround = null;
     #endregion
 
     #region field

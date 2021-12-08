@@ -89,4 +89,10 @@ public class PauseUI : MonoBehaviour
 
         pauseObject.SetActive(true);
     }
+
+    public void SaveClick()
+    {
+        PlayerPrefs.SetInt("LastGoNo", MapManager.lastGoNo);
+        PlayerPrefs.Save();
+    }
 }

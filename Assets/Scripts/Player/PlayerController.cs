@@ -282,8 +282,11 @@ public class PlayerController : MonoBehaviour
         {
             if(obj.transform.parent?.GetComponent<ColorObjectVer3>() && transform.parent == null)
             {
-                transform.SetParent(obj.transform.parent);
-                scaleX = Mathf.Abs(transform.localScale.x);
+                if (!obj.transform.parent.CompareTag("Boss"))
+                {
+                    transform.SetParent(obj.transform.parent);
+                    scaleX = Mathf.Abs(transform.localScale.x);
+                }
             }
         }
         else

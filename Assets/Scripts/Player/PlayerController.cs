@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //プレイヤーを操作するためのクラス
 public class PlayerController : MonoBehaviour
@@ -51,6 +52,17 @@ public class PlayerController : MonoBehaviour
     //何回点滅したか
     private int _NowChangeCount = 0;
 
+    //移動範囲X
+    [SerializeField] private Vector2 _MoveRangeX = new Vector2(-50, 50);
+    //死ぬ高さ
+    [SerializeField] private float _DeathY = -30;
+    //死んでからマスクが小さくなるまでの時間
+    [SerializeField] private float _DeathWaitTime = 4;
+    //時間測定用
+    private TimerScript _TimerScript = new TimerScript();
+    //マスクマネージャー
+    private MaskManager _MaskManager;
+
     public int Life
     {
         get
@@ -76,6 +88,7 @@ public class PlayerController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         _SpriteRenderer = GetComponent<SpriteRenderer>();
         _TimePerChangeAlpha = _MutekiTime / _ChangeAlphaNum;
+        _MaskManager = transform.Find("CircleMask").GetComponent<MaskManager>();
     }
 
     // Update is called once per frame
@@ -151,6 +164,19 @@ public class PlayerController : MonoBehaviour
         if(damage)
         {
             rigidBody.velocity = new Vector2(0,0);
+            if (_TimerScript.IsTimeUp && !_MaskManager.IsFin)
+            {
+                //マスクマネージャーを開始
+                _MaskManager.StartMask(true);
+            }
+            else
+            {
+                //タイマー計測
+                _TimerScript.UpdateTimer();
+                if (_MaskManager.IsFin)
+                    //シーン読み込み
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
 
         //地面にいるかを取得
@@ -212,7 +238,22 @@ public class PlayerController : MonoBehaviour
         //左右どちらかが入力されてればその方向に移動
         if(walk)
         {
-            transform.Translate(vel * vec,0,0);
+            //移動範囲内なら
+            if(transform.position.x >= _MoveRangeX.x && transform.position.x <= _MoveRangeX.y)
+            {
+                transform.Translate(vel * vec, 0, 0);
+            }
+            else
+            {
+                //強制的に位置を戻す
+                transform.position = new Vector3(Mathf.Clamp(transform.position.x, _MoveRangeX.x, _MoveRangeX.y), transform.position.y, transform.position.z);
+            }
+        }
+        //落ちたなら
+        if(transform.position.y < _DeathY && !damage)
+        {
+            //死ぬ
+            Death();
         }
 
         //何か持ってる時
@@ -239,10 +280,13 @@ public class PlayerController : MonoBehaviour
         GameObject obj = transform.Find("Body").gameObject?.transform.Find("Foot")?.gameObject.GetComponent<AreaInObj>().Obj;
         if (obj != null)
         {
-            if(obj.transform.parent?.tag == "ColorObject" && transform.parent == null)
+            if(obj.transform.parent?.GetComponent<ColorObjectVer3>() && transform.parent == null)
             {
-                transform.SetParent(obj.transform.parent);
-                scaleX = Mathf.Abs(transform.localScale.x);
+                if (!obj.transform.parent.CompareTag("Boss"))
+                {
+                    transform.SetParent(obj.transform.parent);
+                    scaleX = Mathf.Abs(transform.localScale.x);
+                }
             }
         }
         else
@@ -276,9 +320,22 @@ public class PlayerController : MonoBehaviour
         _CanDamage = false;
         if(_Life == 0)
         {
-            //死んだ判定にする
-            damage = true;
+            //死んだ
+            Death();
         }
+    }
+
+    public void Death()
+    {
+        damage = true;
+        //音ならす
+        SoundManager.Instance.PlaySE("AfterDeath");
+        //タイマーセット
+        _TimerScript.ResetTimer(_DeathWaitTime);
+        //マスクをリセット
+        _MaskManager.IsFin = false;
+        //BGMを止める
+        SoundManager.Instance.StopBGM();
     }
 
     public void Set_onStage(bool value)

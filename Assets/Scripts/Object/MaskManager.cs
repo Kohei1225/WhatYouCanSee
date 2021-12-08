@@ -5,10 +5,23 @@ using UnityEngine;
 public class MaskManager : MonoBehaviour
 {
     [SerializeField] private bool canMove = true;
+    private bool _IsFin = false;
     [SerializeField] private bool isShrink = false;
     public float speed = 100;
     public float maxScale = 200;
     public GameObject blackBoard;
+
+    public bool IsFin
+    {
+        get
+        {
+            return _IsFin;
+        }
+        set
+        {
+            this._IsFin = value;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -18,7 +31,7 @@ public class MaskManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!canMove)
+        if (!canMove || _IsFin)
             return;
 
         if (isShrink)
@@ -28,6 +41,7 @@ public class MaskManager : MonoBehaviour
             if(transform.localScale.x <= 0 && transform.localScale.y <= 0)
             {
                 canMove = false;
+                _IsFin = true;
                 //x,yの大きさを0にする
                 transform.localScale = Vector3.zero + Vector3.forward;
             }
@@ -39,25 +53,18 @@ public class MaskManager : MonoBehaviour
             if (transform.localScale.x >= maxScale && transform.localScale.y >= maxScale)
             {
                 canMove = false;
+                _IsFin = true;
                 //x,yの大きさを最大にする
                 transform.localScale = (Vector3.right + Vector3.up) * maxScale + Vector3.forward;
             }
         }
     }
 
-    public void Set_canMove(bool canMove)
-    {
-        this.canMove = canMove;
-    }
-
-    public bool Get_canMove()
-    {
-        return canMove;
-    }
-
-    public void Set_isShrink(bool isShrink)
+    public void StartMask(bool isShrink)
     {
         this.isShrink = isShrink;
+        _IsFin = false;
+        canMove = true;
     }
 
     public float Get_speed()

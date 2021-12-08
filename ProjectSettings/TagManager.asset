@@ -10,6 +10,7 @@ TagManager:
   - Stage
   - Goal
   - Mask
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -67,6 +68,9 @@ TagManager:
     locked: 0
   - name: UI
     uniqueID: 1979760093
+    locked: 0
+  - name: PauseUI
+    uniqueID: 2391105191
     locked: 0
   - name: BlackPanel
     uniqueID: 2854444149

@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 6370413876721703288}
   m_Layer: 8
   m_Name: Chameleon
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

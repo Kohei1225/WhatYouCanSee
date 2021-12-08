@@ -51,7 +51,7 @@ public class GoalController : MonoBehaviour
         else if (canDark)
         {
             //マスクが無くなったら
-            if (!maskManager.Get_canMove())
+            if (maskManager.IsFin)
             {
                 canDark = false;
                 canGo = true;
@@ -90,8 +90,7 @@ public class GoalController : MonoBehaviour
             //円マスクが小さくなる
             //スピードを1/2にする
             maskManager.Set_speed(maskManager.Get_speed() / 2f);
-            maskManager.Set_isShrink(true);
-            maskManager.Set_canMove(true);
+            maskManager.StartMask(true);
 
             //音ならす
             SoundManager.Instance.PlaySE("Warped");

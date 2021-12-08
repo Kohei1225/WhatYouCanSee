@@ -153,7 +153,7 @@ public class MapManager : MonoBehaviour
             if (!canMoveLine)
             {
                 //もし円の大きさが最大になったら
-                if (!maskManager.Get_canMove())
+                if (!maskManager.IsFin)
                 {
                     //線が伸ばせるようになる
                     canMoveLine = true;
@@ -188,14 +188,13 @@ public class MapManager : MonoBehaviour
             if (!playerScript.Get_isJump())
             {
                 //マスク縮小開始
-                maskManager.Set_isShrink(true);
-                maskManager.Set_canMove(true);
+                maskManager.StartMask(true);
                 screenStatus = ScreenStatuses.DARK;
             }
         }
         else if(screenStatus == ScreenStatuses.DARK)
         {
-            if (!maskManager.Get_canMove())
+            if (maskManager.IsFin)
             {
                 string stageName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetStageName();
                 stageName2_text.text = stageName;

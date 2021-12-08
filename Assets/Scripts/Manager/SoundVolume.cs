@@ -92,13 +92,6 @@ public class SoundVolume : MonoBehaviour
         //Debug.Log("SEVolume:" + SEVolume);
     }
 
-    public void MoveClick()
-    {
-        optionObject.SetActive(false);
-
-        pauseObject.SetActive(true);
-    }
-
     //以下は音量調節
     public void Set_bgmVolume(float bgmValue)
     {

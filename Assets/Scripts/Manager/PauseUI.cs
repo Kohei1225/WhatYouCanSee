@@ -27,6 +27,8 @@ public class PauseUI : MonoBehaviour
                 pauseObject.SetActive(false);
                 //マップマネージャーの状態をNORMALに
                 MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
+                //時間を動かす
+                Time.timeScale = 1;
             }
         }
         else
@@ -37,18 +39,24 @@ public class PauseUI : MonoBehaviour
                 pauseObject.SetActive(true);
                 //マップマネージャーの状態をPAUSEに
                 MapManager.screenStatus = MapManager.ScreenStatuses.PAUSE;
+                //時間を止める
+                Time.timeScale = 0;
             }
         }
         
     }
 
+    //ポーズを閉じる
     public void RestartClick()
     {
         pauseObject.SetActive(false);
         //マップマネージャーの状態をNORMALに
         MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
+        //時間を動かす
+        Time.timeScale = 1;
     }
 
+    //ポーズからオプションへ
     public void OptionClick()
     {
         pauseObject.SetActive(false);
@@ -61,5 +69,15 @@ public class PauseUI : MonoBehaviour
         //マップマネージャーの状態を普通にする
         MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
         SceneManager.LoadScene(sceneName);
+        //時間を動かす
+        Time.timeScale = 1;
+    }
+
+    //オプションからポーズへ
+    public void MoveClick()
+    {
+        optionObject.SetActive(false);
+
+        pauseObject.SetActive(true);
     }
 }

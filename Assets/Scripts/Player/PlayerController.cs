@@ -6,29 +6,35 @@ using UnityEngine.SceneManagement;
 //プレイヤーを操作するためのクラス
 public class PlayerController : MonoBehaviour
 {
-    /// <summary>
-    ///  移動速度
-    /// </summary>
-    public float vel;
+    /// <summary> 移動速度 </summary>
+    public float moveVel = 17;
 
-    /// <summary>
-    /// ジャンプスピード
-    /// </summary>
-    public float jumpSpeed = 35f;        //ジャンプする時に加える力
+    /// <summary> ジャンプスピード </summary>
+    public float jumpSpeed = 35f;
 
     public bool active{get;private set;}
-    bool walk;                  //歩ける判定用  
-    public bool jump;                  //ジャンプできる判定用
-    public bool damage{get; private set;}  //ダメージを受けたかを判定する用
-    int vec;                    //向いてる方向を示す変数
-    public bool onStage;               //何かの上に乗ってるかを判定する用
+    /// <summary> 歩ける判定用 </summary>
+    bool walk;
+    /// <summary> ジャンプできる判定用 </summary>
+    public bool jump;
+    /// <summary> ダメージを受けたかを判定する用 </summary>
+    public bool damage{get; private set;}
+    /// <summary> 向いてる方向を示す変数 </summary>
+    int vec;
+    /// <summary> 何かの上に乗ってるかを判定する用 </summary>
+    public bool onStage;
+    /// <summary>  </summary>
     private bool canCtrl = true;
     
     float scaleX;
-    float throwPower = 1500;        //投げるときに加える力 
-    [HideInInspector] public bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
-    [HideInInspector] public GameObject objectBeingHolden;   //持ってるオブジェクト
-    GameObject objectToHold;        //持ち上げる時に使う自身の子オブジェクト
+    /// <summary> 投げるときに加える力  </summary>
+    float throwPower = 1500;
+    /// <summary> 今オブジェクトを運んでるかどうかの判定 </summary>
+    [HideInInspector] public bool isHoldingObject;
+    /// <summary> 持ってるオブジェクト </summary>
+    [HideInInspector] public GameObject objectBeingHolden;
+    /// <summary> 持ち上げる時に使う自身の子オブジェクト </summary>
+    GameObject objectToHold;        
     HoldObjectScript holdScript;    
     Animator animController;        //アニメーター
     GameObject topOfHead;           //頭のてっぺんに置いてあるオブジェクト
@@ -115,9 +121,24 @@ public class PlayerController : MonoBehaviour
                 else if(Input.GetKey(KeyCode.RightArrow))vec = 1;//右を向く
                 else vec = -1;
             }
-            
+
+            //左右どちらかが入力されてればその方向に移動
+            if (walk)
+            {
+                //移動範囲内なら
+                if (transform.position.x >= _MoveRangeX.x && transform.position.x <= _MoveRangeX.y)
+                {
+                    transform.Translate(moveVel * vec * Time.deltaTime, 0, 0);
+                }
+                else
+                {
+                    //強制的に位置を戻す
+                    transform.position = new Vector3(Mathf.Clamp(transform.position.x, _MoveRangeX.x, _MoveRangeX.y), transform.position.y, transform.position.z);
+                }
+            }
+
             //持ち上げたり投げたりする処理
-            if(Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKeyDown(KeyCode.X))
             {
                 //目の前にブロックがあって何も持ち上げてない時
                 if(holdScript.Get_objectFrontMe() && !isHoldingObject)
@@ -235,20 +256,6 @@ public class PlayerController : MonoBehaviour
         if (!canCtrl)
             return;
 
-        //左右どちらかが入力されてればその方向に移動
-        if(walk)
-        {
-            //移動範囲内なら
-            if(transform.position.x >= _MoveRangeX.x && transform.position.x <= _MoveRangeX.y)
-            {
-                transform.Translate(vel * vec, 0, 0);
-            }
-            else
-            {
-                //強制的に位置を戻す
-                transform.position = new Vector3(Mathf.Clamp(transform.position.x, _MoveRangeX.x, _MoveRangeX.y), transform.position.y, transform.position.z);
-            }
-        }
         //落ちたなら
         if(transform.position.y < _DeathY && !damage)
         {
@@ -336,6 +343,8 @@ public class PlayerController : MonoBehaviour
         _MaskManager.IsFin = false;
         //BGMを止める
         SoundManager.Instance.StopBGM();
+        //死んだら動かなくする
+        GetComponent<Rigidbody2D>().isKinematic = true;
     }
 
     public void Set_onStage(bool value)

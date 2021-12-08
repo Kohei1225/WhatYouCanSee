@@ -79,12 +79,12 @@ public class GoalController : MonoBehaviour
         //方向ベクトルを作成
         Vector3 direction = (to - from).normalized;
         //fromからtoまでの距離がspeed以下だったら
-        if ((to - from).magnitude <= suckedSpeed * Time.deltaTime)
+        if ((to - from).magnitude <= suckedSpeed * Time.deltaTime && !canDark)
         {
             //playerをワープ位置まで移動
             player.transform.position = transform.position;
             canDark = true;
-            //canSuck = false;
+            canSuck = false;
             //見えなくする
             player.GetComponent<SpriteRenderer>().enabled = false;
             //円マスクが小さくなる

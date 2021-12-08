@@ -171,9 +171,28 @@ public class ClowScript : BossBase
         UpdateState();
     }
 
-
+    private bool _HasOnGround = false;
     void UpdateState()
     {
+        if(_State == StateEnum.Dead)
+        {
+            //
+
+            if(_HasOnGround)
+            {
+                return;
+            }
+
+            if(OnGround)
+            {
+                _HasOnGround = true;
+                return;
+            }
+
+            transform.Translate(0, -1.5f*Time.deltaTime, 0);
+        }
+
+
         if(_State == StateEnum.Move)
         {
             if(_CurrentHP <= 0)
@@ -197,6 +216,7 @@ public class ClowScript : BossBase
             //タスクの処理を更新
             _TaskList.UpdateTask();
         }
+
     }
 
     /// <summary> タスクを追加する </summary>
@@ -519,9 +539,8 @@ public class ClowScript : BossBase
         _AnimController.SetBool("IsFall", false);
         _AnimController.SetBool("IsFallShock", false);
 
-        //スポットライトをOFFにする
-        //_GameManager.existRay = false;
-        _SingleLightObject.SetActive(false);
+        //ミラーボールをセットする
+        ChangeLight(true);
     }
     #endregion
 

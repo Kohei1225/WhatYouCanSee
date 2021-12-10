@@ -2,15 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class TitleManager : MonoBehaviour
 {
     public string sceneName;
+    private GameObject _ContinueButton;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _ContinueButton = transform.Find("ContinueButton").gameObject;
+        if (!PlayerPrefs.HasKey("LastGoNo"))
+        {
+            _ContinueButton.GetComponent<Button>().interactable = false;
+        }
     }
 
     // Update is called once per frame
@@ -18,10 +24,16 @@ public class TitleManager : MonoBehaviour
     {
         
     }
-    public void WorldMove()
+
+    public void ResetClick()
     {
-        //マップマネージャーの状態を普通にする
-        MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
+        MapManager.lastGoNo = 0;
+        SceneManager.LoadScene(sceneName);
+    }
+
+    public void ContinueClick()
+    {
+        MapManager.lastGoNo = PlayerPrefs.GetInt("LastGoNo");
         SceneManager.LoadScene(sceneName);
     }
 }

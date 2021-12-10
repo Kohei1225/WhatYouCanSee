@@ -6,15 +6,17 @@ public class ClowScript : BossBase
 {
     #region define
     /// <summary> タスクの定義 </summary>
-    enum TaskEnum
+    public enum TaskEnum
     {
         Idle,
         Move,
         FlyUp,
+        BeforeFall,
         FallAttack,
         AfterFall,
         Charge,
         WingAttack,
+        AfterWing,
         LowFlyAttack,
         ReturnPostion,
         Damage,
@@ -26,7 +28,7 @@ public class ClowScript : BossBase
     /// <summary> カラスの体力 </summary>
     [SerializeField] private int _MaxHp = 9;
     /// <summary> カラスの移動スピード </summary>
-    [SerializeField] private float _MoveSpeed = 0.075f;
+    [SerializeField] private float _MoveSpeed = 60f;
     /// <summary> プレイヤーのオブジェクト </summary>
     [SerializeField] private GameObject _Player = null;
     /// <summary> 右側の固定位置 </summary>
@@ -44,6 +46,18 @@ public class ClowScript : BossBase
     /// <summary> 低空飛行をする際のスピード </summary>
     [SerializeField] private float[] _LowSpeeds;
     [SerializeField] private WingGenerator _WingGenerator = null;
+
+    /// <summary> 真ん中で回転してるミラーボールの子オブジェクト </summary>
+    [SerializeField] private GameObject _MirrorBallChild = null;
+
+    /// <summary> ゲームマネージャー </summary>
+    [SerializeField] private GameManagerScript _GameManager = null;
+
+    /// <summary> ライトの色の配列 </summary>
+    [SerializeField] private ColorObjectVer3[] _MirrorLightColorObjects = null;
+
+    /// <summary> 光源のオブジェクト </summary>
+    [SerializeField] private GameObject _SingleLightObject = null;
     #endregion
 
     #region field
@@ -68,8 +82,16 @@ public class ClowScript : BossBase
 
     private float _WingAttackTime = 5.0f;
 
+    /// <summary> 見た目の状態 </summary>
     private int _VisualState = 1;
 
+    /// <summary> 見た目の状態の文字列 </summary>
+    private string _VisualStateString = "01";
+
+    /// <summary> 一定の間隔でミラーボールの光を回すクラス </summary>
+    private IntervalRotate _IntervalRotate = null;
+
+    /// <summary> 羽の色の候補 </summary>
     private ColorObjectVer3.OBJECT_COLOR3[,] _WingColors = new ColorObjectVer3.OBJECT_COLOR3[,]
     {
 
@@ -95,6 +117,7 @@ public class ClowScript : BossBase
         },
     };
 
+
     #endregion
 
     #region property
@@ -110,10 +133,12 @@ public class ClowScript : BossBase
         _TaskList.DefineTask(TaskEnum.Idle, TaskIdleEnter, TaskIdleUpdate, TaskIdleExit);
         _TaskList.DefineTask(TaskEnum.Move, TaskMoveEnter, TaskMoveUpdate, TaskMoveExit);
         _TaskList.DefineTask(TaskEnum.FlyUp, TaskFlyUpEnter, TaskFlyUpUpdate, TaskFlyUpExit);
+        _TaskList.DefineTask(TaskEnum.BeforeFall, TaskBeforeFallEnter, TaskBeforeFallUpdate, TaskBeforeFallExit);
         _TaskList.DefineTask(TaskEnum.FallAttack, TaskFallAttackEnter, TaskFallAttackUpdate, TaskFallAttackExit);
         _TaskList.DefineTask(TaskEnum.AfterFall, TaskAfterFallEnter, TaskAfterFallUpdate, TaskAfterFallExit);
         _TaskList.DefineTask(TaskEnum.Charge, TaskChargeEnter, TaskChargeUpdate, TaskChargeExit);
         _TaskList.DefineTask(TaskEnum.WingAttack, TaskWingAttackEnter, TaskWingAttackUpdate, TaskWingAttackExit);
+        _TaskList.DefineTask(TaskEnum.AfterWing, TaskAfterWingEnter, TaskAfterWingUpdate, TaskAfterWingExit);
         _TaskList.DefineTask(TaskEnum.LowFlyAttack, TaskLowFlyAttackEnter, TaskLowFlyAttackUpdate, TaskLowFlyAttackExit);
         _TaskList.DefineTask(TaskEnum.ReturnPostion, TaskReturnPosEnter, TaskReturnPosUpdate, TaskReturnPosExit);
         _TaskList.DefineTask(TaskEnum.Damage, TaskDamageEnter, TaskDamageUpdate, TaskDamageExit);
@@ -130,6 +155,11 @@ public class ClowScript : BossBase
         _AnimController = GetComponent<Animator>();
 
         _AttackIntervalTimer.ResetTimer(_AttackInterval);
+
+        ChangeLightColors(_VisualState);
+        ChangeLight(true);
+
+        _IntervalRotate = _MirrorBallChild?.GetComponent<IntervalRotate>();
     }
 
     // Update is called once per frame
@@ -138,9 +168,28 @@ public class ClowScript : BossBase
         UpdateState();
     }
 
-
+    private bool _HasOnGround = false;
     void UpdateState()
     {
+        if(_State == StateEnum.Dead)
+        {
+            //
+
+            if(_HasOnGround)
+            {
+                return;
+            }
+
+            if(OnGround)
+            {
+                _HasOnGround = true;
+                return;
+            }
+
+            transform.Translate(0, -1.5f*Time.deltaTime, 0);
+        }
+
+
         if(_State == StateEnum.Move)
         {
             if(_CurrentHP <= 0)
@@ -164,17 +213,18 @@ public class ClowScript : BossBase
             //タスクの処理を更新
             _TaskList.UpdateTask();
         }
+
     }
 
     /// <summary> タスクを追加する </summary>
     void SelectTask()
     {
-        Debug.Log("SelectTask");
+        //Debug.Log("SelectTask");
         _AttackIntervalTimer.UpdateTimer();
         //Idle();
         if(!CanAttack)
         {
-            Debug.Log("Can't Attack!");
+            //Debug.Log("Can't Attack!");
             return;
         }
 
@@ -194,6 +244,7 @@ public class ClowScript : BossBase
     {
         _TaskList.AddTask(TaskEnum.FlyUp);
         _TaskList.AddTask(TaskEnum.Wait);
+        _TaskList.AddTask(TaskEnum.BeforeFall);
         _TaskList.AddTask(TaskEnum.FallAttack);
         _TaskList.AddTask(TaskEnum.AfterFall);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
@@ -213,7 +264,7 @@ public class ClowScript : BossBase
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Charge);
         _TaskList.AddTask(TaskEnum.WingAttack);
-        _TaskList.AddTask(TaskEnum.Wait);
+        _TaskList.AddTask(TaskEnum.AfterWing);
     }
 
     public override void Damage()
@@ -222,10 +273,20 @@ public class ClowScript : BossBase
         _TaskList.AddTask(TaskEnum.Damage);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
         _TaskList.AddTask(TaskEnum.Wait);
+        //_GameManager.existRay = false;
 
         if (_CurrentHP == 1)
         {
             _VisualState = 5;
+
+            //最後はずっと色が変わり続ける
+            for (int i = 0; i < _MirrorLightColorObjects.Length; i++)
+            {
+                var changeColorByTime = _MirrorLightColorObjects[i].gameObject.GetComponent<ChangeColorByTime>();
+
+                changeColorByTime._CanChangeColor = true;
+            }
+
         }
         else if (_CurrentHP <= 3)
         {
@@ -239,7 +300,15 @@ public class ClowScript : BossBase
         {
             _VisualState = 2;
         }
-        else _VisualState = 1;
+        else
+        {
+            _VisualState = 1;
+        }
+
+        _VisualStateString = "0" + _VisualState.ToString();
+
+        ChangeLightColors(_VisualState);
+        ChangeLight(true);
     }
 
     public override void Down()
@@ -249,6 +318,12 @@ public class ClowScript : BossBase
         _AnimController.Play("Clow_Down", 0, 0);
         _Head.SetActive(false);
         _Beak.SetActive(false);
+
+        //ライトを切り替える
+        ChangeLight(true);
+
+        //音
+        SoundManager.Instance.PlaySE("Damage_1");
     }
 
     public override void Idle()
@@ -266,6 +341,57 @@ public class ClowScript : BossBase
         throw new System.NotImplementedException();
     }
 
+
+    /// <summary> ライトを切り替える </summary>
+    /// <param name="isSingleLight">ミラーボールのライトがONかどうか</param>
+    private void ChangeLight(bool isMirrorLight)
+    {
+        //それぞれのライトのSetActiveを切り替える
+        _SingleLightObject.SetActive(!isMirrorLight);
+
+        _MirrorBallChild.SetActive(isMirrorLight);
+
+    }
+
+    /// <summary> ミラーボールの光の色を変更する </summary>
+    /// <param name="visualState"></param>
+    private void ChangeLightColors(int visualState)
+    {
+        if(visualState == 5)
+        {
+            return;
+        }
+
+        visualState--;
+        //カラスが出す色の候補とハズレ色を用意
+        var mainColor1 = _WingColors[visualState,0];
+        var mainColor2 = _WingColors[visualState,1];
+        var mainColor3 = _WingColors[visualState,5];
+        var badColor = ColorObjectVer3.OBJECT_COLOR3.CYAN;
+
+        for(int i = 0; i < _MirrorLightColorObjects.Length; i++)
+        {
+            var objColor = badColor;
+
+            if(i == 0 || i == 4)
+            {
+                objColor = mainColor1;
+            }
+
+            else if(i == 1 || i == 5)
+            {
+                objColor = mainColor3;
+            }
+
+            else if(i == 2 || i == 6)
+            {
+                objColor = mainColor2;
+            }
+           
+            _MirrorLightColorObjects[i].colorType = objColor;
+        }
+
+    }
     #region Task function
 
     #region Idle
@@ -305,7 +431,8 @@ public class ClowScript : BossBase
     #region FlyUp
     void TaskFlyUpEnter()
     {
-
+        //ライトを消して部屋を暗くする
+        _MirrorBallChild.SetActive(false);
     }
 
     bool TaskFlyUpUpdate()
@@ -317,26 +444,32 @@ public class ClowScript : BossBase
 
     void TaskFlyUpExit()
     {
-
+        
     }
     #endregion
 
-    #region FallAttack
+    #region BeforeFallAttack
     float _StageYPos = 0;
-    void TaskFallAttackEnter()
+    void TaskBeforeFallEnter()
     {
+        // スポットライトをONにする(落ちる場所を予測)
+        ChangeLight(false);
+
+        //プレイヤーの位置に合わせて移動
         var pos = transform.position;
         pos.x = _Player.transform.position.x;
         transform.position = pos;
 
-        _AnimController.Play("Clow_FallAttack01",0,0);
-        _AnimController.SetBool("IsFall", true);
+        //スポットライトの位置を調整
+        pos.y = _SingleLightObject.transform.position.y;
+        _SingleLightObject.transform.position = pos;
 
+        //下方向にRayを飛ばして距離を計算する
         var dir = transform.position;
         dir.x = 0;
         dir.y = -1;
-        
-        foreach(RaycastHit2D hit in Physics2D.RaycastAll(transform.position,dir))
+
+        foreach (RaycastHit2D hit in Physics2D.RaycastAll(transform.position, dir))
         {
             if (hit.collider.gameObject.tag == "Stage")
             {
@@ -344,6 +477,31 @@ public class ClowScript : BossBase
                 break;
             }
         }
+
+        _WaitTimer.ResetTimer(2.0f);
+    }
+
+    bool TaskBeforeFallUpdate()
+    {
+        _WaitTimer.UpdateTimer();
+        return _WaitTimer.IsTimeUp;
+    }
+
+    void TaskBeforeFallExit()
+    {
+
+    }
+    #endregion
+
+    #region FallAttack
+
+    void TaskFallAttackEnter()
+    {
+        //
+        _AnimController.Play("Clow_FallAttack" + _VisualStateString,0,0);
+        _AnimController.SetBool("IsFall", true);
+        //音
+        SoundManager.Instance.PlaySE("ClowFall");
     }
 
     bool TaskFallAttackUpdate()
@@ -361,6 +519,8 @@ public class ClowScript : BossBase
     {
         _AnimController.SetBool("IsFallShock",true);
         //Debug.Log("落下攻撃完了!!");
+        //音
+        SoundManager.Instance.PlaySE("Defend");
     }
     #endregion
 
@@ -382,6 +542,9 @@ public class ClowScript : BossBase
     {
         _AnimController.SetBool("IsFall", false);
         _AnimController.SetBool("IsFallShock", false);
+
+        //ミラーボールをセットする
+        ChangeLight(true);
     }
     #endregion
 
@@ -392,12 +555,12 @@ public class ClowScript : BossBase
 
     void TaskChargeEnter()
     {
-        Debug.Log("start charge");
+        //Debug.Log("start charge");
         _WaitTimer.ResetTimer(_ChargeTime);
 
         _FrameNumber = 0;
         _Xpos = transform.position.x;
-        _AnimController.Play("Clow_Charge01",0,0);
+        _AnimController.Play("Clow_Charge" + _VisualStateString,0,0);
     }
 
     bool TaskChargeUpdate()
@@ -420,7 +583,7 @@ public class ClowScript : BossBase
 
     void TaskChargeExit()
     {
-        Debug.Log("Finish Charge");
+        //Debug.Log("Finish Charge");
     }
     #endregion
 
@@ -429,25 +592,58 @@ public class ClowScript : BossBase
     private int _WingColorNum;
     void TaskWingAttackEnter()
     {
+        ChangeLight(true);
+        ChangeLightColors(_VisualState);
         _AnimController.SetBool("IsWing", true);
         _WaitTimer.ResetTimer(_WingAttackTime);
 
         _WingColorNum = Random.Range(0, 5);
+
+        if(_IntervalRotate != null)
+        {
+            _IntervalRotate._CanRotate = false;
+        }
+
+        //音
+        SoundManager.Instance.PlaySE("WingAttack");
+
     }
 
     bool TaskWingAttackUpdate()
     {
+        TurnTo(_Player);
         _WaitTimer.UpdateTimer();
         _WingGenerator.ShotWing(_WingPrefab,_Dir,_WingColors[_VisualState - 1,_WingColorNum]);
-
+        _IntervalRotate._CanRotate = false;
         return _WaitTimer.IsTimeUp;
     }
 
     void TaskWingAttackExit()
     {
+        _IntervalRotate._CanRotate = true;
+
         _AnimController.SetBool("IsWing",false);
-        Debug.Log("Finish Wing");
+        //Debug.Log("Finish Wing");
         _WingGenerator.ResetPeriodCounter();
+    }
+    #endregion
+
+    #region WingAttack
+    void TaskAfterWingEnter()
+    {
+        _WaitTimer.ResetTimer(4.5f);
+    }
+
+    bool TaskAfterWingUpdate()
+    {
+        _IntervalRotate._CanRotate = false;
+        _WaitTimer.UpdateTimer();
+        return _WaitTimer.IsTimeUp;
+    }
+
+    void TaskAfterWingExit()
+    {
+
     }
     #endregion
 
@@ -456,7 +652,7 @@ public class ClowScript : BossBase
     int _CurrentLowNumber;
     void TaskLowFlyAttackEnter()
     {
-        _AnimController.Play("Clow_LowFlying01", 0, 0);
+        _AnimController.Play("Clow_LowFlying" + _VisualStateString, 0, 0);
         _AnimController.SetBool("IsLowFly", true);
 
         //右にいたら左へ、左にいたら右へ移動する
@@ -471,6 +667,9 @@ public class ClowScript : BossBase
         TurnTo(_TargetObject);
 
         _CurrentLowNumber = Random.Range(0,_LowRoutes.Length-1);
+
+        //音
+        SoundManager.Instance.PlaySE("SuperKick");
     }
 
     bool TaskLowFlyAttackUpdate()
@@ -481,7 +680,7 @@ public class ClowScript : BossBase
         //var tmpY = Mathf.Lerp(0,1, _RightSetPos.transform.position.x - pos.x);
         //現在地の割合を計算
         var tmpX = (transform.position.x - _LeftSetPos.transform.position.x)/(_RightSetPos.transform.position.x - _LeftSetPos.transform.position.x);
-        Debug.Log("tmp:" + tmpX);
+        //Debug.Log("tmp:" + tmpX);
         pos.y = _LowRoutes[_CurrentLowNumber].Evaluate(tmpX);
 
         pos.y *= _TargetObject.transform.position.y;
@@ -495,7 +694,15 @@ public class ClowScript : BossBase
         pos.y -= targetYPos;
         
         transform.position = pos;
-        return Mathf.Abs(_TargetObject.transform.position.x - transform.position.x) <= 1f;
+
+        //対象を超えたかどうかを返す
+        if(_Dir < 0)
+        {
+            return transform.position.x <= _TargetObject.transform.position.x;
+        }
+
+
+        return _TargetObject.transform.position.x <= transform.position.x;
     }
 
     void TaskLowFlyAttackExit()
@@ -518,7 +725,7 @@ public class ClowScript : BossBase
         }
         else _TargetObject = _RightSetPos;
 
-        Debug.Log("I will return " + _TargetObject.name);
+        //Debug.Log("I will return " + _TargetObject.name);
         //Debug.Log("I will return position");
         _Beak.SetActive(false);
 
@@ -526,20 +733,21 @@ public class ClowScript : BossBase
         _Vec = _TargetObject.transform.position - gameObject.transform.position;
         _Vec.z = 0;
         _Vec /= CalcDistance(_TargetObject, gameObject);
+
+        TurnTo(_TargetObject);
     }
 
     bool TaskReturnPosUpdate()
     {
-        TurnTo(_Player);
-
-        if(_TargetObject.transform.position.y <= gameObject.transform.position.y
-            &&  gameObject.transform.position.y <= _TargetObject.transform.position.y + 2)
+        if((_TargetObject.transform.position.x <= gameObject.transform.position.x && 0 < _Dir)
+            ||(gameObject.transform.position.y <= _TargetObject.transform.position.x && _Dir < 0 )
+            || _TargetObject.transform.position.y <= gameObject.transform.position.y)
         {
             return true;
         }
 
         //対象まで一定のスピードで移動
-        transform.position += _Vec * _MoveSpeed;
+        transform.position += _Vec * _MoveSpeed * Time.deltaTime;
         return false;
     }
 
@@ -551,18 +759,21 @@ public class ClowScript : BossBase
         _Head.SetActive(true);
         _Beak.SetActive(true);
 
-        Debug.Log("Finish Return");
+        //Debug.Log("Finish Return");
     }
     #endregion
 
     #region Damage
     void TaskDamageEnter()
     {
-        _AnimController.Play("Clow_Damage01",0,0);
+        _AnimController.Play("Clow_Damage" + _VisualStateString,0,0);
         _AnimController.SetBool("IsDamage", true);
         _Head.SetActive(false);
         _Beak.SetActive(false);
         _WaitTimer.ResetTimer(1.0f);
+        _IntervalRotate._CanRotate = true;
+        //音
+        SoundManager.Instance.PlaySE("Damage_2");
     }
 
     bool TaskDamageUpdate()

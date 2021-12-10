@@ -51,7 +51,7 @@ public class GoalController : MonoBehaviour
         else if (canDark)
         {
             //マスクが無くなったら
-            if (!maskManager.Get_canMove())
+            if (maskManager.IsFin)
             {
                 canDark = false;
                 canGo = true;
@@ -79,7 +79,7 @@ public class GoalController : MonoBehaviour
         //方向ベクトルを作成
         Vector3 direction = (to - from).normalized;
         //fromからtoまでの距離がspeed以下だったら
-        if ((to - from).magnitude <= suckedSpeed * Time.deltaTime)
+        if ((to - from).magnitude <= suckedSpeed * Time.deltaTime && !canDark)
         {
             //playerをワープ位置まで移動
             player.transform.position = transform.position;
@@ -90,8 +90,7 @@ public class GoalController : MonoBehaviour
             //円マスクが小さくなる
             //スピードを1/2にする
             maskManager.Set_speed(maskManager.Get_speed() / 2f);
-            maskManager.Set_isShrink(true);
-            maskManager.Set_canMove(true);
+            maskManager.StartMask(true);
 
             //音ならす
             SoundManager.Instance.PlaySE("Warped");
@@ -154,5 +153,10 @@ public class GoalController : MonoBehaviour
     public void Set_canSuck(bool canSuck)
     {
         this.canSuck = canSuck;
+    }
+
+    public bool Get_canDark()
+    {
+        return this.canDark;
     }
 }

@@ -60,7 +60,12 @@ public class HeadPointScript : MonoBehaviour
         }
 
         //無敵時間だったらダメージは受けない
-        if (_BossScript.IsUnableBeAttacked) return;
+        if (_BossScript.IsUnableBeAttacked)
+        {
+            //音
+            SoundManager.Instance.PlaySE("Defend");
+            return;
+        }
         _BossScript.BeAttacked();
     }
 }

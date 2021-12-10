@@ -26,7 +26,7 @@ public class LifeManager : MonoBehaviour
             float x = leftX + (_Blank + scaleX) * i;
             float y = _RectTransform.anchoredPosition.y;
             _LifeObjs[i] = Instantiate(_HeartPrefab);
-            _LifeObjs[i].transform.SetParent(transform.parent);
+            _LifeObjs[i].transform.SetParent(transform.parent,false);
             _LifeObjs[i].GetComponent<RectTransform>().anchoredPosition = new Vector3(x, y, 0);
         }
     }

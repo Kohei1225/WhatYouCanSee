@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AreaInObj : MonoBehaviour
 {
+    [SerializeField] private GameObject obj = null;
     [SerializeField] private bool isIn = false;
 
     private bool isEnter = false;
@@ -15,6 +16,14 @@ public class AreaInObj : MonoBehaviour
         get
         {
             return isIn;
+        }
+    }
+
+    public GameObject Obj
+    {
+        get
+        {
+            return obj;
         }
     }
 
@@ -42,16 +51,32 @@ public class AreaInObj : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        isEnter = true;
+        if(obj == null)
+        {
+            isEnter = true;
+            obj = collision.gameObject;
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        isStay = true;
+        if (obj == null)
+            return;
+        if (obj.Equals(collision.gameObject))
+        {
+            isStay = true;
+        }
+        //Debug.Log(collision.gameObject.name);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        isExit = true;
+        if (obj == null)
+            return;
+        if (obj.Equals(collision.gameObject))
+        {
+            isExit = true;
+            obj = null;
+        }
     }
 }

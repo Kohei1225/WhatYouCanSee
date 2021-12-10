@@ -103,7 +103,7 @@ SpriteRenderer:
   m_SortingLayerID: 847136405
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0006ea75636be4ed8abc9a5f3139b168, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0fe1bac2dbfa14939901ee13a2435039, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -158,6 +158,10 @@ PrefabInstance:
     - target: {fileID: 2164618989056574576, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
       propertyPath: m_Name
       value: StageIcon0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
+      propertyPath: sceneName
+      value: Stage1_1
       objectReference: {fileID: 0}
     - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
       propertyPath: stageName
@@ -228,6 +232,10 @@ PrefabInstance:
     - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
       propertyPath: isClear
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
+      propertyPath: sceneName
+      value: Stage1_3
       objectReference: {fileID: 0}
     - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
       propertyPath: stageName
@@ -304,6 +312,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
+      propertyPath: sceneName
+      value: Panda
+      objectReference: {fileID: 0}
+    - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
       propertyPath: stageName
       value: World1-4
       objectReference: {fileID: 0}
@@ -372,6 +384,10 @@ PrefabInstance:
     - target: {fileID: 2164618989056574576, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
       propertyPath: m_Name
       value: StageIcon1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
+      propertyPath: sceneName
+      value: Stage1_2
       objectReference: {fileID: 0}
     - target: {fileID: 2164618989056574581, guid: 4f1ef16ff4827459c98ab9c01414d72b, type: 3}
       propertyPath: stageName

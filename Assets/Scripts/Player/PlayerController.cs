@@ -1,37 +1,45 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //プレイヤーを操作するためのクラス
 public class PlayerController : MonoBehaviour
 {
-    /// <summary>
-    ///  移動速度
-    /// </summary>
-    public float vel;
+    /// <summary> 移動速度 </summary>
+    public float moveVel = 17;
 
-    /// <summary>
-    /// ジャンプスピード
-    /// </summary>
-    public float jumpSpeed = 35f;        //ジャンプする時に加える力
+    /// <summary> ジャンプスピード </summary>
+    public float jumpSpeed = 35f;
 
     public bool active{get;private set;}
-    bool walk;                  //歩ける判定用  
-    public bool jump;                  //ジャンプできる判定用
-    public bool damage{get; private set;}  //ダメージを受けたかを判定する用
-    int vec;                    //向いてる方向を示す変数
-    public bool onStage;               //何かの上に乗ってるかを判定する用
+    /// <summary> 歩ける判定用 </summary>
+    bool walk;
+    /// <summary> ジャンプできる判定用 </summary>
+    public bool jump;
+    /// <summary> ダメージを受けたかを判定する用 </summary>
+    public bool damage{get; private set;}
+    /// <summary> 向いてる方向を示す変数 </summary>
+    int vec;
+    /// <summary> 何かの上に乗ってるかを判定する用 </summary>
+    public bool onStage;
+    /// <summary>  </summary>
     private bool canCtrl = true;
     
-    float scale;           
-    float throwPower = 1500;        //投げるときに加える力 
-    [HideInInspector] public bool isHoldingObject;           //今オブジェクトを運んでるかどうかの判定
-    [HideInInspector] public GameObject objectBeingHolden;   //持ってるオブジェクト
-    GameObject objectToHold;        //持ち上げる時に使う自身の子オブジェクト
+    float scaleX;
+    /// <summary> 投げるときに加える力  </summary>
+    float throwPower = 1500;
+    /// <summary> 今オブジェクトを運んでるかどうかの判定 </summary>
+    [HideInInspector] public bool isHoldingObject;
+    /// <summary> 持ってるオブジェクト </summary>
+    [HideInInspector] public GameObject objectBeingHolden;
+    /// <summary> 持ち上げる時に使う自身の子オブジェクト </summary>
+    GameObject objectToHold;        
     HoldObjectScript holdScript;    
     Animator animController;        //アニメーター
     GameObject topOfHead;           //頭のてっぺんに置いてあるオブジェクト
     Rigidbody2D rigidBody;
+    [SerializeField] GameObject _ParentEnptyPrefab;
 
     //体力
     [SerializeField] private int _Life = 3;
@@ -50,6 +58,17 @@ public class PlayerController : MonoBehaviour
     //何回点滅したか
     private int _NowChangeCount = 0;
 
+    //移動範囲X
+    [SerializeField] private Vector2 _MoveRangeX = new Vector2(-50, 50);
+    //死ぬ高さ
+    [SerializeField] private float _DeathY = -30;
+    //死んでからマスクが小さくなるまでの時間
+    [SerializeField] private float _DeathWaitTime = 4;
+    //時間測定用
+    private TimerScript _TimerScript = new TimerScript();
+    //マスクマネージャー
+    private MaskManager _MaskManager;
+
     public int Life
     {
         get
@@ -67,7 +86,7 @@ public class PlayerController : MonoBehaviour
         active = false;
         isHoldingObject = false;
         onStage = false;
-        scale = transform.localScale.y;
+        scaleX = Mathf.Abs(transform.localScale.x);
         animController = GetComponent<Animator>();
         objectToHold = transform.Find("Body").transform.Find("CatchArea").gameObject;
         holdScript = objectToHold.GetComponent<HoldObjectScript>();
@@ -75,6 +94,7 @@ public class PlayerController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         _SpriteRenderer = GetComponent<SpriteRenderer>();
         _TimePerChangeAlpha = _MutekiTime / _ChangeAlphaNum;
+        _MaskManager = transform.Find("CircleMask").GetComponent<MaskManager>();
     }
 
     // Update is called once per frame
@@ -101,9 +121,24 @@ public class PlayerController : MonoBehaviour
                 else if(Input.GetKey(KeyCode.RightArrow))vec = 1;//右を向く
                 else vec = -1;
             }
-            
+
+            //左右どちらかが入力されてればその方向に移動
+            if (walk)
+            {
+                //移動範囲内なら
+                if (transform.position.x >= _MoveRangeX.x && transform.position.x <= _MoveRangeX.y)
+                {
+                    transform.Translate(moveVel * vec * Time.deltaTime, 0, 0);
+                }
+                else
+                {
+                    //強制的に位置を戻す
+                    transform.position = new Vector3(Mathf.Clamp(transform.position.x, _MoveRangeX.x, _MoveRangeX.y), transform.position.y, transform.position.z);
+                }
+            }
+
             //持ち上げたり投げたりする処理
-            if(Input.GetKeyDown(KeyCode.X))
+            if (Input.GetKeyDown(KeyCode.X))
             {
                 //目の前にブロックがあって何も持ち上げてない時
                 if(holdScript.Get_objectFrontMe() && !isHoldingObject)
@@ -150,6 +185,19 @@ public class PlayerController : MonoBehaviour
         if(damage)
         {
             rigidBody.velocity = new Vector2(0,0);
+            if (_TimerScript.IsTimeUp && !_MaskManager.IsFin)
+            {
+                //マスクマネージャーを開始
+                _MaskManager.StartMask(true);
+            }
+            else
+            {
+                //タイマー計測
+                _TimerScript.UpdateTimer();
+                if (_MaskManager.IsFin)
+                    //シーン読み込み
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
 
         //地面にいるかを取得
@@ -208,10 +256,11 @@ public class PlayerController : MonoBehaviour
         if (!canCtrl)
             return;
 
-        //左右どちらかが入力されてればその方向に移動
-        if(walk)
+        //落ちたなら
+        if(transform.position.y < _DeathY && !damage)
         {
-            transform.Translate(vel * vec,0,0);
+            //死ぬ
+            Death();
         }
 
         //何か持ってる時
@@ -235,7 +284,29 @@ public class PlayerController : MonoBehaviour
             }       
         }
 
-        transform.localScale = new Vector3(vec * scale,scale,1);
+        GameObject obj = transform.Find("Body").gameObject?.transform.Find("Foot")?.gameObject.GetComponent<AreaInObj>().Obj;
+        if (obj != null)
+        {
+            if(obj.transform.parent?.GetComponent<ColorObjectVer3>() && transform.parent == null)
+            {
+                if (!obj.transform.parent.CompareTag("Boss"))
+                {
+                    transform.SetParent(obj.transform.parent);
+                    scaleX = Mathf.Abs(transform.localScale.x);
+                }
+            }
+        }
+        else
+        {
+            if (!GetComponent<ColorObjectVer3>().Get_active())
+            {
+                transform.SetParent(null);
+                scaleX = Mathf.Abs(transform.localScale.x);
+            }
+        }
+
+        Vector3 scale = transform.localScale;
+        transform.localScale = new Vector3(vec * scaleX,scale.y,scale.z);
         animController.SetBool("Nothing",GetComponent<ColorObjectVer3>().Get_active());
         animController.SetBool("Damage",damage);
         animController.SetFloat("Abs_V_Vel",Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x));
@@ -256,9 +327,24 @@ public class PlayerController : MonoBehaviour
         _CanDamage = false;
         if(_Life == 0)
         {
-            //死んだ判定にする
-            damage = true;
+            //死んだ
+            Death();
         }
+    }
+
+    public void Death()
+    {
+        damage = true;
+        //音ならす
+        SoundManager.Instance.PlaySE("AfterDeath");
+        //タイマーセット
+        _TimerScript.ResetTimer(_DeathWaitTime);
+        //マスクをリセット
+        _MaskManager.IsFin = false;
+        //BGMを止める
+        SoundManager.Instance.StopBGM();
+        //死んだら動かなくする
+        GetComponent<Rigidbody2D>().isKinematic = true;
     }
 
     public void Set_onStage(bool value)

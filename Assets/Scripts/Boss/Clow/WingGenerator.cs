@@ -11,7 +11,7 @@ public class WingGenerator : MonoBehaviour
     /// <summary> 一周した回数 </summary>
     public int _RotatePeriodCounter = 0;
     /// <summary> 羽を飛ばす角度の範囲の最小値 </summary>
-    private int _MinAngle = 10;// + 180;
+    private int _MinAngle = 0;// + 180;
     /// <summary> 羽を飛ばす角度の範囲の最大値 </summary>
     private int _MaxAngle = 90;// + 180;
 
@@ -27,7 +27,10 @@ public class WingGenerator : MonoBehaviour
 
     }
 
-
+    /// <summary> 羽を飛ばす </summary>
+    /// <param name="wing">飛ばす羽のオブジェクト</param>
+    /// <param name="dir">飛ばす方向</param>
+    /// <param name="color">羽の色</param>
     public void ShotWing(GameObject wing,int dir ,ColorObjectVer3.OBJECT_COLOR3 color)
     {
         transform.Rotate(0,0,_RotateSpeed);
@@ -47,7 +50,7 @@ public class WingGenerator : MonoBehaviour
             _RotatePeriodCounter++;
             if(_RotatePeriodCounter % _RotatePeriod == 0)
             {
-                Debug.Log("RotatePeriodCounter::" + _RotatePeriodCounter);
+                //Debug.Log("RotatePeriodCounter::" + _RotatePeriodCounter);
             }
         }
 
@@ -63,6 +66,7 @@ public class WingGenerator : MonoBehaviour
         }
     }
 
+    /// <summary> 周期をリセット </summary>
     public void ResetPeriodCounter()
     {
         _RotatePeriodCounter = 0;

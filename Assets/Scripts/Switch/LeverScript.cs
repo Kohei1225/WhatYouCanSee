@@ -13,7 +13,7 @@ public class LeverScript : MonoBehaviour
     /// <summary> 同期する際の最初のレバーか </summary>
     private bool firstLever = false;
     /// <summary> バーの状態 </summary>
-    public int barPosition { get; private set; }
+    public int barPosition{ get; private set; } = 0;
     /// <summary> プレイヤーが近くにいる時(バーを操作できる状態) </summary>
     public bool canChangeBar { get; private set; }
     /// <summary> 実際に動くバーのオブジェクト </summary>
@@ -42,8 +42,9 @@ public class LeverScript : MonoBehaviour
         //バーの傾きを初期化
         //barObject.transform.localEulerAngles = new Vector3(0,0,barAngleList[barPosition]);
 
-        startAngle = barAngleList[barPosition];
-        endAngle = startAngle;
+        //endAngle - startAngleが0にならないように調整
+        startAngle = 0;
+        endAngle = barAngleList[barPosition];
         canChangeBar = false;
     }
 
@@ -92,22 +93,29 @@ public class LeverScript : MonoBehaviour
     /// <param name="barPos">同期元のレバーの状態</param>
     public void SyncLeverPos(int barPos)
     {
+        //Debug.Log(gameObject.name + "::SyncLeverPos()");
         //同期元のレバーだったら何もしない
         if(firstLever)
         {
+            //Debug.Log(gameObject.name + "::End");
             this.firstLever = false;
             return;
         }
 
+        //同期したらChangeBarPos()と同じように設定
+        this.timeSum = 0;
+        this.startAngle = barObject.transform.localEulerAngles.z;
         this.barPosition = barPos;
-        _SyncLever.SyncLeverPos(barPos);
+        this.endAngle = barAngleList[barPosition];
+
+        _SyncLever?.SyncLeverPos(barPos);
     }
 
     /// <summary> バーの角度を変更 </summary>
     public void ChangeBarPos()
     {
-        //Debug.Log("Lever");
-
+        //Debug.Log(gameObject.name + "::ChangeBarPos()");
+        
         timeSum = 0;
         
         startAngle = barObject.transform.localEulerAngles.z;

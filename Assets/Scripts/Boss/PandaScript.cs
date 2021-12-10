@@ -491,6 +491,9 @@ public class PandaScript : BossBase
         _LeverSwitch?.ResetBarPos();
 
         this._IsDead = true;
+
+        //音
+        SoundManager.Instance.PlaySE("Damage_1");
     }
 
     /// <summary> 防御 </summary>
@@ -588,6 +591,8 @@ public class PandaScript : BossBase
         vel = _kickVel;
         vel.x *= _Dir;
         GetComponent<Rigidbody2D>().velocity = vel;
+        //音
+        SoundManager.Instance.PlaySE("Kick");
 
         _HasFloat = false;
     }
@@ -604,6 +609,8 @@ public class PandaScript : BossBase
 
     void TaskKickExit()
     {
+        //音
+        SoundManager.Instance.PlaySE("Landing");
         _AnimController.SetBool("IsKick", false);
         TurnTo(_Player);
     }
@@ -620,6 +627,9 @@ public class PandaScript : BossBase
         vel = _kickVel*1.25f;
         vel.x = 0;
         GetComponent<Rigidbody2D>().velocity = vel;
+
+        //音
+        SoundManager.Instance.PlaySE("SuperKick");
 
         _HasFloat = false;
     }
@@ -644,6 +654,8 @@ public class PandaScript : BossBase
     {
         _AnimController.SetBool("IsKick", false);
         TurnTo(_Player);
+        //音
+        SoundManager.Instance.PlaySE("Landing");
     }
     #endregion
 
@@ -712,6 +724,8 @@ public class PandaScript : BossBase
         _Timer.ResetTimer(_SwingDownTime);
         _AnimController.SetBool("IsAttack", true);
         _AnimController.Play("Panda_SwingDown", 0, 0 );
+        //音
+        SoundManager.Instance.PlaySE("PandaAttack");
     }
 
     bool TaskSwingDownUpdate()
@@ -781,7 +795,8 @@ public class PandaScript : BossBase
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         _IsUnableBeAttacked = false;
 
-         
+        //音
+        SoundManager.Instance.PlaySE("Landing");
     }
     #endregion
 
@@ -793,6 +808,8 @@ public class PandaScript : BossBase
         _AnimController.SetBool("HasDamage", true);
         _AnimController.Play("Panda_Damage", 0, 0);
         _AnimController.SetBool("IsDefend", false);
+        //音
+        SoundManager.Instance.PlaySE("Damage_2");
     }
 
     bool TaskDamageUpdate()

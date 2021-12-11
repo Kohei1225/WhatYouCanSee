@@ -26,7 +26,7 @@ public class ButtonSwitchScript : MonoBehaviour
         //ボタンのサイズを取得
         Vector3 buttonSize = pushButtonObject.transform.localScale;
         float heightDifference = HEIGHT_NOT_PUSH - buttonSize.y;
-        if(isPushed)heightDifference = HEIGHT_ON_PUSH - buttonSize.y;
+        if(isPushed) heightDifference = HEIGHT_ON_PUSH - buttonSize.y;
 
         //ボタンの大きさを調整(踏んでる間はオブジェクトの大きさ自体が縮小する感じ)
         if(Mathf.Abs(heightDifference) > 0.001f)

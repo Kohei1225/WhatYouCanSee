@@ -287,9 +287,9 @@ public class PlayerController : MonoBehaviour
         GameObject obj = transform.Find("Body").gameObject?.transform.Find("Foot")?.gameObject.GetComponent<AreaInObj>().Obj;
         if (obj != null)
         {
-            if(obj.transform.parent?.GetComponent<ColorObjectVer3>() && transform.parent == null)
+            if(obj.transform.parent?.GetComponent<ColorObjectVer3>() && transform.parent == null && obj.transform.parent?.GetComponent<Rigidbody2D>())
             {
-                if (!obj.transform.parent.CompareTag("Boss"))
+                if (!obj.transform.parent.CompareTag("Boss") && obj.transform.parent.GetComponent<Rigidbody2D>().velocity == Vector2.zero)
                 {
                     transform.SetParent(obj.transform.parent);
                     scaleX = Mathf.Abs(transform.localScale.x);

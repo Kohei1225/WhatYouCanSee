@@ -21,6 +21,12 @@ public class PauseUI : MonoBehaviour
     void Update()
     {
         _Status = MapManager.screenStatus;
+        //セーブしました画面がある時はreturn
+        if (saveObject)
+        {
+            if (saveObject.activeSelf)
+                return;
+        }
         if (pauseObject.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Escape))

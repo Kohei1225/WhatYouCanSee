@@ -10,6 +10,7 @@ public class MaskManager : MonoBehaviour
     public float speed = 100;
     public float maxScale = 200;
     public GameObject blackBoard;
+    private PlayerController _PlayerController;
 
     public bool IsFin
     {
@@ -26,6 +27,9 @@ public class MaskManager : MonoBehaviour
     void Start()
     {
         blackBoard.SetActive(true);
+        _PlayerController = transform.parent.GetComponent<PlayerController>();
+        //プレイヤーを動けなくする
+        _PlayerController?.Set_canCtrl(false);
     }
 
     // Update is called once per frame
@@ -56,6 +60,8 @@ public class MaskManager : MonoBehaviour
                 _IsFin = true;
                 //x,yの大きさを最大にする
                 transform.localScale = (Vector3.right + Vector3.up) * maxScale + Vector3.forward;
+                //プレイヤーが動けるように
+                _PlayerController?.Set_canCtrl(true);
             }
         }
     }

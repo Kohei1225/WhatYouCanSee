@@ -38,6 +38,8 @@ public class EndManager : MonoBehaviour
     //ブラックボードが濃くなる時間
     [SerializeField] private float _FadeTime = 3;
 
+    [SerializeField] private PlayerController _PlayerController;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -133,6 +135,8 @@ public class EndManager : MonoBehaviour
                     _TmpState = StateEnum.END;
                     _State = StateEnum.WAIT;
                     _WaitTime = _EndWaitTime;
+                    //プレイヤーは動けなくなる
+                    _PlayerController.Set_canCtrl(false);
                 }
                 break;
             case StateEnum.END:

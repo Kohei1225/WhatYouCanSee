@@ -93,7 +93,20 @@ public class PauseUI : MonoBehaviour
     public void SaveClick()
     {
         PlayerPrefs.SetInt("LastGoNo", MapManager.lastGoNo);
+        PlayerPrefs.SetInt("NowNo", PlayerController_Map.nowNo);
+        PlayerPrefs.SetInt("GoWorldNo", CameraController_Map.goWorldNo);
         Debug.Log("セーブしたよ");
         PlayerPrefs.Save();
+    }
+
+    //再読み込み
+    public void ResetStageClick()
+    {
+        //マップマネージャーの状態を普通にする
+        MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
+        //時間を動かす
+        Time.timeScale = 1;
+        //同じシーンを読み込む
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

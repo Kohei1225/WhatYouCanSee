@@ -64,8 +64,12 @@ public class UFOChatcherScript : MonoBehaviour
                 {
                     if (_AreaObj != null && _CatchObj == null)
                     {
-                        _State = StateEnum.FIND_MOVE;
-                        SetToFromPosX(_AreaObj.transform.position.x);
+                        //速度Xが0だったら
+                        if(_AreaObj.GetComponent<Rigidbody2D>().velocity.magnitude <= 0.0001f)
+                        {
+                            _State = StateEnum.FIND_MOVE;
+                            SetToFromPosX(_AreaObj.transform.position.x);
+                        }
                     }
                 }
                 break;

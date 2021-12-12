@@ -28,12 +28,16 @@ public class TitleManager : MonoBehaviour
     public void ResetClick()
     {
         MapManager.lastGoNo = 0;
+        PlayerController_Map.nowNo = 0;
+        CameraController_Map.goWorldNo = 0;
         SceneManager.LoadScene(sceneName);
     }
 
     public void ContinueClick()
     {
         MapManager.lastGoNo = PlayerPrefs.GetInt("LastGoNo");
+        PlayerController_Map.nowNo = PlayerPrefs.GetInt("NowNo");
+        CameraController_Map.goWorldNo = PlayerPrefs.GetInt("GoWorldNo");
         SceneManager.LoadScene(sceneName);
     }
 }

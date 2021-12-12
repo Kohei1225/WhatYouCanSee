@@ -54,6 +54,7 @@ public class ColorObjectVer3 : MonoBehaviour
     bool inSameColor;   //同じ色に入っているかの判定(FrameRayOfObjectスクリプトから操作)
     bool onThePlayer;   //プレイヤーに持ち上げられてる判定
     float gravity = 0f;      //重力加速度を記憶しておく用
+    public bool isPlayersParent = false;   //プレイヤーが自分の子オブジェクトになるか
 
     GameManagerScript gameManagerScript;
     GameObject BodyObject;  //SetActiveで切り替える対象(実体に当たる部分)

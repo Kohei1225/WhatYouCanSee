@@ -58,7 +58,7 @@ public class MapManager : MonoBehaviour
     public static int lastGoNo = 11;
 
     //挑戦中のステージのアイコン番号
-    public static int tryNo = 0;
+    private int tryNo = 0;
 
     //LineRendererが動けるか
     private bool canMoveLine = false;
@@ -108,6 +108,7 @@ public class MapManager : MonoBehaviour
         SetPointsToLine();
 
         //テキストUIにステージ名を表示(更新)
+        tryNo = PlayerController_Map.nowNo;
         StageIcon nowStageIcon = stageIcons[tryNo].GetComponent<StageIcon>();
         string StageName = nowStageIcon.GetStageName();
         stageName_text.text = StageName;
@@ -135,8 +136,6 @@ public class MapManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 StageIcon stageIcon = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>();
-                //挑戦するステージアイコン記憶
-                tryNo = playerScript.GetGoNo();
                 //プレイヤージャンプ
                 playerScript.Jump();
                 //音再生

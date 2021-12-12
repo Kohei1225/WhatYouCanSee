@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         _SpriteRenderer = GetComponent<SpriteRenderer>();
         _TimePerChangeAlpha = _MutekiTime / _ChangeAlphaNum;
-        _MaskManager = transform.Find("CircleMask").GetComponent<MaskManager>();
+        _MaskManager = transform.Find("CircleMask")?.GetComponent<MaskManager>();
     }
 
     // Update is called once per frame
@@ -289,7 +289,8 @@ public class PlayerController : MonoBehaviour
         {
             if(obj.transform.parent?.GetComponent<ColorObjectVer3>() && transform.parent == null && obj.transform.parent?.GetComponent<Rigidbody2D>())
             {
-                if (!obj.transform.parent.CompareTag("Boss") && obj.transform.parent.GetComponent<Rigidbody2D>().velocity == Vector2.zero)
+                //そのオブジェクトが親になってくれるなら
+                if (obj.transform.parent.GetComponent<ColorObjectVer3>().isPlayersParent && obj.transform.parent.GetComponent<Rigidbody2D>().velocity == Vector2.zero)
                 {
                     transform.SetParent(obj.transform.parent);
                     scaleX = Mathf.Abs(transform.localScale.x);

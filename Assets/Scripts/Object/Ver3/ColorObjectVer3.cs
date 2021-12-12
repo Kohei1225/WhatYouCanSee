@@ -53,12 +53,13 @@ public class ColorObjectVer3 : MonoBehaviour
     bool onShadowRay;   //影に当たってる判定
     bool inSameColor;   //同じ色に入っているかの判定(FrameRayOfObjectスクリプトから操作)
     bool onThePlayer;   //プレイヤーに持ち上げられてる判定
-    float gravity;      //重力加速度を記憶しておく用
+    float gravity = 0f;      //重力加速度を記憶しておく用
 
     GameManagerScript gameManagerScript;
     GameObject BodyObject;  //SetActiveで切り替える対象(実体に当たる部分)
     SpriteRenderer _SpriteRenderer = null;
     SpriteShapeRenderer _SpriteShapeRenderer = null;
+    Rigidbody2D _RigidBody2d = null;
 
     // Start is called before the first frame update
     void Start()
@@ -68,11 +69,14 @@ public class ColorObjectVer3 : MonoBehaviour
         if(gameObject.tag == "BackGround")gameObject.layer = LayerMask.NameToLayer("BACKGROUND");
         else if(gameObject.tag == "ColorObject")gameObject.layer = LayerMask.NameToLayer("Color");
         gameManagerScript = GameObject.Find("Managers").GetComponent<GameManagerScript>();
+
+        _RigidBody2d = GetComponent<Rigidbody2D>() ?? null;
         if(isObject)
         {
             if(!transform.Find("Body"))Debug.Log(gameObject.name + "にはBodyなし");
             else BodyObject = transform.Find("Body").gameObject;
-            gravity = GetComponent<Rigidbody2D>().gravityScale;
+
+            if(_RigidBody2d != null)gravity = _RigidBody2d.gravityScale;
 
             //if(!gameManagerScript.existShadow)hasShadow = false;
             if(BodyObject.transform.Find("ShadowCaster"))
@@ -164,15 +168,23 @@ public class ColorObjectVer3 : MonoBehaviour
 
         if(onThePlayer)
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
-            GetComponent<Rigidbody2D>().gravityScale = 0;
+            if(_RigidBody2d != null)
+            {
+                GetComponent<Rigidbody2D>().velocity = new Vector2(0,0);
+                GetComponent<Rigidbody2D>().gravityScale = 0;
+                GetComponent<Rigidbody2D>().mass = 0;
+            }
+
             transform.rotation = Quaternion.Euler(0.0f, 0.0f, 0.0f);
-            GetComponent<Rigidbody2D>().mass = 0;
         }
         else 
         {
-            GetComponent<Rigidbody2D>().gravityScale = gravity;
-            GetComponent<Rigidbody2D>().mass = 2;
+            if(_RigidBody2d != null)
+            {
+                GetComponent<Rigidbody2D>().gravityScale = gravity;
+                GetComponent<Rigidbody2D>().mass = 2;
+            }
+
         }
     }
 

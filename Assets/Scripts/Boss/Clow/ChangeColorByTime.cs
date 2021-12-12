@@ -34,7 +34,6 @@ public class ChangeColorByTime : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _CanChangeColor = false;
         _ColorObjectScript = GetComponent<ColorObjectVer3>();
         _Timer.ResetTimer(_ColorChangeInterval);
     }

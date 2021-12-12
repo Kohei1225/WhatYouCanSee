@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
         rigidBody = GetComponent<Rigidbody2D>();
         _SpriteRenderer = GetComponent<SpriteRenderer>();
         _TimePerChangeAlpha = _MutekiTime / _ChangeAlphaNum;
-        _MaskManager = transform.Find("CircleMask").GetComponent<MaskManager>();
+        _MaskManager = transform.Find("CircleMask")?.GetComponent<MaskManager>();
     }
 
     // Update is called once per frame

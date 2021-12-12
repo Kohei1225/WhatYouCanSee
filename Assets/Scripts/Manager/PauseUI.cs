@@ -7,6 +7,7 @@ public class PauseUI : MonoBehaviour
 {
     public GameObject pauseObject;
     public GameObject optionObject;
+    public GameObject saveObject;
     public string sceneName;
     [SerializeField] private MapManager.ScreenStatuses _Status;
 
@@ -97,6 +98,10 @@ public class PauseUI : MonoBehaviour
         PlayerPrefs.SetInt("GoWorldNo", CameraController_Map.goWorldNo);
         Debug.Log("セーブしたよ");
         PlayerPrefs.Save();
+        //セーブしましたを表示
+        saveObject.SetActive(true);
+        //ポーズ非表示
+        pauseObject.SetActive(false);
     }
 
     //再読み込み
@@ -108,5 +113,14 @@ public class PauseUI : MonoBehaviour
         Time.timeScale = 1;
         //同じシーンを読み込む
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    //セーブしましたを閉じるボタン
+    public void CloseSaveClick()
+    {
+        //セーブしましたを非表示
+        saveObject.SetActive(false);
+        //ポーズ表示
+        pauseObject.SetActive(true);
     }
 }

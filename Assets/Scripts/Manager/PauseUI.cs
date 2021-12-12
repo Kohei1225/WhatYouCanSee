@@ -7,6 +7,7 @@ public class PauseUI : MonoBehaviour
 {
     public GameObject pauseObject;
     public GameObject optionObject;
+    public GameObject saveObject;
     public string sceneName;
     [SerializeField] private MapManager.ScreenStatuses _Status;
 
@@ -20,6 +21,12 @@ public class PauseUI : MonoBehaviour
     void Update()
     {
         _Status = MapManager.screenStatus;
+        //セーブしました画面がある時はreturn
+        if (saveObject)
+        {
+            if (saveObject.activeSelf)
+                return;
+        }
         if (pauseObject.activeSelf)
         {
             if (Input.GetKeyDown(KeyCode.Escape))
@@ -93,7 +100,33 @@ public class PauseUI : MonoBehaviour
     public void SaveClick()
     {
         PlayerPrefs.SetInt("LastGoNo", MapManager.lastGoNo);
+        PlayerPrefs.SetInt("NowNo", PlayerController_Map.nowNo);
+        PlayerPrefs.SetInt("GoWorldNo", CameraController_Map.goWorldNo);
         Debug.Log("セーブしたよ");
         PlayerPrefs.Save();
+        //セーブしましたを表示
+        saveObject.SetActive(true);
+        //ポーズ非表示
+        pauseObject.SetActive(false);
+    }
+
+    //再読み込み
+    public void ResetStageClick()
+    {
+        //マップマネージャーの状態を普通にする
+        MapManager.screenStatus = MapManager.ScreenStatuses.NORMAL;
+        //時間を動かす
+        Time.timeScale = 1;
+        //同じシーンを読み込む
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    //セーブしましたを閉じるボタン
+    public void CloseSaveClick()
+    {
+        //セーブしましたを非表示
+        saveObject.SetActive(false);
+        //ポーズ表示
+        pauseObject.SetActive(true);
     }
 }

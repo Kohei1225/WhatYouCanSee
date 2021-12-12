@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UFOChatcherScript : MonoBehaviour
+public class UFOCatcherScript : MonoBehaviour
 {
-    private bool _InChatchArea = false;
-    [SerializeField] private GameObject _ChatchArea;
+    private bool _InCatchArea = false;
+    [SerializeField] private GameObject _CatchArea;
     [SerializeField] private GameObject _CatchObj = null;
     [SerializeField] private float _MoveX = 50;
     private float[] _RangeX;
@@ -46,7 +46,7 @@ public class UFOChatcherScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        InAreaScript inAreaScript = _ChatchArea?.GetComponent<InAreaScript>();
+        InAreaScript inAreaScript = _CatchArea?.GetComponent<InAreaScript>();
         GameObject beforeAreaObj = _AreaObj;
         _AreaObj = inAreaScript?.ObjInArea;
 
@@ -64,8 +64,12 @@ public class UFOChatcherScript : MonoBehaviour
                 {
                     if (_AreaObj != null && _CatchObj == null)
                     {
-                        _State = StateEnum.FIND_MOVE;
-                        SetToFromPosX(_AreaObj.transform.position.x);
+                        //速度Xが0だったら
+                        if(_AreaObj.GetComponent<Rigidbody2D>().velocity.magnitude <= 0.0001f)
+                        {
+                            _State = StateEnum.FIND_MOVE;
+                            SetToFromPosX(_AreaObj.transform.position.x);
+                        }
                     }
                 }
                 break;

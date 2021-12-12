@@ -7,8 +7,8 @@ public class PlayerController_Map : MonoBehaviour
 {
     private List<Vector3> clearedPoints;
     public MapManager mapManager;
-    private int goNo;
-    private int nowNo;
+    public static int nowNo;
+    private int goNo = nowNo;
     private bool canMove = false;
     public float speed = 15f;
     private float beforeKeyX = 0;
@@ -36,26 +36,24 @@ public class PlayerController_Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //挑戦中のステージ番号から読み取り
-        goNo = MapManager.tryNo;
 
         if (clearedPoints == null)
         {
             Debug.Log("clearedPointsがnull");
         }
 
-        transform.position = clearedPoints[goNo] + Vector3.up * shiftY;
+        transform.position = clearedPoints[nowNo] + Vector3.up * shiftY;
 
         anim = GetComponent<Animator>();
         firstLocalScaleX = transform.localScale.x;
 
         //hereIconを見えるようにする
-        GameObject hereIcon = mapManager.getStageIcon(goNo).transform.GetChild(0).gameObject;
+        GameObject hereIcon = mapManager.getStageIcon(nowNo).transform.GetChild(0).gameObject;
         hereIcon.SetActive(true);
         //ステージパネルを下げている状態にする
         stagePanel.SetActive(true);
         //看板の名前を更新
-        int worldNo = (int)mapManager.getStageIcon(goNo).GetComponent<StageIcon>().worldNo;
+        int worldNo = (int)mapManager.getStageIcon(nowNo).GetComponent<StageIcon>().worldNo;
         string worldName = mapManager.worldName[worldNo];
         //ワールド名変更
         worldName_text.text = worldName;
@@ -170,6 +168,8 @@ public class PlayerController_Map : MonoBehaviour
             hereIcon.SetActive(true);
             //ステージパネルを見えるようにする
             stagePanel.SetActive(true);
+            //目的の場所は今いる場所に
+            nowNo = goNo;
 
             //カメラ位置調整(カメラ移動の終わり)
             cameraController_map.TranslateGoPos();

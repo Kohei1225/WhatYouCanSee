@@ -5,20 +5,12 @@ using UnityEngine.UI;
 
 public class EndRollManager : MonoBehaviour
 {
-    ////元の文字列
-    //[SerializeField, TextArea(10, 10)] private string _Str;
-    ////整理された文字列
-    //private string _NewString;
-    ////列数
-    //private int _RowNum = 0;
-    ////1行に書ける最大の文字数
-    //[SerializeField] private int _MaxNumPerRow = 10;
-    //テキストコンポーネント
-    private Text _Text;
     //上に動くまでの待機時間
     [SerializeField] private float _StartTime = 3;
+    //流れ終わってからの待機時間
+    [SerializeField] private float _EndTime = 3;
     //時間測定用
-    private TimerScript _TimerScript = new TimerScript();
+    private float _Time = 0;
     //上に動くスピード
     [SerializeField] private float _MoveSpeed = 20;
     //レクトトランスフォーム
@@ -29,23 +21,25 @@ public class EndRollManager : MonoBehaviour
 
     public enum StateEnum
     {
-        WAIT,
+        FIRST_WAIT,
         MOVE,
+        END_WAIT,
         END
     }
-    private StateEnum _State = StateEnum.WAIT;
+    private StateEnum _State = StateEnum.FIRST_WAIT;
+
+    public StateEnum State
+    {
+        get
+        {
+            return _State;
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
-        //_Text = GetComponent<Text>();
-        _TimerScript.ResetTimer(_StartTime);
+        _Time = 0;
         _RectTransform = GetComponent<RectTransform>();
-        //_NewString = "";
-        //CountRowNum();
-        //Debug.Log("元の文字列:" + _Str);
-        //Debug.Log("行数:" + _RowNum);
-        //Debug.Log("文字列:" + _NewString);
-        //_Text.text = _Str;
         _EndPosY = _RectTransform.anchoredPosition.y + SCREEN_HEIGHT + _RectTransform.sizeDelta.y;
 
     }
@@ -55,11 +49,12 @@ public class EndRollManager : MonoBehaviour
     {
         switch (_State)
         {
-            case StateEnum.WAIT:
-                _TimerScript.UpdateTimer();
-                if (_TimerScript.IsTimeUp)
+            case StateEnum.FIRST_WAIT:
+                _Time += Time.deltaTime;
+                if (_Time >= _StartTime)
                 {
                     _State = StateEnum.MOVE;
+                    _Time = 0;
                 }
                 break;
             case StateEnum.MOVE:
@@ -68,49 +63,17 @@ public class EndRollManager : MonoBehaviour
                 _RectTransform.anchoredPosition = pos;
                 if(_RectTransform.anchoredPosition.y >= _EndPosY)
                 {
+                    _State = StateEnum.END_WAIT;
+                }
+                break;
+            case StateEnum.END_WAIT:
+                _Time += Time.deltaTime;
+                if (_Time >= _EndTime)
+                {
                     _State = StateEnum.END;
+                    _Time = 0;
                 }
                 break;
         }
     }
-
-    //private void CountRowNum()
-    //{
-    //    int numPerRow = 0;
-    //    for(int i = 0; i < _Str.Length; i++)
-    //    {
-    //        char c = _Str[i];
-    //        numPerRow++;
-    //        //もし文字が改行だったら
-    //        if (c.Equals('\n'))
-    //        {
-    //            //1行の個数リセット
-    //            numPerRow = 0;
-    //            //行数加算
-    //            _RowNum++;
-    //            //テキストに追加
-    //            _NewString += c;
-    //        }
-    //        //もし1行の限界を超えるなら
-    //        else if(numPerRow > _MaxNumPerRow)
-    //        {
-    //            //1行の個数リセット
-    //            numPerRow = 0;
-    //            //行数加算
-    //            _RowNum++;
-    //            //テキストに改行を加算
-    //            _NewString += '\n';
-
-    //            //テキストにcを追加
-    //            _NewString += c;
-    //            //1行の個数加算
-    //            numPerRow++;
-    //        }
-    //        else
-    //        {
-    //            //テキストにcを追加
-    //            _NewString += c;
-    //        }
-    //    }
-    //}
 }

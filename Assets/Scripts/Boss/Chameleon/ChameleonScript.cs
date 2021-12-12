@@ -407,6 +407,9 @@ public class ChameleonScript : BossBase
         }
         //判定あり
         DamageOrNot(true);
+        //色を緑に
+        _ColorObjectVer3.colorType = _PhaseColorEnums[0];
+
     }
 
     private bool TaskScaredUpdate()

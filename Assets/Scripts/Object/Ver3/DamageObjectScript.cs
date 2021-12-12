@@ -20,18 +20,12 @@ public class DamageObjectScript : MonoBehaviour
     void OnCollisionEnter2D(Collision2D otherObject)
     {
         //プレイヤーに当たったらダメージを与える
-        if(otherObject.gameObject.tag == "Player")
-        {
-            otherObject.gameObject.GetComponent<PlayerController>().Damage();
-        }
+        otherObject.gameObject.GetComponent<PlayerController>()?.Damage();
     }
 
     void OnTriggerEnter2D(Collider2D otherObject)
     {
         //プレイヤーに当たったらダメージを与える
-        if (otherObject.gameObject.transform.root.gameObject.tag == "Player")
-        {
-            otherObject.gameObject.transform.root.gameObject.GetComponent<PlayerController>().Damage();
-        }
+        otherObject.gameObject.transform.root.gameObject.GetComponent<PlayerController>()?.Damage();
     }
 }

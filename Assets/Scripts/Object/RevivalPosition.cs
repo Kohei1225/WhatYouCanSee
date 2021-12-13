@@ -6,15 +6,17 @@ using UnityEngine;
 public class RevivalPosition : MonoBehaviour
 {
     /// <summary> 復活する座標 </summary>
-    [SerializeField] private Vector3 pos;
+    [SerializeField] private Vector3 _RevivalPos;
 
     private bool _IsOutofCamera = false;
     private Rigidbody2D _RigidBody2 = null;
+    private ColorObjectVer3 _ColorObjVer3 = null;
 
     // Start is called before the first frame update 
     void Start()
     {
         _RigidBody2 = GetComponent<Rigidbody2D>();
+        _ColorObjVer3 = GetComponent<ColorObjectVer3>() ?? null;
     }
 
     // Update is called once per frame
@@ -24,7 +26,12 @@ public class RevivalPosition : MonoBehaviour
         {
             _IsOutofCamera = false;
             _RigidBody2.velocity = Vector2.zero;
-            transform.position = pos;
+            transform.position = _RevivalPos;
+
+            if (_ColorObjVer3 != null)
+            {
+                _ColorObjVer3.canHold = true;
+            }
         }
     }
 

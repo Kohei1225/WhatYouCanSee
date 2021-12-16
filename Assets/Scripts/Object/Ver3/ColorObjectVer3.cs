@@ -23,6 +23,7 @@ public class ColorObjectVer3 : MonoBehaviour
         LIME,           //黄緑色
         GRAY,           //灰色
         DARK_YELLOW,   //明るい黄色
+        BROWN,
     }
     ////順番(enum)にあった色
     //private static Color[] _Colors =
@@ -253,7 +254,9 @@ public class ColorObjectVer3 : MonoBehaviour
             case OBJECT_COLOR3.DARK_YELLOW:
                 color = new Color(142f/255, 136f/255, 0, 1);
                 break;
-
+            case OBJECT_COLOR3.BROWN:
+                color = new Color(97f / 255, 46f / 255, 4f / 255);
+                break;
             default: break;
         }
         return new Color(color.r, color.g,color.b, originAlpha);

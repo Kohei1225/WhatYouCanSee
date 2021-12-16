@@ -331,6 +331,11 @@ public class PlayerController : MonoBehaviour
             //死んだ
             Death();
         }
+        else
+        {
+            //音ならす
+            SoundManager.Instance.PlaySE("PlayerDamage");
+        }
     }
 
     public void Death()

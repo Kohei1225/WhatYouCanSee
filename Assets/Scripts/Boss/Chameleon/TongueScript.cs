@@ -190,4 +190,14 @@ public class TongueScript : MonoBehaviour
         _LineRenderer.positionCount = 2;
         _LineRenderer.SetPositions(new Vector3[] {transform.position, transform.position});
     }
+
+
+    //舌強化バージョン
+    public void StrongerTongue()
+    {
+        //伸びてる時間0
+        _StretchingTime = 0;
+        //スピード1.5ばい
+        _StretchSpeed *= 1.5f;
+    }
 }

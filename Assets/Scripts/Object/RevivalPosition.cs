@@ -23,7 +23,7 @@ public class RevivalPosition : MonoBehaviour
     {
         _RigidBody2 = GetComponent<Rigidbody2D>();
         _ColorObjVer3 = GetComponent<ColorObjectVer3>() ?? null;
-        _CurrentLeverState = _Lever.barPosition;
+        _CurrentLeverState = (int)(_Lever?.barPosition);
     }
 
     // Update is called once per frame

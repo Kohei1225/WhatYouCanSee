@@ -23,18 +23,17 @@ public class RevivalPosition : MonoBehaviour
     {
         _RigidBody2 = GetComponent<Rigidbody2D>();
         _ColorObjVer3 = GetComponent<ColorObjectVer3>() ?? null;
-        _CurrentLeverState = (int)(_Lever?.barPosition);
+        if(_Lever != null)
+        {
+            _CurrentLeverState = _Lever.barPosition;
+        }
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        //レバーが更新されたら
-        if(_CurrentLeverState != _Lever?.barPosition)
-        {
-            ResetPos();
-            _CurrentLeverState = (int)(_Lever?.barPosition);
-        }
+
 
         //カメラ外に出たら
         if(_IsOutofCamera)
@@ -42,6 +41,19 @@ public class RevivalPosition : MonoBehaviour
             _IsOutofCamera = false;
             ResetPos();
         }
+
+        if(_Lever == null)
+        {
+            return;
+        }
+
+        //レバーが更新されたら
+        if(_CurrentLeverState != _Lever.barPosition)
+        {
+            ResetPos();
+            _CurrentLeverState = _Lever.barPosition;
+        }
+
     }
 
     private void OnBecameInvisible()

@@ -14,7 +14,7 @@ public class LifeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _RectTransform = _HeartPrefab.GetComponent<RectTransform>();
+        _RectTransform = GetComponent<RectTransform>();
         _MaxLife = _PlayerController.Life;
         float scaleX = _RectTransform.sizeDelta.x;
         //左端のX座標

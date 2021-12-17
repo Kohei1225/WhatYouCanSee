@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class CreditManager : MonoBehaviour
 {
@@ -21,13 +23,16 @@ public class CreditManager : MonoBehaviour
     [SerializeField] private float _SecondWaitTime = 3;
     [SerializeField] private float _LastWaitTime = 1;
 
+    [SerializeField] private Text _DendaiText;
+    [SerializeField] private TextMeshProUGUI _AMText;
 
     // Start is called before the first frame update
     void Start()
     {
-        Color color = _SpriteRendererLogo.color;
-        color.a = 0;
-        _SpriteRendererLogo.color = color;
+        float alpha = 0;
+        _SpriteRendererLogo.color = GetChangeColor(_SpriteRendererLogo.color, alpha);
+        _DendaiText.color = GetChangeColor(_DendaiText.color, alpha);
+        _AMText.color = GetChangeColor(_AMText.color, alpha);
     }
 
     // Update is called once per frame
@@ -45,9 +50,10 @@ public class CreditManager : MonoBehaviour
                 }
                 break;
             case StateEnum.LOGO_FADE_IN:
-                Color color = _SpriteRendererLogo.color;
-                color.a = Mathf.Lerp(0, 1, _Time / _FadeTime);
-                _SpriteRendererLogo.color = color;
+                float alpha = Mathf.Lerp(0, 1, _Time / _FadeTime);
+                _SpriteRendererLogo.color = GetChangeColor(_SpriteRendererLogo.color, alpha);
+                _DendaiText.color = GetChangeColor(_DendaiText.color, alpha);
+                _AMText.color = GetChangeColor(_AMText.color, alpha);
                 if (_Time >= _FadeTime)
                 {
                     _Time = 0;
@@ -62,9 +68,10 @@ public class CreditManager : MonoBehaviour
                 }
                 break;
             case StateEnum.LOGO_FADE_OUT:
-                color = _SpriteRendererLogo.color;
-                color.a = Mathf.Lerp(1, 0, _Time / _FadeTime);
-                _SpriteRendererLogo.color = color;
+                alpha = Mathf.Lerp(1, 0, _Time / _FadeTime);
+                _SpriteRendererLogo.color = GetChangeColor(_SpriteRendererLogo.color, alpha);
+                _DendaiText.color = GetChangeColor(_DendaiText.color, alpha);
+                _AMText.color = GetChangeColor(_AMText.color, alpha);
                 if (_Time >= _FadeTime)
                 {
                     _Time = 0;
@@ -78,5 +85,10 @@ public class CreditManager : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    private Color GetChangeColor(Color color, float alpha)
+    {
+        return new Color(color.r, color.g, color.b, alpha);
     }
 }

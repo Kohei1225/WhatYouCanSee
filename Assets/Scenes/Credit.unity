@@ -389,6 +389,8 @@ MonoBehaviour:
   _FirstWaitTime: 1
   _SecondWaitTime: 3
   _LastWaitTime: 1
+  _DendaiText: {fileID: 1665933614}
+  _AMText: {fileID: 98590455}
 --- !u!1001 &161895981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -469,6 +471,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.01
   isFadeIn: 0
+--- !u!20 &161895984 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 2060966624171422198, guid: e31bc40899d66452293e29e9d3b9774e, type: 3}
+  m_PrefabInstance: {fileID: 161895981}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &814828846
 GameObject:
   m_ObjectHideFlags: 0
@@ -537,8 +544,8 @@ Canvas:
   m_GameObject: {fileID: 814828846}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 1
+  m_Camera: {fileID: 161895984}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -546,7 +553,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_SortingLayerID: 0
+  m_SortingLayerID: 1908432107
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!224 &814828850

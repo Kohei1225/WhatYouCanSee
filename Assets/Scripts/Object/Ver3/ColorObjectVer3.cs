@@ -23,7 +23,7 @@ public class ColorObjectVer3 : MonoBehaviour
         LIME,           //黄緑色
         GRAY,           //灰色
         DARK_YELLOW,   //明るい黄色
-        BACKGROUND,     //背景の色
+        BROWN,
     }
     ////順番(enum)にあった色
     //private static Color[] _Colors =
@@ -40,7 +40,6 @@ public class ColorObjectVer3 : MonoBehaviour
     //    new Color(1,165f/255f,0),
     //    new Color(0,1,0),
     //    new Color(118f/255,118f/255f,118f/255f),
-    //    new Color(0,0,0) //背景の色？
     //};
     public OBJECT_COLOR3 colorType; //色のタイプ
     public bool isObject;           //ステージ上にあるかどうか(背景ならfalse)
@@ -229,7 +228,7 @@ public class ColorObjectVer3 : MonoBehaviour
                 break;
             
             case OBJECT_COLOR3.MAGENTA:
-                color = new Color(225f/255f,0,255f/255f);
+                color = new Color(228f/255f,0,127f/255f);
                 break;
 
             case OBJECT_COLOR3.YELLOW:
@@ -255,7 +254,9 @@ public class ColorObjectVer3 : MonoBehaviour
             case OBJECT_COLOR3.DARK_YELLOW:
                 color = new Color(142f/255, 136f/255, 0, 1);
                 break;
-
+            case OBJECT_COLOR3.BROWN:
+                color = new Color(97f / 255, 46f / 255, 4f / 255);
+                break;
             default: break;
         }
         return new Color(color.r, color.g,color.b, originAlpha);

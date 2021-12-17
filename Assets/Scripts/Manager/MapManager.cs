@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MapManager : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class MapManager : MonoBehaviour
 
     private GameObject[] stageIcons;
     //アイコンの数
-    public int stageIconNum = 12;
+    private int stageIconNum = 13;
     private LineRenderer lr;
     //
     //始点の色(線)
@@ -45,8 +46,8 @@ public class MapManager : MonoBehaviour
     //プレイヤーアニメーション
     private Animator playerAnim;
 
-    public Text stageName_text;
-    public Text stageName2_text;
+    public TextMeshProUGUI stageName_text;
+    public TextMeshProUGUI stageName2_text;
 
     //public static bool isClear = false;
 
@@ -55,7 +56,7 @@ public class MapManager : MonoBehaviour
     public float appearSpeed = 0.1f;
 
     //移動可能アイコン番号
-    public static int lastGoNo = 11;
+    public static int lastGoNo = 12;
 
     //挑戦中のステージのアイコン番号
     private int tryNo = 0;
@@ -100,7 +101,7 @@ public class MapManager : MonoBehaviour
         lr = GetComponent<LineRenderer>();
         //Vector3[] points = new Vector3[stageIcons.Length];
         playerScript = GameObject.FindWithTag("Player").GetComponent<PlayerController_Map>();
-        stageName_text = GameObject.Find("StageName").GetComponent<Text>();
+        stageName_text = GameObject.Find("StageName").GetComponent<TextMeshProUGUI>();
         playerAnim = GameObject.FindWithTag("Player").GetComponent<Animator>();
 
         lr.startColor = firstColor;

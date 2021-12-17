@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class PlayerController_Map : MonoBehaviour
 {
@@ -30,8 +31,12 @@ public class PlayerController_Map : MonoBehaviour
 
     public GameObject stagePanel;
 
-    public Text worldName_text;
+    public TextMeshProUGUI worldName_text;
     public WorldSignboardScript worldSignboardScript;
+
+    //ステージの画面を見せるもの
+    [SerializeField] private Image _StageImage;
+
 
     // Start is called before the first frame update
     void Start()
@@ -57,6 +62,14 @@ public class PlayerController_Map : MonoBehaviour
         string worldName = mapManager.worldName[worldNo];
         //ワールド名変更
         worldName_text.text = worldName;
+        //ステージ画像を取り替え
+        Sprite sprite = Resources.Load<Sprite>("Sprites/Worlds/" + mapManager.getStageIcon(goNo).GetComponent<StageIcon>().GetStageName());
+        if (sprite == null)
+            Debug.Log("ステージ画像が見つからない");
+        else
+        {
+            _StageImage.sprite = sprite;
+        }
         //アイコンにあるワールドから流す曲を決める
         mapManager.PlayWorldBGM(worldNo);
     }
@@ -180,6 +193,14 @@ public class PlayerController_Map : MonoBehaviour
             //看板を出す
             worldSignboardScript.Init(false);
             worldSignboardScript.Set_isMove(true);
+            //ステージ画像を取り替え
+            Sprite sprite = Resources.Load<Sprite>("Sprites/Worlds/" + mapManager.getStageIcon(goNo).GetComponent<StageIcon>().GetStageName());
+            if (sprite == null)
+                Debug.Log("ステージ画像が見つからない");
+            else
+            {
+                _StageImage.sprite = sprite;
+            }
             //アイコンにあるワールドから流す曲を決める
             mapManager.PlayWorldBGM(worldNo);
             return;

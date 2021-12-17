@@ -201,3 +201,4 @@ MonoBehaviour:
   isObject: 0
   hasShadow: 0
   canHold: 0
+  isPlayersParent: 0

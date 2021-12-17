@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class GoalController : MonoBehaviour
 {
@@ -137,7 +138,7 @@ public class GoalController : MonoBehaviour
             CameraController camCtrl = GameObject.FindWithTag("MainCamera").GetComponent<CameraController>();
             camCtrl.enabled = true;
             textPanel.SetActive(true);
-            textPanel.GetComponent<Text>().text = "Game Clear";
+            textPanel.GetComponent<TextMeshProUGUI>().text = "Game Clear";
 
             canSuck = true;
             //音ならす

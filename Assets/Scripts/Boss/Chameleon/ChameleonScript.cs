@@ -219,7 +219,7 @@ public class ChameleonScript : BossBase
                 break;
             case 2:
                 //交互にやる
-                if (_CharaUpdateCount % 2 == 0)
+                if (_CharaUpdateCount % 4 == 0)
                 {
                     _TaskList.AddTask(TaskEnum.TRANSPARENT);
                     _TaskList.AddTask(TaskEnum.TRANSLATE);
@@ -228,7 +228,7 @@ public class ChameleonScript : BossBase
                 }
                 else
                 {
-                    Attack1();
+                    Attack2();
                 }
                 break;
         }
@@ -525,7 +525,12 @@ public class ChameleonScript : BossBase
 
     public override void Attack2()
     {
-        throw new System.NotImplementedException();
+        //プレイヤーを向く
+        TurnTo(_Player);
+        //スクリプトの初期化
+        _TongueScript.SetStretch();
+        //リスト追加
+        _TaskList.AddTask(TaskEnum.TONGUE_ATTACK);
     }
 
     public override void Attack3()
@@ -557,7 +562,13 @@ public class ChameleonScript : BossBase
                 GameObject bee = Instantiate(_BeePrefab, _BeePosObj[_Phase].transform.position, Quaternion.identity);
                 bee.GetComponent<BeeScript>().Player = _Player;
                 _BeeObjs.Add(bee);
-                
+                //ラストフェーズ
+                if (_Phase == _MaxPhase)
+                {
+                    //したが高速に
+                    _TongueScript.StrongerTongue();
+                }
+
             }
             if (_Phase != 2)
             {

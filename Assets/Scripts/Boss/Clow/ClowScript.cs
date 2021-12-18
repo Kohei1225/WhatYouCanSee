@@ -614,7 +614,10 @@ public class ClowScript : BossBase
         TurnTo(_Player);
         _WaitTimer.UpdateTimer();
         _WingGenerator.ShotWing(_WingPrefab,_Dir,_WingColors[_VisualState - 1,_WingColorNum]);
-        _IntervalRotate._CanRotate = false;
+        if (_CurrentHP != 1)
+        {
+            _IntervalRotate._CanRotate = false;
+        }
         return _WaitTimer.IsTimeUp;
     }
 

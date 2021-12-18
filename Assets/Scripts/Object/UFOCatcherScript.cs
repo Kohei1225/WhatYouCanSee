@@ -16,7 +16,6 @@ public class UFOCatcherScript : MonoBehaviour
     private float _Time = 0;
     [SerializeField] private GameObject _AreaObj = null;
     //private bool isCatch = false;
-    private float _ObjGravityScale;
     [SerializeField] private float _WaitTime = 2;
     private LineRenderer _LineRenderer;
     [SerializeField] private float _DeltaCatchY = -5;

@@ -97,7 +97,7 @@ MonoBehaviour:
   canMove: 1
   isShrink: 0
   speed: 150
-  maxScale: 200
+  maxScale: 220
   blackBoard: {fileID: 0}
 --- !u!1 &1076299636666512443
 GameObject:
@@ -232,7 +232,7 @@ MonoBehaviour:
   - {x: -1.0002711, y: 0.098400794, z: 0}
   m_ShapePathHash: -1504377493
   m_Mesh: {fileID: 0}
-  m_InstanceId: 98336
+  m_InstanceId: 727456
 --- !u!1 &3238795088645205694
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +327,7 @@ MonoBehaviour:
   - {x: -0.56600624, y: 0.06609519, z: 0}
   m_ShapePathHash: -1431389970
   m_Mesh: {fileID: 0}
-  m_InstanceId: 98330
+  m_InstanceId: 727450
 --- !u!1 &4179578707476982527
 GameObject:
   m_ObjectHideFlags: 0
@@ -876,15 +876,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed825a97d06f34885b526e0c23a95040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vel: 0.36
+  moveVel: 17
   jumpSpeed: 35
   jump: 0
   onStage: 0
   isHoldingObject: 0
   objectBeingHolden: {fileID: 0}
+  _ParentEnptyPrefab: {fileID: 0}
   _Life: 3
   _MutekiTime: 3
   _ChangeAlphaNum: 20
+  _MoveRangeX: {x: -50, y: 50}
+  _DeathY: -30
+  _DeathWaitTime: 4
 --- !u!114 &8515560821544124293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -926,6 +930,7 @@ MonoBehaviour:
   isObject: 1
   hasShadow: 0
   canHold: 0
+  isPlayersParent: 0
 --- !u!50 &5766122731173275664
 Rigidbody2D:
   serializedVersion: 4

@@ -24,6 +24,9 @@ public class SoundVolume : MonoBehaviour
     //ミュートか覚えるためのbool
     public static bool isMute_BGM;
     public static bool isMute_SE;
+    //トグル
+    [SerializeField] private Toggle BGMToggle;
+    [SerializeField] private Toggle SEToggle;
 
     private static bool isFirst = true;
 
@@ -52,7 +55,7 @@ public class SoundVolume : MonoBehaviour
         //Debug.Log("BGM:" + bgmVolume);
         BGMVolumeSlider.minValue = 0;
         BGMVolumeSlider.maxValue = 1;
-
+        //スライダーにも適用
         BGMVolumeSlider.value = Mathf.InverseLerp(firstVolume - (deltaVolume / 2), firstVolume + (deltaVolume / 2), bgmVolume);
 
         float seVolume;
@@ -60,16 +63,15 @@ public class SoundVolume : MonoBehaviour
         //Debug.Log("SE:" + seVolume);
         SEVolumeSlider.minValue = 0;
         SEVolumeSlider.maxValue = 1;
-
+        //スライダーにも適用
         SEVolumeSlider.value = Mathf.InverseLerp(firstVolume - (deltaVolume / 2), firstVolume + (deltaVolume / 2), seVolume);
-
-        //float masterVolume;
-        //audioMixer.GetFloat("SEVolume", out masterVolume);
-        //MasterVolumeSlider.value = masterVolume;
 
         //開始時にトグルの値をオーディオミキサーから読み取る
         SoundManager.Instance.SetMuteBGM(isMute_BGM);
         SoundManager.Instance.SetMuteSE(isMute_SE);
+        //トグルにも適用
+        BGMToggle.isOn = isMute_BGM;
+        SEToggle.isOn = isMute_SE;
     }
 
     // Update is called once per frame

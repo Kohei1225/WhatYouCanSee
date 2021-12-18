@@ -1718,6 +1718,8 @@ MonoBehaviour:
   optionObject: {fileID: 1879734394124088773}
   deltaVolume: 60
   firstVolume: -10
+  BGMToggle: {fileID: 1317783421}
+  SEToggle: {fileID: 1771032747}
 --- !u!1 &1879734393263880958
 GameObject:
   m_ObjectHideFlags: 0

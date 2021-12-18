@@ -423,7 +423,7 @@ MonoBehaviour:
   m_ShadowGroup: 0
   m_HasRenderer: 0
   m_UseRendererSilhouette: 1
-  m_CastsShadows: 1
+  m_CastsShadows: 0
   m_SelfShadows: 0
   m_ApplyToSortingLayers: 00000000
   m_ShapePath:
@@ -433,7 +433,7 @@ MonoBehaviour:
   - {x: -0.9476315, y: -0.9442629, z: 0}
   m_ShapePathHash: -721213775
   m_Mesh: {fileID: 0}
-  m_InstanceId: -455422
+  m_InstanceId: 938824
 --- !u!1 &5714184023104438757
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +688,7 @@ MonoBehaviour:
   isObject: 1
   hasShadow: 0
   canHold: 0
+  isPlayersParent: 0
 --- !u!114 &797132388937661301
 MonoBehaviour:
   m_ObjectHideFlags: 0

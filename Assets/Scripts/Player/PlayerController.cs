@@ -13,8 +13,7 @@ public class PlayerController : MonoBehaviour
     public float jumpSpeed = 35f;
 
     public bool active{get;private set;}
-    /// <summary> 歩ける判定用 </summary>
-    bool walk;
+
     /// <summary> ジャンプできる判定用 </summary>
     public bool jump;
     /// <summary> ダメージを受けたかを判定する用 </summary>
@@ -80,7 +79,6 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        walk = false;
         jump = false;
         vec = 1;
         active = false;
@@ -103,7 +101,8 @@ public class PlayerController : MonoBehaviour
         if (!canCtrl)
             return;
 
-        walk = false;
+        bool walk = false;
+
         if(Input.GetKey(KeyCode.Z))active = true;
 
         GetComponent<ColorObjectVer3>().Set_active(Input.GetKey(KeyCode.Z));
@@ -112,7 +111,7 @@ public class PlayerController : MonoBehaviour
         {
             //キーが押されたかを保存
             jump = Input.GetKeyDown(KeyCode.UpArrow);
-            
+
 
             walk = Input.GetKey(KeyCode.RightArrow)|Input.GetKey(KeyCode.LeftArrow);
             if(Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.LeftArrow))
@@ -121,7 +120,6 @@ public class PlayerController : MonoBehaviour
                 else if(Input.GetKey(KeyCode.RightArrow))vec = 1;//右を向く
                 else vec = -1;
             }
-
             //左右どちらかが入力されてればその方向に移動
             if (walk)
             {
@@ -199,6 +197,7 @@ public class PlayerController : MonoBehaviour
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
             }
         }
+        animController.SetBool("Walk", walk);
 
         //地面にいるかを取得
         onStage = transform.Find("Body").gameObject.transform.Find("Foot").gameObject.GetComponent<FootAreaScript>().touchingStage;
@@ -311,7 +310,7 @@ public class PlayerController : MonoBehaviour
         animController.SetBool("Nothing",GetComponent<ColorObjectVer3>().Get_active());
         animController.SetBool("Damage",damage);
         animController.SetFloat("Abs_V_Vel",Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x));
-        animController.SetBool("Walk",walk);
+
         animController.SetBool("OnStage",onStage);
     }
 

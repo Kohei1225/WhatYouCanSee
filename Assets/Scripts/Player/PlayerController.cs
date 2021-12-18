@@ -110,7 +110,7 @@ public class PlayerController : MonoBehaviour
         if(!GetComponent<ColorObjectVer3>().Get_active() && !damage)
         {
             //キーが押されたかを保存
-            jump = Input.GetKeyDown(KeyCode.UpArrow);
+            jump = Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space);
 
 
             walk = Input.GetKey(KeyCode.RightArrow)|Input.GetKey(KeyCode.LeftArrow);

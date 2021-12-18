@@ -133,8 +133,8 @@ public class MapManager : MonoBehaviour
             string StageName = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>().GetStageName();
             stageName_text.text = StageName;
 
-            //スペースキーが押されたら
-            if (Input.GetKeyDown(KeyCode.Space))
+            //スペースキーか上キーが押されたら
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 StageIcon stageIcon = stageIcons[playerScript.GetGoNo()].GetComponent<StageIcon>();
                 //プレイヤージャンプ

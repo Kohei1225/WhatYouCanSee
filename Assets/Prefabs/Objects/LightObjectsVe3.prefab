@@ -115,7 +115,7 @@ MonoBehaviour:
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
   m_LightOrder: 0
-  m_AlphaBlendOnOverlap: 0
+  m_AlphaBlendOnOverlap: 1
   m_ShadowIntensity: 1
   m_ShadowVolumeIntensity: 0
   m_PointLightInnerAngle: 360
@@ -243,7 +243,7 @@ MonoBehaviour:
   - {x: -0.5, y: 0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: -17248
+  m_InstanceId: 881376
 --- !u!1 &7674285460488513119
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +299,7 @@ MonoBehaviour:
   m_LightCookieSprite: {fileID: 0}
   m_UseNormalMap: 0
   m_LightOrder: 1
-  m_AlphaBlendOnOverlap: 0
+  m_AlphaBlendOnOverlap: 1
   m_ShadowIntensity: 1
   m_ShadowVolumeIntensity: 0
   m_PointLightInnerAngle: 34
@@ -427,6 +427,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   switchObject: {fileID: 7674285460488513119}
   LeverObject: {fileID: 0}
+  _IsReverse: 0
 --- !u!1001 &184945995830689151
 PrefabInstance:
   m_ObjectHideFlags: 0

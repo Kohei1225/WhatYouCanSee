@@ -22,14 +22,22 @@ public class RayColliderScript : MonoBehaviour
 
     void FixedUpdate()
     {
-        transform.parent.gameObject.GetComponent<RayJudgeScript>().Set_RayJudgeValue(listNumber,onLightRay);
+        //transform.parent.gameObject.GetComponent<RayJudgeScript>().Set_RayJudgeValue(listNumber,onLightRay);
     }
 
     // Update is called once per frame
     void Update()
     {
+        transform.parent.gameObject.GetComponent<RayJudgeScript>().Set_RayJudgeValue(listNumber, onLightRay);
+        if (gameObject.transform.root.gameObject.Equals(GameObject.Find("Player")))
+        {
+            if (!onRay)
+            {
+                Debug.LogError("Not Hit Ray");
+            }
+        }
         //Rayに当たらなければ一旦リセット
-        if(!onRay)onLightRay = false;
+        if (!onRay)onLightRay = false;
         onRay = false;
     }
 

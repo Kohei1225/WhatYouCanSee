@@ -37,6 +37,9 @@ public class PlayerController_Map : MonoBehaviour
     //ステージの画面を見せるもの
     [SerializeField] private Image _StageImage;
 
+    //ステージ選択方法のTextMeshPro
+    [SerializeField] private TextMeshProUGUI _HowToText;
+
 
     // Start is called before the first frame update
     void Start()
@@ -129,6 +132,8 @@ public class PlayerController_Map : MonoBehaviour
             hereIcon.SetActive(false);
             //ステージパネルを見えないようにする
             stagePanel.SetActive(false);
+            //操作方法見えないようにする
+            _HowToText.enabled = false;
             //元の位置記憶
             nowNo = goNo;
             //移動ポイント更新
@@ -181,6 +186,8 @@ public class PlayerController_Map : MonoBehaviour
             hereIcon.SetActive(true);
             //ステージパネルを見えるようにする
             stagePanel.SetActive(true);
+            //操作方法見えるようにする
+            _HowToText.enabled = true;
             //目的の場所は今いる場所に
             nowNo = goNo;
 

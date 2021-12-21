@@ -51,7 +51,7 @@ MonoBehaviour:
   - 15
   - 20
   _WaitTime: 2
-  _LightningTime: 10
+  _LightningTime: 15
   _MakeLightningBlockNum: 2
   _LightningLight: {fileID: 0}
   _LightingBackColor: {r: 0.49056602, g: 0.43037176, b: 0, a: 0}

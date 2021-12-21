@@ -836,6 +836,7 @@ public class PandaScript : BossBase
             else
             {
                 ChangeBackColor();
+                ChangeBackColor();
             }
             
         }

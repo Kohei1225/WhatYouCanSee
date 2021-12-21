@@ -37,7 +37,7 @@ public class FootAreaScript : MonoBehaviour
         && other.gameObject.transform.parent.gameObject.GetComponent<ColorObject2>().isObject))
         {
             touchingStage = true;
-            //Debug.Log("ステージに当たった");
+            //if(transform.root.gameObject.name == "Player")Debug.Log("ステージに当たった");
             //player.GetComponent<PlayerController>().onStage = true;
         }
     }
@@ -53,7 +53,7 @@ public class FootAreaScript : MonoBehaviour
 
             touchingStage = false;
             //player.GetComponent<PlayerController>().onStage = false;
-            //Debug.Log("離れた");
+            //if (transform.root.gameObject.name == "Player") Debug.Log("離れた");
         }
     }
 }

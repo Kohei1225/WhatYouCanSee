@@ -20,10 +20,11 @@ public class PlayerController : MonoBehaviour
     public bool damage{get; private set;}
     /// <summary> 向いてる方向を示す変数 </summary>
     int vec;
-    /// <summary> 何かの上に乗ってるかを判定する用 </summary>
-    public bool onStage;
+    private bool onGround;
     /// <summary>  </summary>
     private bool canCtrl = true;
+    /// <summary> 最初の演出が終わったか </summary>
+    [SerializeField] private bool isAfterFirstAnim = true;
     
     float scaleX;
     /// <summary> 投げるときに加える力  </summary>
@@ -76,6 +77,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public bool IsAfterFirstAnim
+    {
+        set { isAfterFirstAnim = value; }
+        get { return isAfterFirstAnim; }
+    }
+
+    public bool OnGround
+    {
+        get { return transform.Find("Body").gameObject.transform.Find("Foot").gameObject.GetComponent<FootAreaScript>().touchingStage; }
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -83,7 +94,6 @@ public class PlayerController : MonoBehaviour
         vec = 1;
         active = false;
         isHoldingObject = false;
-        onStage = false;
         scaleX = Mathf.Abs(transform.localScale.x);
         animController = GetComponent<Animator>();
         objectToHold = transform.Find("Body").transform.Find("CatchArea").gameObject;
@@ -98,8 +108,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!canCtrl)
+        onGround = OnGround;
+
+        if (!canCtrl || !isAfterFirstAnim)
+        {
             return;
+        }
+           
 
         bool walk = false;
 
@@ -199,11 +214,9 @@ public class PlayerController : MonoBehaviour
         }
         animController.SetBool("Walk", walk);
 
-        //地面にいるかを取得
-        onStage = transform.Find("Body").gameObject.transform.Find("Foot").gameObject.GetComponent<FootAreaScript>().touchingStage;
 
         //地面にいる状態ならジャンプできる
-        if(jump && onStage)
+        if(jump && OnGround)
         {
             var vel = rigidBody.velocity;
 
@@ -252,8 +265,12 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!canCtrl)
+        animController.SetBool("OnStage",onGround);
+
+        if (!canCtrl || !isAfterFirstAnim)
+        {
             return;
+        }
 
         //落ちたなら
         if(transform.position.y < _DeathY && !damage)
@@ -311,7 +328,7 @@ public class PlayerController : MonoBehaviour
         animController.SetBool("Damage",damage);
         animController.SetFloat("Abs_V_Vel",Mathf.Abs(GetComponent<Rigidbody2D>().velocity.x));
 
-        animController.SetBool("OnStage",onStage);
+
     }
 
     public void Damage()
@@ -352,11 +369,6 @@ public class PlayerController : MonoBehaviour
         GetComponent<Rigidbody2D>().isKinematic = true;
     }
 
-    public void Set_onStage(bool value)
-    {
-        this.onStage = value;
-    }
-
     public bool Get_isHoldingObject()
     {
         return this.isHoldingObject;
@@ -364,6 +376,7 @@ public class PlayerController : MonoBehaviour
 
     public void Set_canCtrl(bool canCtrl)
     {
+
         this.canCtrl = canCtrl;
     }
 

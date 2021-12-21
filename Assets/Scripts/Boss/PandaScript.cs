@@ -95,6 +95,8 @@ public class PandaScript : BossBase
     // Start is called before the first frame update
     void Start()
     {
+        //最初に踏む用に１プラスする
+        _MaxHp++;
         _CurrentHP = _MaxHp;
         _AttackInterval = 2;
         _DamageTimeInterval = 1;
@@ -131,8 +133,6 @@ public class PandaScript : BossBase
         //バトルが始まってたら処理する
         if(_HasStartBattle)
         {
-            
-
             //戦える状態だったら戦う
             if (!_IsDead && !_Player.GetComponent<PlayerController>().damage)
             {
@@ -141,15 +141,14 @@ public class PandaScript : BossBase
                 //身体の処理
                 CheckBackColorAndControlBody();
             }
-
             UpdateState();
         }
         //一定の距離近づいたらバトルが始まる
-        else if(Distance < BATTLE_START_DISTANCE)
-        {
-            _HasStartBattle = true;
+        //else if(Distance < BATTLE_START_DISTANCE)
+        //{
+        //    _HasStartBattle = true;
             
-        }
+        //}
     }
 
 
@@ -166,7 +165,6 @@ public class PandaScript : BossBase
             case StateEnum.None:
                 // None時に毎フレーム呼ばれる処理
                 {
-
                     if(ply.damage)
                     {
                         break;
@@ -263,7 +261,7 @@ public class PandaScript : BossBase
                     Move();
 
                     //プレイヤーが近くでジャンプしたら防御
-                    if (!_Player.GetComponent<PlayerController>().onStage && Distance < DISTANCE1*1.5f)
+                    if (!_Player.GetComponent<PlayerController>().OnGround && Distance < DISTANCE1*1.5f)
                     {
                         Defend(2.0f);
                     }
@@ -301,7 +299,7 @@ public class PandaScript : BossBase
             case 0:
                 {
                     //プレイヤーが近くでジャンプしたら防御
-                    if(!_Player.GetComponent<PlayerController>().onStage && Distance < 5)
+                    if(!_Player.GetComponent<PlayerController>().OnGround && Distance < 5)
                     {
                         Defend(2.0f);
                     }
@@ -428,11 +426,27 @@ public class PandaScript : BossBase
 
     public override void Damage()
     {
+        if(!_HasStartBattle)
+        {
+            SetHasStartBattle();
+
+            //プレイヤーを左方向に飛ばす
+            var pVel = _Player.GetComponent<Rigidbody2D>().velocity;
+            pVel.x = -10f;
+            _Player.GetComponent<Rigidbody2D>().velocity = pVel;
+        }
         _TaskList.CancelAllTask();
         _TaskList.AddTask(TaskEnum.Damage);
         _TaskList.AddTask(TaskEnum.ReturnPostion);
+
+        if (_CurrentHP == 9)
+        {
+            return;
+        }
+
         Defend(2.0f);
 
+        
         // 攻撃タイプを更新
         var preBattleType = _BattleType;
         _BattleType = (_CurrentHP - 1) / 3;
@@ -516,24 +530,43 @@ public class PandaScript : BossBase
     /// <summary> 背景に合わせて身体を有効/無効化 </summary>
     void CheckBackColorAndControlBody()
     {
+        //BlackBodyだけアクティブ状態がfalseにならないバグが発生。
+        //原因は不明。たまたまここにfalseにする処理書いたら復活した。
+        _BlackBody.SetActive(false);
+
         //背景の色によって実体が消える
         bool isWhite = false;
         bool isBlack = false;
+
         if(this._BackColorScript?.colorType == ColorObjectVer3.OBJECT_COLOR3.WHITE)
+        {
             isWhite = true;
+        }
 
         if(this._BackColorScript?.colorType == ColorObjectVer3.OBJECT_COLOR3.BLACK)
+        {
             isBlack = true;
+        }
+            
 
         //身体を有効/無効化する
         this._WhiteBody.SetActive(!isWhite);
         this._BlackBody.SetActive(!isBlack);
+
     }
 
     /// <summary> 背景色を変更する </summary>
     void ChangeBackColor()
     {
         _LeverSwitch?.ChangeBarPos();
+    }
+
+
+    public void SetHasStartBattle()
+    {
+        _HasStartBattle = true;
+        _AnimController.SetBool("IsBattle", true);
+        _State = StateEnum.Move;
     }
 
     #region Task function
@@ -745,7 +778,6 @@ public class PandaScript : BossBase
     void TaskReturnEnter()
     {
         TurnTo(_Player);
-        
         var rb = GetComponent<Rigidbody2D>();
         var vel = rb.velocity;
         var diff = 0f;
@@ -786,17 +818,28 @@ public class PandaScript : BossBase
 
     void TaskReturnExit()
     {
-        //背景色を変更
-        if(_AnimController.GetBool("IsKick"))
-        {
-            ChangeBackColor();
-        }
-        _AnimController.SetBool("IsKick", false);
+
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         _IsUnableBeAttacked = false;
 
         //音
         SoundManager.Instance.PlaySE("Landing");
+
+        //背景色を変更
+        if(_AnimController.GetBool("IsKick"))
+        {
+            var player = _Player.GetComponent<PlayerController>();
+            if (!player.IsAfterFirstAnim)
+            {
+                player.IsAfterFirstAnim = true;
+            }
+            else
+            {
+                ChangeBackColor();
+            }
+            
+        }
+        _AnimController.SetBool("IsKick", false);
     }
     #endregion
 

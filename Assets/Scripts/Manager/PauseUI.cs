@@ -15,7 +15,7 @@ public class PauseUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _MaskManager = GameObject.FindWithTag("Player").transform.Find("CircleMask").GetComponent<MaskManager>();
+        _MaskManager = GameObject.FindWithTag("Mask").GetComponent<MaskManager>();
     }
 
     // Update is called once per frame

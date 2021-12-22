@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 146232767969774949}
   m_Layer: 0
   m_Name: CircleMask
-  m_TagString: Untagged
+  m_TagString: Mask
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   - {x: -1.0002711, y: 0.098400794, z: 0}
   m_ShapePathHash: -1504377493
   m_Mesh: {fileID: 0}
-  m_InstanceId: 727456
+  m_InstanceId: 784326
 --- !u!1 &3238795088645205694
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +327,7 @@ MonoBehaviour:
   - {x: -0.56600624, y: 0.06609519, z: 0}
   m_ShapePathHash: -1431389970
   m_Mesh: {fileID: 0}
-  m_InstanceId: 727450
+  m_InstanceId: 784320
 --- !u!1 &4179578707476982527
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,7 +879,7 @@ MonoBehaviour:
   moveVel: 17
   jumpSpeed: 35
   jump: 0
-  onStage: 0
+  isAfterFirstAnim: 1
   isHoldingObject: 0
   objectBeingHolden: {fileID: 0}
   _ParentEnptyPrefab: {fileID: 0}

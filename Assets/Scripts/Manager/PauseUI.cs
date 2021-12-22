@@ -9,18 +9,18 @@ public class PauseUI : MonoBehaviour
     public GameObject optionObject;
     public GameObject saveObject;
     public string sceneName;
-    [SerializeField] private MapManager.ScreenStatuses _Status;
+    //playerのマスク
+    private MaskManager _MaskManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        _MaskManager = GameObject.FindWithTag("Player").transform.Find("CircleMask").GetComponent<MaskManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        _Status = MapManager.screenStatus;
         //セーブしました画面がある時はreturn
         if (saveObject)
         {
@@ -40,8 +40,8 @@ public class PauseUI : MonoBehaviour
         }
         else
         {
-            //マップマネージャーの状態がNORMALかPauseだったら
-            if (MapManager.screenStatus == MapManager.ScreenStatuses.NORMAL || MapManager.screenStatus == MapManager.ScreenStatuses.PAUSE)
+            //マップマネージャーの状態がNORMALかPauseで、画面全体が見えるようになったら
+            if ((MapManager.screenStatus == MapManager.ScreenStatuses.NORMAL || MapManager.screenStatus == MapManager.ScreenStatuses.PAUSE) && _MaskManager.IsFin)
             {
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
